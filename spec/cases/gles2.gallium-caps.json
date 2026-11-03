@@ -1,0 +1,3459 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gles2.gallium-caps",
+ "source": "Mesa 26.2.4 headers (the prepared root's Mesa SDK) and the driver at HEAD, survey 2026-11-03: every field of struct pipe_caps, its value and who sets it",
+ "criteria": "The dump of the published screen equals the recorded value, and the value has evidence (a hardware fact, a test of what it enables, or why it is off); evidence \"missing\" fails",
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "graphics",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:46 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "gallium/auxiliary/util/u_inlines.h"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "npot_textures",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:91",
+    "enables": "ARB_texture_non_power_of_two (1092)",
+    "gl21_gles2": "yes (GL 2.0 and ES 2.0 version checks, main/version.c:259, 484)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "anisotropic_filter",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "EXT_texture_filter_anisotropic (1125)",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "occlusion_query",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ARB_occlusion_query2/EXT_occlusion_query_boolean (st_extensions.c:1061); when 0 every OCCLUSION_* query is a dummy (main/queryobj.c:141) while ARB_occlusion_query stays on (main/extensions.c:279)",
+    "gl21_gles2": "GL2.1: GL 1.5 occlusion queries are core; with 0 they work but always return 0 samples, and an active dummy query + quad clear hits the set_active_query_state NULL-GAP. GLES2: no.",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "query_time_elapsed",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "EXT_timer_query (st_extensions.c:1534); GL_TIME_ELAPSED query type (queryobj.c:185)",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "texture_shadow_map",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:145 (u_init_pipe_screen_caps)",
+    "enables": "ARB_shadow (1080), ARB_fragment_program_shadow (1055)",
+    "gl21_gles2": "yes (GL 1.4 gate, version.c:254)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "texture_swizzle",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "texture_mirror_clamp",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "blend_equation_separate",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:97",
+    "enables": "EXT_blend_equation_separate (1101)",
+    "gl21_gles2": "yes (GL 2.0 and ES 2.0 version checks, version.c:260, 485)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "primitive_restart",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "gallium/auxiliary/util/u_vbuf.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "primitive_restart_fixed_index",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c",
+     "gallium/auxiliary/util/u_vbuf.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "indep_blend_enable",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_atom_blend.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "indep_blend_func",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_atom_blend.c",
+     "mesa/main/fbobject.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "fs_coord_origin_upper_left",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_glsl_to_nir.cpp"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "fs_coord_origin_lower_left",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_glsl_to_nir.cpp"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "fs_coord_pixel_center_half_integer",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_glsl_to_nir.cpp"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "fs_coord_pixel_center_integer",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_glsl_to_nir.cpp"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "depth_clip_disable",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "depth_clip_disable_separate",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "depth_clamp_enable",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "shader_stencil_export",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_cb_drawpixels.c",
+     "gallium/auxiliary/util/u_blitter.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "vs_instanceid",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ARB_draw_instanced (1054); layered clear (st_cb_clear.c:166); st PBO layers (st_pbo.c:664)",
+    "gl21_gles2": "no; keeps the layered-clear geometry shader off",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "vertex_element_instance_divisor",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "fragment_color_clamped",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_context.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "mixed_colorbuffer_formats",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:49 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/main/fbobject.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "seamless_cube_map",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "seamless_cube_map_per_texture",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "conditional_render",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "NV_conditional_render (1148)",
+    "gl21_gles2": "no (GL 3.0); glBeginConditionalRender is still installed unchecked: render_condition NULL-GAP",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "texture_barrier",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "NV_texture_barrier / ARB_texture_barrier (1154)",
+    "gl21_gles2": "no (makes our texture_barrier SET-UNREACHED)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "stream_output_pause_resume",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "tgsi_can_compact_constants",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "vertex_color_unclamped",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_context.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "vertex_color_clamped",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_context.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "quads_follow_provoking_vertex_convention",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "user_vertex_buffers",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "u_vbuf fallback_only_for_user_vbuffers (gallium/auxiliary/util/u_vbuf.c:324, 352; cso_context.c:257): client-side arrays go through u_vbuf",
+    "gl21_gles2": "yes (indirectly): GL 2.x and GLES2 client arrays work through u_vbuf uploads",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "compute",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c",
+     "gallium/auxiliary/util/u_inlines.h"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "start_instance",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "query_timestamp",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ARB_timer_query (1095), EXT_disjoint_timer_query (1104); GL_TIMESTAMP glGet (get_hash_params.py:415)",
+    "gl21_gles2": "no (but glQueryCounter is not gated by it: create_query NULL-GAP)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "texture_multisample",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "gallium/auxiliary/util/u_blitter.c",
+     "gallium/auxiliary/util/u_blitter.h"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "cube_map_array",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "gallium/auxiliary/util/u_blitter.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "texture_buffer_objects",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ARB_texture_buffer_object (1086); st->pbo.upload_enabled/download_enabled (st_pbo.c:648-659) -> shader-based PBO paths and their image/GS/PAUSE_QUERIES uses are off",
+    "gl21_gles2": "no (GL 3.1)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "buffer_sampler_view_rgba_only",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c",
+     "mesa/state_tracker/st_pbo.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "tgsi_texcoord",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_atom_rasterizer.c",
+     "mesa/state_tracker/st_cb_drawtex.c",
+     "mesa/state_tracker/st_program.h",
+     "mesa/main/state.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "query_pipeline_statistics",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/main/queryobj.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "mixed_framebuffer_sizes",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ARB_framebuffer_object (1056); EXT_framebuffer_object/EXT_framebuffer_blit stay on (dummy_true)",
+    "gl21_gles2": "no (GL 3.0)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "vs_layer_viewport",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "AMD_vertex_shader_layer (1263-1266); layered clear VS (st_cb_clear.c:174)",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "texture_gather_sm5",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "buffer_map_persistent_coherent",
+   "parameters": {
+    "type": "bool",
+    "value": "false",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:96",
+    "enables": "ARB_buffer_storage (1043) off; u_upload_mgr maps with PIPE_MAP_FLUSH_EXPLICIT (u_upload_mgr.c:74-86) -> transfer_flush_region is reached on every upload",
+    "gl21_gles2": "no (GL 4.4)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "fake_sw_msaa",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "texture_query_lod",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "sample_shading",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ARB_sample_shading (1068); st_update_sample_shading -> cso_set_min_samples (st_atom_msaa.c:150-152)",
+    "gl21_gles2": "no; set_min_samples is still called with 1 by meta ops",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "texture_gather_offsets",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_glsl_to_nir.cpp"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "vs_window_space_position",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "gallium/auxiliary/util/u_tests.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "draw_indirect",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "fs_fine_derivative",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "uma",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "gallium/frontends/dri/dri_query_renderer.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "conditional_render_inverted",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "sampler_view_target",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_pbo.c",
+     "gallium/auxiliary/util/u_blitter.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "clip_halfz",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "polygon_offset_clamp",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "multisample_z_resolve",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "resource_from_user_memory",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "AMD_pinned_memory (1139)",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "resource_from_user_memory_compute_only",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "device_reset_status_query",
+   "parameters": {
+    "type": "bool",
+    "value": "1",
+    "set_by": "init_caps (poulsback_screen.c)",
+    "enables": "installs GetGraphicsResetStatus (st_cb_flush.c:184-185) -> get_device_reset_status",
+    "gl21_gles2": "no (robustness is optional)",
+    "evidence": "poulsback-lost fixture; the device-lost run (eng/lab/x8-run.sh step2), internal device runs 054 and 059"
+   }
+  },
+  {
+   "id": "texture_float_linear",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_context.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "texture_half_float_linear",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "depth_bounds_test",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "native_fp32_depth",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:146 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "texture_query_samples",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "force_persample_interp",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_context.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "shareable_shaders",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:106 (u_init_pipe_screen_caps)",
+    "enables": "single-variant shaders (st_context.c:651-677)",
+    "gl21_gles2": "no (performance)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "copy_between_compressed_and_plain_formats",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ARB_copy_image/OES_copy_image (1047-1048) off; NV_copy_image stays on (main/extensions.c:296)",
+    "gl21_gles2": "no; glCopyImageSubDataNV still reaches resource_copy_region/blit",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "clear_scissored",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_manager.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "clear_masked",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_cb_clear.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "draw_parameters",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "shader_pack_half_float",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_context.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "multi_draw_indirect",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_draw.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "multi_draw_indirect_params",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "multi_draw_indirect_partial_stride",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:107 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_draw.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "fs_position_is_sysval",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "fs_point_is_sysval",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "fs_face_is_integer_sysval",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "invalidate_buffer",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ctx->has_invalidate_buffer (st_context.c:798); glBufferData orphan via invalidate_resource (main/bufferobj.c:313)",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "generate_mipmap",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "pipe->generate_mipmap path (st_gen_mipmap.c:144); fallback util_gen_mipmap via blit",
+    "gl21_gles2": "no (glGenerateMipmap works through blit)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "string_marker",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ctx->has_string_marker (st_context.c:801-802), GREMEDY_string_marker (1702) -> emit_string_marker",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "surface_no_compress",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_cb_texture.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "surface_reinterpret_blocks",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_cb_texture.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "compressed_surface_reinterpret_blocks_layered",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_cb_texture.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "query_buffer_object",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ARB_query_buffer_object (1066) -> get_query_result_resource",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "query_memory_info",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ATI_meminfo (1140), NVX_gpu_memory_info (1157) -> query_memory_info",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "framebuffer_no_attachment",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c",
+     "mesa/state_tracker/st_pbo.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "robust_buffer_access_behavior",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "cull_distance",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "shader_group_vote",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "shader_array_components",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "stream_output_interleave_buffers",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "native_fence_fd",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "not st/mesa: EGL_ANDROID_native_fence_sync (egl/drivers/dri2/egl_dri2.c:633, 708), __DRI_FENCE_CAP_NATIVE_FD (frontends/dri/dri_helpers.c:86)",
+    "gl21_gles2": "no; leaves our create_fence_fd and fence_get_fd SET-UNREACHED",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "glsl_tess_levels_as_inputs",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "legacy_math_rules",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "fp16",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "doubles",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "int64",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "shader_clock",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "shader_realtime_clock",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "polygon_mode_fill_rectangle",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "shader_ballot",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "tes_layer_viewport",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "can_bind_const_buffer_as_vertex",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_atom_array.cpp"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "allow_mapped_buffers_during_execution",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:118 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c",
+     "mesa/main/glthread.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "post_depth_coverage",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "bindless_texture",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ARB_bindless_texture (1042)",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "nir_samplers_as_deref",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_glsl_to_nir.cpp",
+     "mesa/state_tracker/st_nir_lower_tex_src_plane.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "query_so_overflow",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ARB_transform_feedback_overflow_query (1098)",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "memobj",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "EXT_memory_object, EXT_memory_object_fd (1106-1108); gates memobj_* and resource_from_memobj",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "load_constbuf",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "tile_raster_order",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "signed_vertex_buffer_offset",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c",
+     "gallium/auxiliary/util/u_vbuf.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "fence_signal",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "EXT_semaphore, EXT_semaphore_fd/_win32 (1114-1119); gates fence_server_signal, create_fence_win32, glImportSemaphoreFdEXT->create_fence_fd",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "packed_uniforms",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:88",
+    "enables": "ctx->Const.PackedDriverUniformStorage (st_context.c:524)",
+    "gl21_gles2": "yes (driver uniform layout)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "conservative_raster_post_snap_triangles",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "conservative_raster_post_snap_points_lines",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "conservative_raster_pre_snap_triangles",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "conservative_raster_pre_snap_points_lines",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "conservative_raster_post_depth_coverage",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "conservative_raster_inner_coverage",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "programmable_sample_locations",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ARB_sample_locations (1069); gates set_sample_locations, evaluate_depth_buffer, get_sample_pixel_grid",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "texture_mirror_clamp_to_edge",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "surface_sample_count",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "gallium/auxiliary/util/u_framebuffer.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "image_atomic_float_add",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "query_pipeline_statistics_single",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/main/queryobj.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "dest_surface_srgb_control",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:128 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "compute_grid_info_last_block",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "compute_shader_derivatives",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "image_load_formatted",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "image_store_formatted",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_context.h",
+     "mesa/state_tracker/st_extensions.c",
+     "mesa/state_tracker/st_pbo.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "throttle",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:132 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "gallium/frontends/dri/dri_screen.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "cl_gl_sharing",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "prefer_compute_for_multimedia",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "fragment_shader_interlock",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "fbfetch_coherent",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "atomic_float_minmax",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "fragment_shader_texture_lod",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ARB_shader_texture_lod (1079)",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "fragment_shader_derivatives",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "OES_standard_derivatives (1159)",
+    "gl21_gles2": "no (ES2 optional; desktop GLSL 1.10+ always has dFdx)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "texture_shadow_lod",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "shader_samples_identical",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "image_atomic_inc_wrap",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "prefer_imm_arrays_as_constbuf",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:121 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "gl_spirv",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "gl_spirv_variable_pointers",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "demote_to_helper_invocation",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "tgsi_tg4_component_in_swizzle",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "flatshade",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:148 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_atom_rasterizer.c",
+     "mesa/state_tracker/st_atom_shader.c",
+     "mesa/state_tracker/st_context.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "alpha_test",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:150 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_atom_depth.c",
+     "mesa/state_tracker/st_atom_shader.c",
+     "mesa/state_tracker/st_context.c",
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "two_sided_color",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:152 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_atom_rasterizer.c",
+     "mesa/state_tracker/st_atom_shader.c",
+     "mesa/state_tracker/st_context.c",
+     "mesa/main/enable.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "opencl_integer_functions",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "integer_multiply_32x16",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "frontend_noop",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "INTEL_blackhole_render (1163) -> set_frontend_noop",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "nir_images_as_deref",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:156 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_glsl_to_nir.cpp",
+     "mesa/state_tracker/st_nir_builtins.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "packed_stream_output",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:158 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "viewport_transform_lowered",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "psiz_clamped",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "viewport_swizzle",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "system_svm",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "viewport_mask",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "alpha_to_coverage_dither_control",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "map_unsynchronized_thread_safe",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/main/glthread.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "blend_equation_advanced",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "nir_atomics_as_deref",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_glsl_to_nir.cpp"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "no_clip_on_copy_tex",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_context.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "shader_atomic_int64",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "device_protected_surface",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "prefer_real_buffer_in_constbuf0",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_atom_constbuf.c",
+     "mesa/state_tracker/st_draw_feedback.c",
+     "gallium/auxiliary/util/u_inlines.h",
+     "gallium/auxiliary/util/u_threaded_context.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "gl_clamp",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:47 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_atom_shader.c",
+     "mesa/state_tracker/st_context.c",
+     "mesa/state_tracker/st_program.c",
+     "mesa/state_tracker/st_program.h"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "texrect",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:162 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_atom_sampler.c",
+     "mesa/state_tracker/st_cb_bitmap.c",
+     "mesa/state_tracker/st_cb_drawpixels.c",
+     "mesa/state_tracker/st_glsl_to_nir.cpp"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "sampler_reduction_minmax",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "sampler_reduction_minmax_arb",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "allow_dynamic_vao_fastpath",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:164 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "emulate_nonfixed_primitive_restart",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "gallium/auxiliary/util/u_vbuf.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "prefer_back_buffer_reuse",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:112 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "gallium/frontends/dri/dri_query_renderer.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "draw_vertex_state",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "ctx->Const.HasDrawVertexState (636) -> display-list vertex states (vbo_save_api.c:959); gates draw_vertex_state/create_vertex_state",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "prefer_pot_aligned_varyings",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "sparse_texture_full_array_cube_mipmaps",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "query_sparse_texture_residency",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "clamp_sparse_texture_lod",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "allow_draw_out_of_order",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "hardware_gl_select",
+   "parameters": {
+    "type": "bool",
+    "value": "!!accel && debug_get_bool_option(\"MESA_HW_ACCEL_SELECT\", accel > 0) && /* internal geometry shader need indirect array access */ pscreen->shader_caps[MESA_SHADER_GEOMETRY].indirect_temp_addr && /* internal geometry shader need SSBO support */ pscreen->shader_caps[MESA_SHADER_GEOMETRY].max_shader_buffers",
+    "set_by": "u_screen.c:174 (u_init_pipe_screen_caps)",
+    "enables": "ctx->Const.HardwareAcceleratedSelect (630); GL_SELECT uses the software draw-module path",
+    "gl21_gles2": "no",
+    "effective_per_survey": "false",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "dithering",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:50 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_atom_blend.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "fbfetch_zs",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "timeline_semaphore_import",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/main/externalobjects.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "device_protected_context",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c",
+     "gallium/frontends/dri/dri_screen.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "allow_glthread_buffer_subdata_opt",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "null_textures",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/main/texobj.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "astc_void_extents_need_denorm_flush",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_cb_texture.c",
+     "mesa/state_tracker/st_format.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "validate_all_dirty_states",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/main/state.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "has_const_bw",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "performance_monitor",
+   "parameters": {
+    "type": "bool",
+    "value": "pscreen->get_driver_query_info && pscreen->get_driver_query_group_info && pscreen->get_driver_query_group_info(pscreen, 0, NULL) != 0",
+    "set_by": "u_screen.c:185 (u_init_pipe_screen_caps)",
+    "enables": "AMD_performance_monitor (1138)",
+    "gl21_gles2": "no; AMD entry points are installed unchecked: screen get_driver_query_info NULL-GAP",
+    "effective_per_survey": "false",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "texture_sampler_independent",
+   "parameters": {
+    "type": "bool",
+    "value": "true",
+    "set_by": "u_screen.c:184 (u_init_pipe_screen_caps)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "astc_decode_mode",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "shader_subgroup_quad_all_stages",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "call_finalize_nir_in_linker",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_draw_feedback.c",
+     "mesa/state_tracker/st_glsl_to_nir.cpp",
+     "mesa/state_tracker/st_program.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "mesh_shader",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "EXT_mesh_shader (1112); cso task/mesh binds (cso_context.c:1178)",
+    "gl21_gles2": "no",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "representative_fragment_test",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "prefer_persp",
+   "parameters": {
+    "type": "bool",
+    "value": "false",
+    "set_by": "u_screen.c:195 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "gallium/auxiliary/util/u_blitter.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "blit_3d",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/main/copyimage.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "glsl_bindless_handles_are_32bit",
+   "parameters": {
+    "type": "bool",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "accelerated",
+   "parameters": {
+    "type": "int",
+    "value": "accel",
+    "set_by": "u_screen.c:44 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "gallium/frontends/dri/dri_query_renderer.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "min_texel_offset",
+   "parameters": {
+    "type": "int",
+    "value": "-8",
+    "set_by": "u_screen.c:56 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_texel_offset",
+   "parameters": {
+    "type": "int",
+    "value": "7",
+    "set_by": "u_screen.c:57 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "min_texture_gather_offset",
+   "parameters": {
+    "type": "int",
+    "value": "-8",
+    "set_by": "u_screen.c:92 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_texture_gather_offset",
+   "parameters": {
+    "type": "int",
+    "value": "7",
+    "set_by": "u_screen.c:94 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_dual_source_render_targets",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_render_targets",
+   "parameters": {
+    "type": "unsigned",
+    "value": "true",
+    "set_by": "u_screen.c:48 (u_init_pipe_screen_caps)",
+    "enables": "MaxDrawBuffers/MaxColorAttachments (154-156)",
+    "gl21_gles2": "yes (ARB_draw_buffers minimum 1)",
+    "effective_per_survey": "1",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "max_texture_2d_size",
+   "parameters": {
+    "type": "unsigned",
+    "value": "2048",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:98",
+    "enables": "MaxTextureSize, MaxRenderbufferSize, MaxViewport (124-147)",
+    "gl21_gles2": "yes (GL 2.1 min 64, ES2 min 64)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "max_texture_3d_levels",
+   "parameters": {
+    "type": "unsigned",
+    "value": "1",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:99",
+    "enables": "OES_texture_3D = levels!=0 (st_extensions.c:130); Max3DTextureLevels=1 -> GL_MAX_3D_TEXTURE_SIZE 1",
+    "gl21_gles2": "yes: 3D textures are core since GL 1.2 (GL 2.1 minimum size 16); 1 is below the spec minimum; ES2 does not need 3D",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "max_texture_cube_levels",
+   "parameters": {
+    "type": "unsigned",
+    "value": "1",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:100",
+    "enables": "MaxCubeTextureLevels=1 (132) -> GL_MAX_CUBE_MAP_TEXTURE_SIZE 1",
+    "gl21_gles2": "yes: GL 1.3 / ES2 cube maps; spec minimum 16 (is_format_supported also rejects cube targets)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "max_stream_output_buffers",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "EXT_transform_feedback (1130), MaxTransformFeedbackBuffers (421); cso has_streamout (cso_context.c:330-331); gates create_stream_output_target/set_stream_output_targets",
+    "gl21_gles2": "no (GL 3.0/ES 3.0)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "max_texture_array_layers",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:101",
+    "enables": "EXT_texture_array (1123), MaxArrayTextureLayers (138)",
+    "gl21_gles2": "no (GL 3.0)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "max_stream_output_separate_components",
+   "parameters": {
+    "type": "unsigned",
+    "value": "4",
+    "set_by": "u_screen.c:60 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_stream_output_interleaved_components",
+   "parameters": {
+    "type": "unsigned",
+    "value": "64",
+    "set_by": "u_screen.c:61 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "glsl_feature_level",
+   "parameters": {
+    "type": "unsigned",
+    "value": "120",
+    "set_by": "u_screen.c:64 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c",
+     "gallium/auxiliary/util/u_blitter.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "glsl_feature_level_compatibility",
+   "parameters": {
+    "type": "unsigned",
+    "value": "120",
+    "set_by": "u_screen.c:64 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "essl_feature_level",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "constant_buffer_offset_alignment",
+   "parameters": {
+    "type": "unsigned",
+    "value": "1",
+    "set_by": "u_screen.c:70 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c",
+     "gallium/auxiliary/util/u_inlines.h",
+     "gallium/auxiliary/util/u_threaded_context.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "timer_resolution",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "min_map_buffer_alignment",
+   "parameters": {
+    "type": "unsigned",
+    "value": "64",
+    "set_by": "u_screen.c:73 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c",
+     "gallium/auxiliary/util/u_threaded_context.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "texture_buffer_offset_alignment",
+   "parameters": {
+    "type": "unsigned",
+    "value": "256",
+    "set_by": "u_screen.c:76 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c",
+     "mesa/state_tracker/st_pbo.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "linear_image_pitch_alignment",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "linear_image_base_address_alignment",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "texture_transfer_modes",
+   "parameters": {
+    "type": "unsigned",
+    "value": "PIPE_TEXTURE_TRANSFER_BLIT",
+    "set_by": "u_screen.c:77 (u_init_pipe_screen_caps)",
+    "enables": "st->prefer_blit_based_texture_transfer / allow_compute_based_texture_transfer (st_context.c:489-491); no compute PBO, is_compute_copy_faster never called",
+    "gl21_gles2": "no (blit-based transfers are enough)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "texture_border_color_quirk",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_context.c",
+     "gallium/auxiliary/cso_cache/cso_context.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_texel_buffer_elements",
+   "parameters": {
+    "type": "unsigned",
+    "value": "65536",
+    "set_by": "u_screen.c:81 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_viewports",
+   "parameters": {
+    "type": "unsigned",
+    "value": "1",
+    "set_by": "u_screen.c:82 (u_init_pipe_screen_caps)",
+    "enables": "MaxViewports (1640); st_atom_viewport.c:81 extra-viewport path unreached",
+    "gl21_gles2": "yes",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "max_geometry_output_vertices",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c",
+     "mesa/state_tracker/st_pbo.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_geometry_total_output_components",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_texture_gather_components",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_vertex_streams",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "vendor_id",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0xffffffff",
+    "set_by": "u_screen.c:95 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_interop.c",
+     "gallium/frontends/dri/dri_query_renderer.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "device_id",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0xffffffff",
+    "set_by": "u_screen.c:95 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_interop.c",
+     "gallium/frontends/dri/dri_query_renderer.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "video_memory",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "gallium/frontends/dri/dri_query_renderer.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_vertex_attrib_stride",
+   "parameters": {
+    "type": "unsigned",
+    "value": "2048",
+    "set_by": "u_screen.c:100 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_shader_patch_varyings",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "shader_buffer_offset_alignment",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "pci_group",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_interop.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "pci_bus",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_interop.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "pci_device",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_interop.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "pci_function",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_interop.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_window_rectangles",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "enables": "EXT_window_rectangles (1131), MaxWindowRectangles (585)",
+    "gl21_gles2": "no; glWindowRectanglesEXT is installed unchecked: set_window_rectangles NULL-GAP",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "viewport_subpixel_bits",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "rasterizer_subpixel_bits",
+   "parameters": {
+    "type": "unsigned",
+    "value": "4",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:102",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "mixed_color_depth_bits",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "gallium/frontends/dri/dri_screen.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "fbfetch",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c",
+     "gallium/auxiliary/util/u_tests.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "sparse_buffer_page_size",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_combined_shader_output_resources",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "framebuffer_msaa_constraints",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "context_priority_mask",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "constbuf0_flags",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "gallium/auxiliary/util/u_inlines.h"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_conservative_raster_subpixel_precision_bias",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_gs_invocations",
+   "parameters": {
+    "type": "unsigned",
+    "value": "32",
+    "set_by": "u_screen.c:122 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_shader_buffer_size",
+   "parameters": {
+    "type": "unsigned",
+    "value": "1 << 27",
+    "set_by": "u_screen.c:124 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_combined_shader_buffers",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_combined_hw_atomic_counters",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_combined_hw_atomic_counter_buffers",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_texture_upload_memory_budget",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_context.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_vertex_element_src_offset",
+   "parameters": {
+    "type": "unsigned",
+    "value": "2047",
+    "set_by": "u_screen.c:126 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_varyings",
+   "parameters": {
+    "type": "unsigned",
+    "value": "8",
+    "set_by": "u_screen.c:130 (u_init_pipe_screen_caps)",
+    "enables": "MaxVarying (397)",
+    "gl21_gles2": "yes (GL 2.0 / ES2 minimum 8 vec4)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "dmabuf",
+   "parameters": {
+    "type": "unsigned",
+    "value": "DRM_PRIME_CAP_IMPORT | DRM_PRIME_CAP_EXPORT",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:94",
+    "enables": "not st/mesa: DRI image import/export, EGL dma-buf, GBM",
+    "gl21_gles2": "yes for the window-system path (DRI3/GBM/Wayland buffers)",
+    "effective_per_survey": "DRM_PRIME_CAP_IMPORT|EXPORT",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "clip_planes",
+   "parameters": {
+    "type": "unsigned",
+    "value": "1",
+    "set_by": "u_screen.c:153 (u_init_pipe_screen_caps)",
+    "enables": "pipe->set_clip_state from st_update_clip (st_atom_clip.c:65); MaxClipPlanes default (st_extensions.c:1286-1291 only for GLSL>=130)",
+    "gl21_gles2": "yes: GL 2.x user clip planes / gl_ClipVertex go to set_clip_state (driver must honour them or 0 must be advertised)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "max_vertex_buffers",
+   "parameters": {
+    "type": "unsigned",
+    "value": "16",
+    "set_by": "u_screen.c:154 (u_init_pipe_screen_caps)",
+    "enables": "u_vbuf fallback_always if <16 (u_vbuf.c:346)",
+    "gl21_gles2": "yes (GL 2.0 needs 16 attribs)",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "gl_begin_end_buffer_size",
+   "parameters": {
+    "type": "unsigned",
+    "value": "512 * 1024",
+    "set_by": "u_screen.c:160 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "glsl_zero_init",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_texture_mb",
+   "parameters": {
+    "type": "unsigned",
+    "value": "1024",
+    "set_by": "u_screen.c:194 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/main/teximage.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "supported_prim_modes",
+   "parameters": {
+    "type": "unsigned",
+    "value": "BITFIELD_MASK(MESA_PRIM_COUNT)",
+    "set_by": "u_screen.c:51 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_context.c",
+     "gallium/auxiliary/util/u_vbuf.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "supported_prim_modes_with_restart",
+   "parameters": {
+    "type": "unsigned",
+    "value": "BITFIELD_MASK(MESA_PRIM_COUNT)",
+    "set_by": "u_screen.c:51 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "gallium/auxiliary/util/u_vbuf.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_sparse_texture_size",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_sparse_3d_texture_size",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_sparse_array_texture_layers",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_constant_buffer_size",
+   "parameters": {
+    "type": "unsigned",
+    "value": "pscreen->shader_caps[MESA_SHADER_FRAGMENT].max_const_buffer0_size",
+    "set_by": "u_screen.c:166 (u_init_pipe_screen_caps)",
+    "enables": "MaxUniformBlockSize (st_extensions.c:190-195) -> can_ubo false; GL_MAX_UNIFORM_BLOCK_SIZE reads 0",
+    "gl21_gles2": "no (UBOs are GL 3.1); cosmetic ordering quirk in init_caps",
+    "effective_per_survey": "0",
+    "evidence": "survey 2026-11-03 (caps-gates)"
+   }
+  },
+  {
+   "id": "query_timestamp_bits",
+   "parameters": {
+    "type": "unsigned",
+    "value": "64",
+    "set_by": "u_screen.c:180 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/state_tracker/st_context.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "shader_subgroup_size",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c",
+     "mesa/main/glspirv.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "shader_subgroup_supported_stages",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "shader_subgroup_supported_features",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "shader_pixel_local_storage_size",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "shader_pixel_local_storage_fast_size",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "multiview",
+   "parameters": {
+    "type": "unsigned",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_label_length",
+   "parameters": {
+    "type": "unsigned",
+    "value": "256",
+    "set_by": "u_screen.c:192 (u_init_pipe_screen_caps)",
+    "read_by": [
+     "mesa/main/objectlabel.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_timeline_semaphore_difference",
+   "parameters": {
+    "type": "uint64_t",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "min_vma",
+   "parameters": {
+    "type": "uint64_t",
+    "value": "0",
+    "set_by": "u_screen.c:189 (u_init_pipe_screen_caps)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "max_vma",
+   "parameters": {
+    "type": "uint64_t",
+    "value": "0",
+    "set_by": "u_screen.c:189 (u_init_pipe_screen_caps)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "hw_clear_buffer_sizes",
+   "parameters": {
+    "type": "uint16_t",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "pipe_vertex_input_alignment vertex_input_alignment",
+   "parameters": {
+    "type": "enum",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "pipe_endian endianness",
+   "parameters": {
+    "type": "enum",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "pipe_point_size_lower_mode point_size_fixed",
+   "parameters": {
+    "type": "enum",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  },
+  {
+   "id": "min_line_width",
+   "parameters": {
+    "type": "float",
+    "value": "1.0f",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:103",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "min_line_width_aa",
+   "parameters": {
+    "type": "float",
+    "value": "1.0f",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:103",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_line_width",
+   "parameters": {
+    "type": "float",
+    "value": "1.0f",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:103",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_line_width_aa",
+   "parameters": {
+    "type": "float",
+    "value": "1.0f",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:103",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "line_width_granularity",
+   "parameters": {
+    "type": "float",
+    "value": "0.1f",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:105",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "min_point_size",
+   "parameters": {
+    "type": "float",
+    "value": "1.0f",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:104",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "min_point_size_aa",
+   "parameters": {
+    "type": "float",
+    "value": "1.0f",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:104",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_point_size",
+   "parameters": {
+    "type": "float",
+    "value": "1.0f",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:104",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_point_size_aa",
+   "parameters": {
+    "type": "float",
+    "value": "1.0f",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:104",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "point_size_granularity",
+   "parameters": {
+    "type": "float",
+    "value": "0.1f",
+    "set_by": "src/gallium/mesa/poulsback/poulsback_screen.c:105",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_texture_anisotropy",
+   "parameters": {
+    "type": "float",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_texture_lod_bias",
+   "parameters": {
+    "type": "float",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "min_conservative_raster_dilate",
+   "parameters": {
+    "type": "float",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "max_conservative_raster_dilate",
+   "parameters": {
+    "type": "float",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "conservative_raster_dilate_granularity",
+   "parameters": {
+    "type": "float",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "read_by": [
+     "mesa/state_tracker/st_extensions.c"
+    ],
+    "evidence": "missing: st/mesa reads it; record why this value"
+   }
+  },
+  {
+   "id": "pipe_mesh_caps mesh",
+   "parameters": {
+    "type": "struct",
+    "value": "0",
+    "set_by": "zero (the screen is calloc'd)",
+    "evidence": "no GL frontend reads it (state_tracker, main, dri, cso, util)"
+   }
+  }
+ ]
+}

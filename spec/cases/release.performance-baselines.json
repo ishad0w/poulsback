@@ -1,0 +1,661 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "release.performance-baselines",
+ "source": "docs/bench/emgd-reference.md and docs/bench/psb-reference.md (2026-11-01 and 2026-11-02)",
+ "criteria": "Median of three BENCH repeats meets the bound; CPU bounds are whole-system busy share during the run",
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "glxgears-300",
+   "bound": {
+    "min": 316.9,
+    "unit": "FPS"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md",
+    "program": "glxgears 8.5.0 unchanged, 300x300, swap interval 0"
+   }
+  },
+  {
+   "id": "glxgears-300-cpu",
+   "bound": {
+    "max": 33,
+    "unit": "percent"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md",
+    "program": "glxgears-metrics 300x300, whole-system busy share"
+   }
+  },
+  {
+   "id": "glxgears-300-default-swap",
+   "bound": {
+    "min": 316.4,
+    "unit": "FPS"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "glxgears-600",
+   "bound": {
+    "min": 98.0,
+    "unit": "FPS"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "glxgears-640",
+   "bound": {
+    "min": 87.0,
+    "unit": "FPS"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md",
+    "note": "PSB 4.42 reached 162 FPS here (psb-reference.md); M1 bounds 3D by EMGD"
+   }
+  },
+  {
+   "id": "glxgears-640-cpu",
+   "bound": {
+    "max": 12,
+    "unit": "percent"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "glxgears-fullscreen",
+   "bound": {
+    "min": 46.9,
+    "unit": "FPS"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "glxgears-fullscreen-cpu",
+   "bound": {
+    "max": 10,
+    "unit": "percent"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "poulscube-300",
+   "bound": {
+    "min": 528,
+    "unit": "FPS"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md#poulscube (EMGD poulscube at 300x300)"
+   }
+  },
+  {
+   "id": "vertexrate-vbo-drawelements",
+   "bound": {
+    "min": 5.6,
+    "unit": "Mvertices/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "vertexrate-vbo-drawarrays",
+   "bound": {
+    "min": 5.3,
+    "unit": "Mvertices/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "vertexrate-immediate",
+   "bound": {
+    "min": 2.2,
+    "unit": "Mvertices/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "trispd-triangles",
+   "bound": {
+    "min": 1.27,
+    "unit": "Mtriangles/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "trispd-pixels",
+   "bound": {
+    "min": 63,
+    "unit": "Mpixels/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "drawoverhead-draws",
+   "bound": {
+    "min": 182,
+    "unit": "kdraws/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "drawoverhead-noop-state",
+   "bound": {
+    "min": 161,
+    "unit": "kdraws/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "drawoverhead-state-change",
+   "bound": {
+    "min": 113,
+    "unit": "kdraws/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "fill-simple",
+   "bound": {
+    "min": 1.3,
+    "unit": "Gpixels/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "fill-blended",
+   "bound": {
+    "min": 1.3,
+    "unit": "Gpixels/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "fill-textured",
+   "bound": {
+    "min": 1.3,
+    "unit": "Gpixels/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "fill-shader1",
+   "bound": {
+    "min": 1.1,
+    "unit": "Gpixels/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "fill-shader2",
+   "bound": {
+    "min": 305,
+    "unit": "Mpixels/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "teximage-rgba-256",
+   "bound": {
+    "min": 154,
+    "unit": "MB/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "teximage-rgba-1024",
+   "bound": {
+    "min": 155,
+    "unit": "MB/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "teximage-bgra-256",
+   "bound": {
+    "min": 260,
+    "unit": "MB/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "teximage-rgb565",
+   "bound": {
+    "min": 168,
+    "unit": "MB/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "teximage-readback",
+   "bound": {
+    "min": 34,
+    "unit": "MB/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md",
+    "note": "GetTexImage, \"about 34\""
+   }
+  },
+  {
+   "id": "swapbuffers-320x240",
+   "bound": {
+    "min": 3400,
+    "unit": "swaps/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "swapbuffers-640x480",
+   "bound": {
+    "min": 500,
+    "unit": "swaps/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "swapbuffers-1024x768",
+   "bound": {
+    "min": 126,
+    "unit": "swaps/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "swapbuffers-clear",
+   "bound": {
+    "min": 30,
+    "unit": "Mpixels/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md",
+    "note": "\"about 30 M pixels/s\""
+   }
+  },
+  {
+   "id": "fbobind",
+   "bound": {
+    "min": 520,
+    "unit": "binds/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md"
+   }
+  },
+  {
+   "id": "clearspd",
+   "bound": {
+    "min": 2.65,
+    "unit": "Mclears/s"
+   },
+   "parameters": {
+    "source": "docs/bench/emgd-reference.md",
+    "note": "EMGD coalesces redundant clears; not a fill figure"
+   }
+  },
+  {
+   "id": "x11perf-scroll500",
+   "bound": {
+    "min": 143,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "Scroll 500x500 pixels",
+    "option": "-scroll500",
+    "emgd": 143,
+    "psb": 49,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-copywinwin10",
+   "bound": {
+    "min": 20700,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "Copy 10x10 from window to window",
+    "option": "-copywinwin10",
+    "emgd": 15500,
+    "psb": 20700,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-copywinwin500",
+   "bound": {
+    "min": 144,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "Copy 500x500 from window to window",
+    "option": "-copywinwin500",
+    "emgd": 144,
+    "psb": 32.5,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-rect10",
+   "bound": {
+    "min": 241000,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "10x10 rectangle",
+    "option": "-rect10",
+    "emgd": 17400,
+    "psb": 241000,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-rect500",
+   "bound": {
+    "min": 194,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "500x500 rectangle",
+    "option": "-rect500",
+    "emgd": 194,
+    "psb": 186,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-srect500",
+   "bound": {
+    "min": 111,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "500x500 stippled rectangle (8x8 stipple)",
+    "option": "-srect500",
+    "emgd": 87.2,
+    "psb": 111,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-trect500",
+   "bound": {
+    "min": 66,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "500x500 tiled rectangle (4x4 tile)",
+    "option": "-trect500",
+    "emgd": 30,
+    "psb": 66,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-seg500",
+   "bound": {
+    "min": 26500,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "500-pixel line segment",
+    "option": "-seg500",
+    "emgd": 18600,
+    "psb": 26500,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-line500",
+   "bound": {
+    "min": 27000,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "500-pixel line",
+    "option": "-line500",
+    "emgd": 18700,
+    "psb": 27000,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-fcircle500",
+   "bound": {
+    "min": 228,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "500-pixel solid circle",
+    "option": "-fcircle500",
+    "emgd": 36,
+    "psb": 228,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-ftext",
+   "bound": {
+    "min": 861000,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "Char in 80-char line (6x13)",
+    "option": "-ftext",
+    "emgd": 861000,
+    "psb": 719000,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-f8text",
+   "bound": {
+    "min": 821000,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "Char in 70-char line (8x13)",
+    "option": "-f8text",
+    "emgd": 821000,
+    "psb": 629000,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-copypixwin500",
+   "bound": {
+    "min": 176,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "Copy 500x500 from pixmap to window",
+    "option": "-copypixwin500",
+    "emgd": 169,
+    "psb": 176,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-copywinpix500",
+   "bound": {
+    "min": 229,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "Copy 500x500 from window to pixmap",
+    "option": "-copywinpix500",
+    "emgd": 229,
+    "psb": 53.1,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-copypixpix500",
+   "bound": {
+    "min": 414,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "Copy 500x500 from pixmap to pixmap",
+    "option": "-copypixpix500",
+    "emgd": 293,
+    "psb": 414,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-putimage500",
+   "bound": {
+    "min": 211,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "PutImage 500x500 square",
+    "option": "-putimage500",
+    "emgd": 211,
+    "psb": 63.6,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-shmput500",
+   "bound": {
+    "min": 865,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "ShmPutImage 500x500 square",
+    "option": "-shmput500",
+    "emgd": 865,
+    "psb": 175,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-shmget500",
+   "bound": {
+    "min": 93.2,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "ShmGetImage 500x500 square",
+    "option": "-shmget500",
+    "emgd": 93.2,
+    "psb": 34.5,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-getimage500",
+   "bound": {
+    "min": 56,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "GetImage 500x500 square",
+    "option": "-getimage500",
+    "emgd": 56,
+    "psb": 28.9,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-compwinwin500",
+   "bound": {
+    "min": 144,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "Composite 500x500 from window to window",
+    "option": "-compwinwin500",
+    "emgd": 144,
+    "psb": 43,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  },
+  {
+   "id": "x11perf-comppixwin500",
+   "bound": {
+    "min": 175,
+    "unit": "ops/s"
+   },
+   "parameters": {
+    "source": "docs/bench/psb-reference.md",
+    "test": "Composite 500x500 from pixmap to window",
+    "option": "-comppixwin500",
+    "emgd": 170,
+    "psb": 175,
+    "rule": "the better of EMGD and PSB; where unreachable, the X stack ceiling (stock modesetting, same boot) with the reason recorded and a maintainer accepting it as an exclusion"
+   }
+  }
+ ]
+}

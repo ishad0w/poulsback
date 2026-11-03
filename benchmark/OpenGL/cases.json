@@ -1,0 +1,159 @@
+[
+  {
+    "id": "glx-info",
+    "binary": "glxinfo",
+    "args": [
+      "-B"
+    ],
+    "kind": "information",
+    "description": "Actual GLX renderer and API information",
+    "window": "none"
+  },
+  {
+    "id": "gles-info",
+    "binary": "es2_info",
+    "args": [],
+    "kind": "information",
+    "description": "EGL/GLES capabilities",
+    "window": "none"
+  },
+  {
+    "id": "gles-triangle",
+    "binary": "es2tri",
+    "args": [],
+    "kind": "interactive",
+    "description": "EGL/GLES2 triangle",
+    "window": "300x300"
+  },
+  {
+    "id": "gles-gears",
+    "binary": "es2gears_x11",
+    "args": [],
+    "kind": "interactive",
+    "description": "Shader-based EGL/GLES2 gears",
+    "window": "300x300"
+  },
+  {
+    "id": "texture",
+    "binary": "tri-tex",
+    "args": [],
+    "kind": "interactive",
+    "description": "Triangle texture sampling",
+    "window": "250x250"
+  },
+  {
+    "id": "texture-update",
+    "binary": "quad-tex-sub",
+    "args": [],
+    "kind": "interactive",
+    "description": "Texture subimage updates triggered by keyboard input",
+    "window": "250x250"
+  },
+  {
+    "id": "blend",
+    "binary": "tri-blend",
+    "args": [],
+    "kind": "interactive",
+    "description": "Triangle blending",
+    "window": "200x200"
+  },
+  {
+    "id": "mask",
+    "binary": "tri-mask-tri",
+    "args": [],
+    "kind": "interactive",
+    "description": "Color write masks",
+    "window": "250x250"
+  },
+  {
+    "id": "scissor",
+    "binary": "tri-scissor-tri",
+    "args": [],
+    "kind": "interactive",
+    "description": "Scissor state",
+    "window": "300x300"
+  },
+  {
+    "id": "stencil",
+    "binary": "tri-stencil",
+    "args": [],
+    "kind": "interactive",
+    "description": "Stencil state",
+    "window": "300x300"
+  },
+  {
+    "id": "fbo",
+    "binary": "tri-fbo-tex",
+    "args": [],
+    "kind": "interactive",
+    "description": "Render to an FBO and sample its texture",
+    "window": "512x512"
+  },
+  {
+    "id": "fbo-clear",
+    "binary": "clear-fbo-scissor",
+    "args": [],
+    "kind": "interactive",
+    "description": "FBO clear with scissor",
+    "window": "512x512"
+  },
+  {
+    "id": "shared-texture",
+    "binary": "sharedtex",
+    "args": [],
+    "kind": "interactive",
+    "description": "GLX context texture sharing",
+    "window": "300x300"
+  },
+  {
+    "id": "glmark2-build",
+    "binary": "glmark2",
+    "args": [
+      "--size",
+      "{size}",
+      "--benchmark",
+      "build:use-vbo=true:duration=3.0"
+    ],
+    "kind": "throughput",
+    "description": "One desktop GL VBO scene",
+    "window": "{size}"
+  },
+  {
+    "id": "glmark2-texture",
+    "binary": "glmark2",
+    "args": [
+      "--size",
+      "{size}",
+      "--benchmark",
+      "texture:texture-filter=nearest:duration=3.0"
+    ],
+    "kind": "throughput",
+    "description": "One desktop GL texture scene",
+    "window": "{size}"
+  },
+  {
+    "id": "glmark2-gles",
+    "binary": "glmark2-es2",
+    "args": [
+      "--size",
+      "{size}",
+      "--benchmark",
+      "build:use-vbo=true:duration=3.0"
+    ],
+    "kind": "throughput",
+    "description": "One GLES2 VBO scene",
+    "window": "{size}"
+  },
+  {
+    "id": "glmark2-validate",
+    "binary": "glmark2",
+    "args": [
+      "--benchmark",
+      "build:use-vbo=true",
+      "--validate"
+    ],
+    "kind": "correctness",
+    "description": "Upstream validation at its required 800x600 size",
+    "window": "800x600"
+  }
+]

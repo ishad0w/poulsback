@@ -1,0 +1,30 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gles2.alu-vectors",
+ "source": "VK-GL-CTS opengl-es-cts-3.2.14.0 aosp_mustpass/main/gles2-main.txt as the lab lists it (eng/lab/conformance/lists/deqp-gles2-m1.txt), the part selected by its patterns",
+ "criteria": "dEQP reports Pass; NotSupported, QualityWarning, CompatibilityWarning, Fail, Crash and Timeout are not passes (an optional extension test needs an accepted exclusion)",
+ "runner": null,
+ "external": {
+  "source": "eng/lab/conformance/lists/deqp-gles2-m1.txt",
+  "member": null,
+  "select": [
+   "dEQP-GLES2.functional.shaders.operator.*",
+   "dEQP-GLES2.functional.shaders.matrix.*",
+   "dEQP-GLES2.functional.shaders.swizzles.*",
+   "dEQP-GLES2.functional.shaders.conversions.*",
+   "dEQP-GLES2.functional.shaders.constant_expressions.*",
+   "dEQP-GLES2.functional.shaders.random.*",
+   "dEQP-GLES2.functional.shaders.algorithm.*",
+   "dEQP-GLES2.functional.shaders.builtin_variable.*",
+   "dEQP-GLES2.functional.shaders.invariance.*",
+   "dEQP-GLES2.functional.shaders.fragdata.*",
+   "dEQP-GLES2.functional.shaders.misc.*"
+  ],
+  "count": 7290,
+  "sha256": "31569a5a917e4480d542ba094a3a1810ef0d1e3c3fed0183267c5b94d3628609",
+  "source_sha256": "47d14a5e9abe302ae120c6622ee459ba3069cdea9086d74d578575fbe01e163b",
+  "builder": "conformance-harnesses",
+  "note": "Pinned list; partitioned among the gles2 families without overlap"
+ },
+ "cases": []
+}

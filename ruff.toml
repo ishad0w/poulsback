@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: 2026 ishad0w and the poulsback contributors
+# SPDX-License-Identifier: MIT
+
+# Formatting and lint defaults; Ruff is not a driver build dependency.
+required-version = "==0.11.13"
+target-version = "py311"
+line-length = 100
+extend-exclude = ["build"]
+
+[format]
+quote-style = "preserve"
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = false

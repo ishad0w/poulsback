@@ -1,0 +1,17 @@
+/build/
+/out/
+/.local/
+/.ruff_cache/
+**/__pycache__/
+*.pyc
+*.o
+*.a
+*.so
+*.ko
+*.mod.c
+*.cmd
+Module.symvers
+modules.order
+compile_commands.json
+/.env
+/.env.*

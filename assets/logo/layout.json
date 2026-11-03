@@ -1,0 +1,48 @@
+{
+  "schema_version": 2,
+  "release_version": "2.1.0",
+  "name": "poulsback",
+  "tagline": "THE PULSE IS BACK",
+  "cube_cell_px": 3,
+  "wordmark_cell_px": 4,
+  "tagline_cell_px": 2,
+  "tagline_extra_tracking_px": 1,
+  "margin_px": 32,
+  "cube_to_wordmark_px": 28,
+  "wordmark_top_offset_px": 16,
+  "wordmark_to_tagline_px": 0,
+  "bracket_width_px": 21,
+  "bracket_thickness_px": 9,
+  "bracket_to_cube_px": 12,
+  "cursor_gap_px": 12,
+  "cursor_width_px": 24,
+  "keyline_px": 2,
+  "halo_radius_px": 1.6,
+  "icon": {
+    "size_px": 128,
+    "cube_cell_px": 3,
+    "keyline_px": 2,
+    "outlines": {
+      "black": "#000000",
+      "white": "#FFFFFF"
+    }
+  },
+  "themes": {
+    "dark": {
+      "background": "#12151B",
+      "foreground": "#F5F6F7",
+      "tagline": "#969DA8",
+      "cube_keyline": "#000000",
+      "halo": "#000000",
+      "halo_opacity": 0.3
+    },
+    "light": {
+      "background": "#F5F6F8",
+      "foreground": "#000000",
+      "tagline": "#707783",
+      "cube_keyline": "#000000",
+      "halo": "#FFFFFF",
+      "halo_opacity": 0.5
+    }
+  }
+}

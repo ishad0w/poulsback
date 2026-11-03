@@ -1,0 +1,42 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "release.kms-display",
+ "source": "tests/acceptance/release.md#release.kms-display",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "lvds-native-mode",
+   "criteria": "SetCrtc of 1280x800 on LVDS with a SCANOUT BO shows the frame"
+  },
+  {
+   "id": "page-flip-event",
+   "criteria": "Every page flip completes with its event, at most one in flight"
+  },
+  {
+   "id": "vblank-wait",
+   "criteria": "DRM_IOCTL_WAIT_VBLANK steps at 59.9 Hz"
+  },
+  {
+   "id": "scanout-bo-framebuffer",
+   "criteria": "A SCANOUT BO is a KMS framebuffer; AddFB2 of other classes is refused"
+  },
+  {
+   "id": "display-gtt-release",
+   "criteria": "Removing a framebuffer releases its display GTT binding after the last scanout"
+  },
+  {
+   "id": "flip-watch-no-tear",
+   "criteria": "eng/lab/bo/flip-test.c watch: the marker never shows a torn frame"
+  },
+  {
+   "id": "hw-cursor",
+   "criteria": "The DDX cursor moves and changes image without leaving trails"
+  },
+  {
+   "id": "vga-connector",
+   "criteria": "VGA detect, modes and SetCrtc when a monitor is attached"
+  }
+ ]
+}

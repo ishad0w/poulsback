@@ -1,0 +1,24 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-x11.transforms",
+ "source": "rendercheck 1.6, selected in eng/lab/conformance/lists/rendercheck-m1.txt (single tests, and blend, composite and cacomposite per Render op)",
+ "criteria": "rendercheck reports the test or op passed; composite, cacomposite and gradients on ARGB32, XRGB32, A8 and RGB565 (-f a8r8g8b8,x8r8g8b8,a8,r5g6b5, a maintainer decision of 2026-11-03, as in the X server CI), every other test on every format the server offers (rendercheck 1.6 has no per-format list)",
+ "runner": null,
+ "external": {
+  "source": "eng/lab/conformance/lists/rendercheck-m1.txt",
+  "member": null,
+  "select": [
+   "rendercheck@tscoords*",
+   "rendercheck@tmcoords*",
+   "rendercheck@repeat*",
+   "rendercheck@gradients*",
+   "rendercheck@triangles*"
+  ],
+  "count": 5,
+  "sha256": "9a68e078cca46a023bd913cfe2905d371ac4034635fc6822d1985b05ef41c91d",
+  "source_sha256": "e452e3df2c37630fa6808a8f4a0a6641f3d27f28ba8deb59fd86d656e442c2ef",
+  "builder": "conformance-harnesses",
+  "note": "The transformed-coordinate, repeat, gradient and triangle tests"
+ },
+ "cases": []
+}

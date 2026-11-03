@@ -1,0 +1,34 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-x11.exa-operations",
+ "source": "tests/acceptance/2d-x11.md#2d-x11.exa-operations: EXA Solid, Copy, Composite, Upload, Download",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "solid",
+   "criteria": "PrepareSolid/Solid/DoneSolid on the 2D core for every GX alu and planemask the DDX accepts; x2d-fixture fill set exact"
+  },
+  {
+   "id": "copy",
+   "criteria": "PrepareCopy/Copy/DoneCopy on the 2D core, overlap in every direction; x2d-fixture copy set exact"
+  },
+  {
+   "id": "composite",
+   "criteria": "CheckComposite/PrepareComposite/Composite on the route ADR 0003 chooses; rendercheck composite groups 0 fail"
+  },
+  {
+   "id": "upload",
+   "criteria": "UploadToScreen exact for every depth the DDX accepts"
+  },
+  {
+   "id": "download",
+   "criteria": "DownloadFromScreen exact for every depth the DDX accepts"
+  },
+  {
+   "id": "prepare-access",
+   "criteria": "PrepareAccess/FinishAccess wait for the BO fence and leave no CPU write unflushed (x2d-fixture pixmap set)"
+  }
+ ]
+}

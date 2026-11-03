@@ -1,0 +1,330 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gl21.fixed-function",
+ "source": "The GL 1.0 to 1.5 core features, one case per feature, plus Mesa core's software paths; piglit patterns in derive",
+ "criteria": "Derived from gl21.external-conformance: every piglit test matching the case's patterns passes, and at least one matches; no matching test is a failure (no evidence)",
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "fixed-function-tnl",
+   "parameters": {
+    "version": "1.0-1.4",
+    "step": "GPU vertex path, fragment backend"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@!opengl 1.0@*",
+     "piglit@spec@!opengl 1.1@*",
+     "piglit@spec@!opengl 1.2@*",
+     "piglit@spec@!opengl 1.3@*",
+     "piglit@spec@!opengl 1.4@*",
+     "*fogcoord*",
+     "*texgen*",
+     "piglit@spec@ext_fog_coord@*",
+     "piglit@spec@ext_secondary_color@*",
+     "piglit@spec@ext_rescale_normal@*",
+     "piglit@spec@ext_separate_specular_color@*"
+    ]
+   }
+  },
+  {
+   "id": "vertex-arrays-vbo",
+   "parameters": {
+    "version": "1.1-1.5",
+    "step": "GPU vertex path"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_vertex_buffer_object@*",
+     "*draw-elements*",
+     "*draw-arrays*",
+     "piglit@spec@ext_draw_range_elements@*",
+     "piglit@spec@ext_multi_draw_arrays@*",
+     "piglit@spec@ext_compiled_vertex_array@*",
+     "piglit@spec@ext_vertex_array@*"
+    ]
+   }
+  },
+  {
+   "id": "texture-3d",
+   "parameters": {
+    "version": "1.2",
+    "step": "fragment backend: 3D textures"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*tex3d*",
+     "*texwrap 3D*",
+     "piglit@spec@ext_texture3d@*"
+    ]
+   }
+  },
+  {
+   "id": "bgra-packed-edge-lod",
+   "parameters": {
+    "version": "1.2",
+    "step": "fragment backend: formats"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*texwrap*",
+     "*levelclamp*",
+     "*getteximage-formats*",
+     "piglit@spec@ext_bgra@*",
+     "piglit@spec@ext_packed_pixels@*",
+     "piglit@spec@sgis_texture_edge_clamp@*",
+     "piglit@spec@sgis_texture_lod@*"
+    ]
+   }
+  },
+  {
+   "id": "multitexture",
+   "parameters": {
+    "version": "1.3",
+    "step": "fragment backend: samplers"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_multitexture@*",
+     "*texunits*"
+    ]
+   }
+  },
+  {
+   "id": "cube-maps",
+   "parameters": {
+    "version": "1.3",
+    "step": "fragment backend"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*cubemap*",
+     "*texwrap cube*",
+     "piglit@spec@arb_texture_cube_map@*"
+    ]
+   }
+  },
+  {
+   "id": "compressed-textures",
+   "parameters": {
+    "version": "1.3",
+    "step": "fragment backend: formats"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_texture_compression@*",
+     "piglit@spec@ext_texture_compression_s3tc@*"
+    ]
+   }
+  },
+  {
+   "id": "texture-env-border",
+   "parameters": {
+    "version": "1.3",
+    "step": "Mesa fixed function; fragment backend: sampler"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*texenv*",
+     "*texwrap GL_CLAMP_TO_BORDER*",
+     "piglit@spec@arb_texture_env_*",
+     "piglit@spec@ext_texture_env_*",
+     "piglit@spec@arb_texture_border_clamp@*"
+    ]
+   }
+  },
+  {
+   "id": "multisample-api",
+   "parameters": {
+    "version": "1.3",
+    "step": "fragment backend: MSAA 4x",
+    "note": "MSAA 4x window visuals are in M1 (maintainer decision, 2026-11-02)"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_multisample@*"
+    ]
+   }
+  },
+  {
+   "id": "transpose-windowpos",
+   "parameters": {
+    "version": "1.3-1.4",
+    "step": "Mesa"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*windowpos*",
+     "piglit@spec@arb_transpose_matrix@*",
+     "piglit@spec@arb_window_pos@*"
+    ]
+   }
+  },
+  {
+   "id": "depth-textures-shadow",
+   "parameters": {
+    "version": "1.4",
+    "step": "fragment backend: depth textures"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_depth_texture@*",
+     "piglit@spec@arb_shadow@*",
+     "*depth-tex-compare*",
+     "piglit@spec@ext_shadow_funcs@*"
+    ]
+   }
+  },
+  {
+   "id": "point-parameters",
+   "parameters": {
+    "version": "1.4",
+    "step": "vertex path: points"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*point-*",
+     "piglit@spec@arb_point_parameters@*"
+    ]
+   }
+  },
+  {
+   "id": "blending",
+   "parameters": {
+    "version": "1.4",
+    "step": "fragment backend: blending"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*blendminmax*",
+     "*blendsquare*",
+     "*fbo-blending-*",
+     "piglit@spec@ext_blend_*",
+     "piglit@spec@nv_blend_square@*"
+    ]
+   }
+  },
+  {
+   "id": "stencil-lod-mirror-mipmap",
+   "parameters": {
+    "version": "1.4",
+    "step": "fragment backend: stencil, sampler"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*stencil-wrap*",
+     "*lodbias*",
+     "*gen-*mipmap*",
+     "piglit@spec@ext_stencil_wrap@*",
+     "piglit@spec@ext_texture_lod_bias@*",
+     "piglit@spec@arb_texture_mirrored_repeat@*",
+     "piglit@spec@sgis_generate_mipmap@*"
+    ]
+   }
+  },
+  {
+   "id": "occlusion-queries",
+   "parameters": {
+    "version": "1.5",
+    "step": "fragment backend: occlusion queries"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_occlusion_query@*",
+     "*occlusion_query*"
+    ]
+   }
+  },
+  {
+   "id": "buffer-objects",
+   "parameters": {
+    "version": "1.5",
+    "step": "GPU vertex path, kernel BOs"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_vertex_buffer_object@*",
+     "*bufferobj*"
+    ]
+   }
+  },
+  {
+   "id": "polygon-offset-depth-scissor-masks",
+   "parameters": {
+    "version": "1.0-1.1",
+    "step": "fragment backend"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*polygon-offset*",
+     "*depthfunc*",
+     "*scissor-*",
+     "*colormask*"
+    ]
+   }
+  },
+  {
+   "id": "mesa-core-selection",
+   "parameters": {
+    "version": "1.0",
+    "step": "Mesa core",
+    "path": "Mesa core software path shared by every Gallium driver: not a driver fallback",
+    "note": "GL_SELECT"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@!opengl 1.1@gl_select*"
+    ]
+   }
+  },
+  {
+   "id": "mesa-core-feedback",
+   "parameters": {
+    "version": "1.0",
+    "step": "Mesa core",
+    "path": "Mesa core software path shared by every Gallium driver: not a driver fallback",
+    "note": "GL_FEEDBACK"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*rendermode-feedback*"
+    ]
+   }
+  },
+  {
+   "id": "mesa-core-accumulation",
+   "parameters": {
+    "version": "1.0",
+    "step": "Mesa core",
+    "path": "Mesa core software path shared by every Gallium driver: not a driver fallback",
+    "note": "glAccum and the accumulation buffer"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*clear-accum*"
+    ]
+   }
+  }
+ ]
+}

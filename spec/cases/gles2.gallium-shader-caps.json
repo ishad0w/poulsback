@@ -1,0 +1,458 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gles2.gallium-shader-caps",
+ "source": "Mesa 26.2.4 headers (the prepared root's Mesa SDK) and the driver at HEAD, survey 2026-11-03: every pipe_shader_caps field for the two stages GL 2.1 and GLES 2.0 use",
+ "criteria": "The dump equals the recorded value and meets the GL 2.1 and GLES 2.0 minimums",
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "vertex/max_instructions",
+   "parameters": {
+    "value": "INT_MAX",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_alu_instructions",
+   "parameters": {
+    "value": "INT_MAX",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_tex_instructions",
+   "parameters": {
+    "value": "INT_MAX",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_tex_indirections",
+   "parameters": {
+    "value": "INT_MAX",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_control_flow_depth",
+   "parameters": {
+    "value": "TGSI_EXEC_MAX_NESTING",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_inputs",
+   "parameters": {
+    "value": "TGSI_EXEC_MAX_INPUT_ATTRIBS",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_outputs",
+   "parameters": {
+    "value": "32",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_const_buffer0_size",
+   "parameters": {
+    "value": "TGSI_EXEC_MAX_CONST_BUFFER_SIZE",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_const_buffers",
+   "parameters": {
+    "value": "1",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_temps",
+   "parameters": {
+    "value": "TGSI_EXEC_NUM_TEMPS",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_texture_samplers",
+   "parameters": {
+    "value": "0",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_sampler_views",
+   "parameters": {
+    "value": "0",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_shader_buffers",
+   "parameters": {
+    "value": "0",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_shader_images",
+   "parameters": {
+    "value": "0",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_hw_atomic_counters",
+   "parameters": {
+    "value": "0",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/max_hw_atomic_counter_buffers",
+   "parameters": {
+    "value": "0",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/supported_irs",
+   "parameters": {
+    "value": "1 << PIPE_SHADER_IR_TGSI",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/cont_supported",
+   "parameters": {
+    "value": "true",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/indirect_temp_addr",
+   "parameters": {
+    "value": "true",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/indirect_const_addr",
+   "parameters": {
+    "value": "true",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/subroutines",
+   "parameters": {
+    "value": "true",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/integers",
+   "parameters": {
+    "value": "true",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/int64_atomics",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "vertex/fp16",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "vertex/fp16_derivatives",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "vertex/fp16_const_buffers",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "vertex/fp16_no_denorms",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "vertex/int16",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "vertex/glsl_16bit_consts",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "vertex/glsl_16bit_load_dst",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "vertex/tgsi_sqrt_supported",
+   "parameters": {
+    "value": "true",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "vertex/tgsi_any_inout_decl_range",
+   "parameters": {
+    "value": "true",
+    "set_by": "tgsi_exec_init_shader_caps (draw, no LLVM) + init_caps"
+   }
+  },
+  {
+   "id": "fragment/max_instructions",
+   "parameters": {
+    "value": "SGX535_NIR_MAX_INSTRUCTIONS",
+    "set_by": "init_caps struct literal"
+   }
+  },
+  {
+   "id": "fragment/max_alu_instructions",
+   "parameters": {
+    "value": "SGX535_NIR_MAX_INSTRUCTIONS",
+    "set_by": "init_caps struct literal"
+   }
+  },
+  {
+   "id": "fragment/max_tex_instructions",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/max_tex_indirections",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/max_control_flow_depth",
+   "parameters": {
+    "value": "0",
+    "set_by": "init_caps struct literal"
+   }
+  },
+  {
+   "id": "fragment/max_inputs",
+   "parameters": {
+    "value": "8",
+    "set_by": "init_caps struct literal"
+   }
+  },
+  {
+   "id": "fragment/max_outputs",
+   "parameters": {
+    "value": "1",
+    "set_by": "init_caps struct literal"
+   }
+  },
+  {
+   "id": "fragment/max_const_buffer0_size",
+   "parameters": {
+    "value": "POULSBACK_RENDER_UNIFORM_WORDS * 4",
+    "set_by": "init_caps struct literal"
+   }
+  },
+  {
+   "id": "fragment/max_const_buffers",
+   "parameters": {
+    "value": "1",
+    "set_by": "init_caps struct literal"
+   }
+  },
+  {
+   "id": "fragment/max_temps",
+   "parameters": {
+    "value": "64",
+    "set_by": "init_caps struct literal"
+   }
+  },
+  {
+   "id": "fragment/max_texture_samplers",
+   "parameters": {
+    "value": "1",
+    "set_by": "init_caps struct literal"
+   }
+  },
+  {
+   "id": "fragment/max_sampler_views",
+   "parameters": {
+    "value": "1",
+    "set_by": "init_caps struct literal"
+   }
+  },
+  {
+   "id": "fragment/max_shader_buffers",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/max_shader_images",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/max_hw_atomic_counters",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/max_hw_atomic_counter_buffers",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/supported_irs",
+   "parameters": {
+    "value": "1 << PIPE_SHADER_IR_NIR",
+    "set_by": "init_caps struct literal"
+   }
+  },
+  {
+   "id": "fragment/cont_supported",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/indirect_temp_addr",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/indirect_const_addr",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/subroutines",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/integers",
+   "parameters": {
+    "value": "true",
+    "set_by": "init_caps struct literal"
+   }
+  },
+  {
+   "id": "fragment/int64_atomics",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/fp16",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/fp16_derivatives",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/fp16_const_buffers",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/fp16_no_denorms",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/int16",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/glsl_16bit_consts",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/glsl_16bit_load_dst",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/tgsi_sqrt_supported",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  },
+  {
+   "id": "fragment/tgsi_any_inout_decl_range",
+   "parameters": {
+    "value": "0",
+    "set_by": "zero"
+   }
+  }
+ ]
+}

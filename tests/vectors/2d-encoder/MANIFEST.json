@@ -1,0 +1,12 @@
+{
+  "generator": "functional outputs of the project's earlier encoder; generator not distributed",
+  "files": {
+    "raster-fill.jsonl": {"vectors": 460, "sha256": "add112df6493ede436f790ed0d0c7894395b40935e6b3d8a579cab9e628e6d0e"},
+    "raster-copy.jsonl": {"vectors": 1013, "sha256": "617c1510aeaa5d57853a4606b00d81eed54b54e70770e3fba01e35ba10f1f331"},
+    "raster-precedence.jsonl": {"vectors": 569, "sha256": "098302039123905dd93d22640f8c82731a59881e4ab8f24bc3b316ed433ba572"},
+    "raster-random.jsonl": {"vectors": 2000, "sha256": "62f0036730eabe32ae83043a870240a5e1adf0f6d35e47ead1892ad32eff5e93"},
+    "v1.jsonl": {"vectors": 173, "sha256": "9ccdd5921863037d665f91b0c01e4457c87dce380c2e16551c3807b81bedc807"},
+    "rgb565-fill-colour.bin": {"vectors": 65536, "sha256": "c65cf7eb7f045769f9a434b9e3b5139194b2bf613fe65b75ce6c2526ccdbff13"}
+  },
+  "total_jsonl_vectors": 4215
+}

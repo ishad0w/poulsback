@@ -1,0 +1,766 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-x11.x2d-fixture",
+ "source": "eng/lab/x11/x2d-fixture.c at workspace HEAD, run under Xvfb on the host (252 case lines)",
+ "criteria": "The case prints bad 0 (or its line CRC equals eng/lab/x11/x2d-lines-xvfb.txt)",
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "copy-win-clear-+7+5"
+  },
+  {
+   "id": "copy-win-clear--7+5"
+  },
+  {
+   "id": "copy-win-clear-+7-5"
+  },
+  {
+   "id": "copy-win-clear--7-5"
+  },
+  {
+   "id": "copy-win-clear-+0+1"
+  },
+  {
+   "id": "copy-win-clear-+0-1"
+  },
+  {
+   "id": "copy-win-clear-+1+0"
+  },
+  {
+   "id": "copy-win-clear--1+0"
+  },
+  {
+   "id": "copy-win-clear-+230+0"
+  },
+  {
+   "id": "copy-win-and-+7+5"
+  },
+  {
+   "id": "copy-win-and--7+5"
+  },
+  {
+   "id": "copy-win-and-+7-5"
+  },
+  {
+   "id": "copy-win-and--7-5"
+  },
+  {
+   "id": "copy-win-and-+0+1"
+  },
+  {
+   "id": "copy-win-and-+0-1"
+  },
+  {
+   "id": "copy-win-and-+1+0"
+  },
+  {
+   "id": "copy-win-and--1+0"
+  },
+  {
+   "id": "copy-win-and-+230+0"
+  },
+  {
+   "id": "copy-win-andReverse-+7+5"
+  },
+  {
+   "id": "copy-win-andReverse--7+5"
+  },
+  {
+   "id": "copy-win-andReverse-+7-5"
+  },
+  {
+   "id": "copy-win-andReverse--7-5"
+  },
+  {
+   "id": "copy-win-andReverse-+0+1"
+  },
+  {
+   "id": "copy-win-andReverse-+0-1"
+  },
+  {
+   "id": "copy-win-andReverse-+1+0"
+  },
+  {
+   "id": "copy-win-andReverse--1+0"
+  },
+  {
+   "id": "copy-win-andReverse-+230+0"
+  },
+  {
+   "id": "copy-win-copy-+7+5"
+  },
+  {
+   "id": "copy-win-copy--7+5"
+  },
+  {
+   "id": "copy-win-copy-+7-5"
+  },
+  {
+   "id": "copy-win-copy--7-5"
+  },
+  {
+   "id": "copy-win-copy-+0+1"
+  },
+  {
+   "id": "copy-win-copy-+0-1"
+  },
+  {
+   "id": "copy-win-copy-+1+0"
+  },
+  {
+   "id": "copy-win-copy--1+0"
+  },
+  {
+   "id": "copy-win-copy-+230+0"
+  },
+  {
+   "id": "copy-win-andInverted-+7+5"
+  },
+  {
+   "id": "copy-win-andInverted--7+5"
+  },
+  {
+   "id": "copy-win-andInverted-+7-5"
+  },
+  {
+   "id": "copy-win-andInverted--7-5"
+  },
+  {
+   "id": "copy-win-andInverted-+0+1"
+  },
+  {
+   "id": "copy-win-andInverted-+0-1"
+  },
+  {
+   "id": "copy-win-andInverted-+1+0"
+  },
+  {
+   "id": "copy-win-andInverted--1+0"
+  },
+  {
+   "id": "copy-win-andInverted-+230+0"
+  },
+  {
+   "id": "copy-win-noop-+7+5"
+  },
+  {
+   "id": "copy-win-noop--7+5"
+  },
+  {
+   "id": "copy-win-noop-+7-5"
+  },
+  {
+   "id": "copy-win-noop--7-5"
+  },
+  {
+   "id": "copy-win-noop-+0+1"
+  },
+  {
+   "id": "copy-win-noop-+0-1"
+  },
+  {
+   "id": "copy-win-noop-+1+0"
+  },
+  {
+   "id": "copy-win-noop--1+0"
+  },
+  {
+   "id": "copy-win-noop-+230+0"
+  },
+  {
+   "id": "copy-win-xor-+7+5"
+  },
+  {
+   "id": "copy-win-xor--7+5"
+  },
+  {
+   "id": "copy-win-xor-+7-5"
+  },
+  {
+   "id": "copy-win-xor--7-5"
+  },
+  {
+   "id": "copy-win-xor-+0+1"
+  },
+  {
+   "id": "copy-win-xor-+0-1"
+  },
+  {
+   "id": "copy-win-xor-+1+0"
+  },
+  {
+   "id": "copy-win-xor--1+0"
+  },
+  {
+   "id": "copy-win-xor-+230+0"
+  },
+  {
+   "id": "copy-win-or-+7+5"
+  },
+  {
+   "id": "copy-win-or--7+5"
+  },
+  {
+   "id": "copy-win-or-+7-5"
+  },
+  {
+   "id": "copy-win-or--7-5"
+  },
+  {
+   "id": "copy-win-or-+0+1"
+  },
+  {
+   "id": "copy-win-or-+0-1"
+  },
+  {
+   "id": "copy-win-or-+1+0"
+  },
+  {
+   "id": "copy-win-or--1+0"
+  },
+  {
+   "id": "copy-win-or-+230+0"
+  },
+  {
+   "id": "copy-win-nor-+7+5"
+  },
+  {
+   "id": "copy-win-nor--7+5"
+  },
+  {
+   "id": "copy-win-nor-+7-5"
+  },
+  {
+   "id": "copy-win-nor--7-5"
+  },
+  {
+   "id": "copy-win-nor-+0+1"
+  },
+  {
+   "id": "copy-win-nor-+0-1"
+  },
+  {
+   "id": "copy-win-nor-+1+0"
+  },
+  {
+   "id": "copy-win-nor--1+0"
+  },
+  {
+   "id": "copy-win-nor-+230+0"
+  },
+  {
+   "id": "copy-win-equiv-+7+5"
+  },
+  {
+   "id": "copy-win-equiv--7+5"
+  },
+  {
+   "id": "copy-win-equiv-+7-5"
+  },
+  {
+   "id": "copy-win-equiv--7-5"
+  },
+  {
+   "id": "copy-win-equiv-+0+1"
+  },
+  {
+   "id": "copy-win-equiv-+0-1"
+  },
+  {
+   "id": "copy-win-equiv-+1+0"
+  },
+  {
+   "id": "copy-win-equiv--1+0"
+  },
+  {
+   "id": "copy-win-equiv-+230+0"
+  },
+  {
+   "id": "copy-win-invert-+7+5"
+  },
+  {
+   "id": "copy-win-invert--7+5"
+  },
+  {
+   "id": "copy-win-invert-+7-5"
+  },
+  {
+   "id": "copy-win-invert--7-5"
+  },
+  {
+   "id": "copy-win-invert-+0+1"
+  },
+  {
+   "id": "copy-win-invert-+0-1"
+  },
+  {
+   "id": "copy-win-invert-+1+0"
+  },
+  {
+   "id": "copy-win-invert--1+0"
+  },
+  {
+   "id": "copy-win-invert-+230+0"
+  },
+  {
+   "id": "copy-win-orReverse-+7+5"
+  },
+  {
+   "id": "copy-win-orReverse--7+5"
+  },
+  {
+   "id": "copy-win-orReverse-+7-5"
+  },
+  {
+   "id": "copy-win-orReverse--7-5"
+  },
+  {
+   "id": "copy-win-orReverse-+0+1"
+  },
+  {
+   "id": "copy-win-orReverse-+0-1"
+  },
+  {
+   "id": "copy-win-orReverse-+1+0"
+  },
+  {
+   "id": "copy-win-orReverse--1+0"
+  },
+  {
+   "id": "copy-win-orReverse-+230+0"
+  },
+  {
+   "id": "copy-win-copyInverted-+7+5"
+  },
+  {
+   "id": "copy-win-copyInverted--7+5"
+  },
+  {
+   "id": "copy-win-copyInverted-+7-5"
+  },
+  {
+   "id": "copy-win-copyInverted--7-5"
+  },
+  {
+   "id": "copy-win-copyInverted-+0+1"
+  },
+  {
+   "id": "copy-win-copyInverted-+0-1"
+  },
+  {
+   "id": "copy-win-copyInverted-+1+0"
+  },
+  {
+   "id": "copy-win-copyInverted--1+0"
+  },
+  {
+   "id": "copy-win-copyInverted-+230+0"
+  },
+  {
+   "id": "copy-win-orInverted-+7+5"
+  },
+  {
+   "id": "copy-win-orInverted--7+5"
+  },
+  {
+   "id": "copy-win-orInverted-+7-5"
+  },
+  {
+   "id": "copy-win-orInverted--7-5"
+  },
+  {
+   "id": "copy-win-orInverted-+0+1"
+  },
+  {
+   "id": "copy-win-orInverted-+0-1"
+  },
+  {
+   "id": "copy-win-orInverted-+1+0"
+  },
+  {
+   "id": "copy-win-orInverted--1+0"
+  },
+  {
+   "id": "copy-win-orInverted-+230+0"
+  },
+  {
+   "id": "copy-win-nand-+7+5"
+  },
+  {
+   "id": "copy-win-nand--7+5"
+  },
+  {
+   "id": "copy-win-nand-+7-5"
+  },
+  {
+   "id": "copy-win-nand--7-5"
+  },
+  {
+   "id": "copy-win-nand-+0+1"
+  },
+  {
+   "id": "copy-win-nand-+0-1"
+  },
+  {
+   "id": "copy-win-nand-+1+0"
+  },
+  {
+   "id": "copy-win-nand--1+0"
+  },
+  {
+   "id": "copy-win-nand-+230+0"
+  },
+  {
+   "id": "copy-win-set-+7+5"
+  },
+  {
+   "id": "copy-win-set--7+5"
+  },
+  {
+   "id": "copy-win-set-+7-5"
+  },
+  {
+   "id": "copy-win-set--7-5"
+  },
+  {
+   "id": "copy-win-set-+0+1"
+  },
+  {
+   "id": "copy-win-set-+0-1"
+  },
+  {
+   "id": "copy-win-set-+1+0"
+  },
+  {
+   "id": "copy-win-set--1+0"
+  },
+  {
+   "id": "copy-win-set-+230+0"
+  },
+  {
+   "id": "copy-win-scroll-500x300"
+  },
+  {
+   "id": "copy-win-edges"
+  },
+  {
+   "id": "copy-win-clip"
+  },
+  {
+   "id": "copy-win-planemask"
+  },
+  {
+   "id": "copy-win-1x1"
+  },
+  {
+   "id": "fill-win-clear-pmffffff"
+  },
+  {
+   "id": "fill-win-clear-pm00ff00"
+  },
+  {
+   "id": "fill-win-clear-pma5a5a5"
+  },
+  {
+   "id": "fill-win-and-pmffffff"
+  },
+  {
+   "id": "fill-win-and-pm00ff00"
+  },
+  {
+   "id": "fill-win-and-pma5a5a5"
+  },
+  {
+   "id": "fill-win-andReverse-pmffffff"
+  },
+  {
+   "id": "fill-win-andReverse-pm00ff00"
+  },
+  {
+   "id": "fill-win-andReverse-pma5a5a5"
+  },
+  {
+   "id": "fill-win-copy-pmffffff"
+  },
+  {
+   "id": "fill-win-copy-pm00ff00"
+  },
+  {
+   "id": "fill-win-copy-pma5a5a5"
+  },
+  {
+   "id": "fill-win-andInverted-pmffffff"
+  },
+  {
+   "id": "fill-win-andInverted-pm00ff00"
+  },
+  {
+   "id": "fill-win-andInverted-pma5a5a5"
+  },
+  {
+   "id": "fill-win-noop-pmffffff"
+  },
+  {
+   "id": "fill-win-noop-pm00ff00"
+  },
+  {
+   "id": "fill-win-noop-pma5a5a5"
+  },
+  {
+   "id": "fill-win-xor-pmffffff"
+  },
+  {
+   "id": "fill-win-xor-pm00ff00"
+  },
+  {
+   "id": "fill-win-xor-pma5a5a5"
+  },
+  {
+   "id": "fill-win-or-pmffffff"
+  },
+  {
+   "id": "fill-win-or-pm00ff00"
+  },
+  {
+   "id": "fill-win-or-pma5a5a5"
+  },
+  {
+   "id": "fill-win-nor-pmffffff"
+  },
+  {
+   "id": "fill-win-nor-pm00ff00"
+  },
+  {
+   "id": "fill-win-nor-pma5a5a5"
+  },
+  {
+   "id": "fill-win-equiv-pmffffff"
+  },
+  {
+   "id": "fill-win-equiv-pm00ff00"
+  },
+  {
+   "id": "fill-win-equiv-pma5a5a5"
+  },
+  {
+   "id": "fill-win-invert-pmffffff"
+  },
+  {
+   "id": "fill-win-invert-pm00ff00"
+  },
+  {
+   "id": "fill-win-invert-pma5a5a5"
+  },
+  {
+   "id": "fill-win-orReverse-pmffffff"
+  },
+  {
+   "id": "fill-win-orReverse-pm00ff00"
+  },
+  {
+   "id": "fill-win-orReverse-pma5a5a5"
+  },
+  {
+   "id": "fill-win-copyInverted-pmffffff"
+  },
+  {
+   "id": "fill-win-copyInverted-pm00ff00"
+  },
+  {
+   "id": "fill-win-copyInverted-pma5a5a5"
+  },
+  {
+   "id": "fill-win-orInverted-pmffffff"
+  },
+  {
+   "id": "fill-win-orInverted-pm00ff00"
+  },
+  {
+   "id": "fill-win-orInverted-pma5a5a5"
+  },
+  {
+   "id": "fill-win-nand-pmffffff"
+  },
+  {
+   "id": "fill-win-nand-pm00ff00"
+  },
+  {
+   "id": "fill-win-nand-pma5a5a5"
+  },
+  {
+   "id": "fill-win-set-pmffffff"
+  },
+  {
+   "id": "fill-win-set-pm00ff00"
+  },
+  {
+   "id": "fill-win-set-pma5a5a5"
+  },
+  {
+   "id": "fill-win-clip-xor"
+  },
+  {
+   "id": "fill-win-500x300-copy"
+  },
+  {
+   "id": "stipple-8x8"
+  },
+  {
+   "id": "stipple-opaque-8x8"
+  },
+  {
+   "id": "stipple-5x3"
+  },
+  {
+   "id": "stipple-opaque-5x3"
+  },
+  {
+   "id": "stipple-32x2"
+  },
+  {
+   "id": "stipple-opaque-32x2"
+  },
+  {
+   "id": "stipple-clip"
+  },
+  {
+   "id": "stipple-xor"
+  },
+  {
+   "id": "copy-big-to-win-copy"
+  },
+  {
+   "id": "copy-win-to-big-copy"
+  },
+  {
+   "id": "copy-big-to-big-copy"
+  },
+  {
+   "id": "copy-small-to-win-copy"
+  },
+  {
+   "id": "copy-win-to-small-copy"
+  },
+  {
+   "id": "fill-big-copy"
+  },
+  {
+   "id": "copy-big-to-win-xor"
+  },
+  {
+   "id": "copy-win-to-big-xor"
+  },
+  {
+   "id": "copy-big-to-big-xor"
+  },
+  {
+   "id": "copy-small-to-win-xor"
+  },
+  {
+   "id": "copy-win-to-small-xor"
+  },
+  {
+   "id": "fill-big-xor"
+  },
+  {
+   "id": "copy-big-to-win-copyInverted"
+  },
+  {
+   "id": "copy-win-to-big-copyInverted"
+  },
+  {
+   "id": "copy-big-to-big-copyInverted"
+  },
+  {
+   "id": "copy-small-to-win-copyInverted"
+  },
+  {
+   "id": "copy-win-to-small-copyInverted"
+  },
+  {
+   "id": "fill-big-copyInverted"
+  },
+  {
+   "id": "copy-big-to-win-planemask"
+  },
+  {
+   "id": "fill-big-planemask-xor"
+  },
+  {
+   "id": "render-over-win-win"
+  },
+  {
+   "id": "render-over-big-win"
+  },
+  {
+   "id": "render-src-win-win"
+  },
+  {
+   "id": "render-src-big-win"
+  },
+  {
+   "id": "render-fill-src-win"
+  },
+  {
+   "id": "lines-win-copy"
+  },
+  {
+   "id": "lines-win-copy-clip"
+  },
+  {
+   "id": "lines-win-xor"
+  },
+  {
+   "id": "lines-win-xor-clip"
+  },
+  {
+   "id": "lines-win-pm"
+  },
+  {
+   "id": "lines-win-pm-clip"
+  },
+  {
+   "id": "lines-win-dash"
+  },
+  {
+   "id": "lines-win-dash-clip"
+  },
+  {
+   "id": "lines-win-wide"
+  },
+  {
+   "id": "lines-win-wide-clip"
+  },
+  {
+   "id": "lines-big-copy"
+  },
+  {
+   "id": "lines-big-copy-clip"
+  },
+  {
+   "id": "lines-big-xor"
+  },
+  {
+   "id": "lines-big-xor-clip"
+  },
+  {
+   "id": "lines-big-pm"
+  },
+  {
+   "id": "lines-big-pm-clip"
+  },
+  {
+   "id": "lines-big-dash"
+  },
+  {
+   "id": "lines-big-dash-clip"
+  },
+  {
+   "id": "lines-big-wide"
+  },
+  {
+   "id": "lines-big-wide-clip"
+  }
+ ]
+}

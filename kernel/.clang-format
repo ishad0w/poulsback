@@ -1,0 +1,5 @@
+BasedOnStyle: InheritParentConfig
+IndentWidth: 8
+TabWidth: 8
+UseTab: Always
+ContinuationIndentWidth: 8

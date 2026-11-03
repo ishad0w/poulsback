@@ -1,0 +1,30 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-x11.glyph-images",
+ "source": "tests/acceptance/2d-x11.md#2d-x11.glyph-images",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "render-glyphs-a8",
+   "criteria": "Render AddGlyphs/CompositeGlyphs with A8 glyphs exact against the premultiplied reference"
+  },
+  {
+   "id": "render-glyphs-argb-ca",
+   "criteria": "Component-alpha ARGB glyphs exact"
+  },
+  {
+   "id": "glyph-cache-reuse",
+   "criteria": "A glyph set reused after its glyphs change never shows an older glyph"
+  },
+  {
+   "id": "core-text",
+   "criteria": "Core text (XDrawString/ImageString, 8 and 16 bit) exact; covered beside it by xts5 Xlib9 text tests"
+  },
+  {
+   "id": "putimage-alpha",
+   "criteria": "ARGB32 PutImage then Composite Over exact"
+  }
+ ]
+}

@@ -1,0 +1,37 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-x11.desktop-damage",
+ "source": "tests/acceptance/2d-x11.md#2d-x11.desktop-damage: resize, expose and close",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "move-overlap"
+  },
+  {
+   "id": "resize"
+  },
+  {
+   "id": "expose"
+  },
+  {
+   "id": "close"
+  },
+  {
+   "id": "scroll"
+  },
+  {
+   "id": "focus-repaint"
+  },
+  {
+   "id": "gl-window-resize"
+  },
+  {
+   "id": "gl-window-expose"
+  },
+  {
+   "id": "gl-window-close"
+  }
+ ]
+}

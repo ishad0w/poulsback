@@ -1,0 +1,56 @@
+# SPDX-FileCopyrightText: 2026 ishad0w and the poulsback contributors
+# SPDX-License-Identifier: MIT
+
+name: Bug report
+description: Report a build failure, crash, rendering or performance problem, or documentation issue.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Poulsback. Share what you know; incomplete reports are welcome, and we can work out missing details together.
+
+        Use "unknown" or "not applicable" where helpful. Build and documentation reports do not need GPU details.
+
+        The [reporting guide](https://github.com/ishad0w/poulsback/blob/HEAD/SUPPORT.md#useful-reporting-details) suggests useful details for each kind of problem.
+
+        For a suspected vulnerability, please email [Alex](mailto:alex@kmn.io) privately so we can discuss the details there.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and observed behavior
+      description: What were you trying to do, and what happened? Include what you expected and the application or build target, if known.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Poulsback version
+      description: If known, include the release/tag or commit, where you obtained it and any local changes.
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps or example
+      description: Share any steps, full command or example you have, and how often the problem occurs. Existing observations are enough; no need to repeat a crash or hang.
+  - type: textarea
+    id: environment
+    attributes:
+      label: Hardware and software
+      description: Any details you have can help. For runtime reports, the machine/GPU and loaded renderer are useful; for build failures, the compiler and build environment are useful. Skip anything unavailable.
+      placeholder: |
+        Machine and GPU (PCI vendor:device, revision):
+        Distribution and architecture:
+        Kernel version:
+        Mesa / Xorg versions, if applicable:
+        Loaded driver / renderer, if known:
+        Compiler / build target, for build failures:
+  - type: input
+    id: regression
+    attributes:
+      label: Last working version
+      description: If this is a regression, name the last working release or commit. Leave blank if unknown.
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Logs and attachments
+      description: Relevant output, errors or screenshots can help if you have them. Mention debug logging or tracing if enabled. Please remove secrets and personal information before posting.
+      placeholder: Paste short logs in fenced code blocks, or attach larger logs and images.

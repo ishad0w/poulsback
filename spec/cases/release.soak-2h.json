@@ -1,0 +1,26 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "release.soak-2h",
+ "source": "tests/acceptance/release.md#release.soak-2h",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "gears-desktop-2h",
+   "criteria": "glxgears beside the scripted desktop for 2 h: no HOLD, no errsite"
+  },
+  {
+   "id": "glxheads-120s",
+   "criteria": "glxheads on two connections for 120 s"
+  },
+  {
+   "id": "no-leak",
+   "criteria": "Shmem, BO and fence counts return to their baselines after the soak"
+  },
+  {
+   "id": "idle-overnight-irq",
+   "criteria": "HW-IRQ-003: the idle Dell overnight, with and without intel_idle.max_cstate=1"
+  }
+ ]
+}

@@ -1,0 +1,454 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-native.zero-and-edge",
+ "source": "eng/lab/bo/bo-2d-fixtures.c --list at workspace 569c3f6; case = job name with the fixture prefix removed; result line from out/bo-2d-fixtures.jsonl (status pass)",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "wc/argb/empty-right"
+  },
+  {
+   "id": "wc/argb/empty-left"
+  },
+  {
+   "id": "wc/argb/empty-below"
+  },
+  {
+   "id": "wc/argb/empty-above"
+  },
+  {
+   "id": "wc/argb/empty-width-0"
+  },
+  {
+   "id": "wc/argb/empty-height-0"
+  },
+  {
+   "id": "wc/argb/empty-clip-disjoint"
+  },
+  {
+   "id": "wc/argb/empty-src-outside"
+  },
+  {
+   "id": "wc/argb/one-fill-top-left"
+  },
+  {
+   "id": "wc/argb/one-copy-top-left"
+  },
+  {
+   "id": "wc/argb/one-fill-top-right"
+  },
+  {
+   "id": "wc/argb/one-copy-top-right"
+  },
+  {
+   "id": "wc/argb/one-fill-bottom-left"
+  },
+  {
+   "id": "wc/argb/one-copy-bottom-left"
+  },
+  {
+   "id": "wc/argb/one-fill-bottom-right"
+  },
+  {
+   "id": "wc/argb/one-copy-bottom-right"
+  },
+  {
+   "id": "wc/argb/one-fill-top"
+  },
+  {
+   "id": "wc/argb/one-copy-top"
+  },
+  {
+   "id": "wc/argb/one-fill-bottom"
+  },
+  {
+   "id": "wc/argb/one-copy-bottom"
+  },
+  {
+   "id": "wc/argb/one-fill-left"
+  },
+  {
+   "id": "wc/argb/one-copy-left"
+  },
+  {
+   "id": "wc/argb/one-fill-right"
+  },
+  {
+   "id": "wc/argb/one-copy-right"
+  },
+  {
+   "id": "wc/argb/job-of-4-empties"
+  },
+  {
+   "id": "wc/argb/job-empty-and-one"
+  },
+  {
+   "id": "wc/xrgb/empty-right"
+  },
+  {
+   "id": "wc/xrgb/empty-left"
+  },
+  {
+   "id": "wc/xrgb/empty-below"
+  },
+  {
+   "id": "wc/xrgb/empty-above"
+  },
+  {
+   "id": "wc/xrgb/empty-width-0"
+  },
+  {
+   "id": "wc/xrgb/empty-height-0"
+  },
+  {
+   "id": "wc/xrgb/empty-clip-disjoint"
+  },
+  {
+   "id": "wc/xrgb/empty-src-outside"
+  },
+  {
+   "id": "wc/xrgb/one-fill-top-left"
+  },
+  {
+   "id": "wc/xrgb/one-copy-top-left"
+  },
+  {
+   "id": "wc/xrgb/one-fill-top-right"
+  },
+  {
+   "id": "wc/xrgb/one-copy-top-right"
+  },
+  {
+   "id": "wc/xrgb/one-fill-bottom-left"
+  },
+  {
+   "id": "wc/xrgb/one-copy-bottom-left"
+  },
+  {
+   "id": "wc/xrgb/one-fill-bottom-right"
+  },
+  {
+   "id": "wc/xrgb/one-copy-bottom-right"
+  },
+  {
+   "id": "wc/xrgb/one-fill-top"
+  },
+  {
+   "id": "wc/xrgb/one-copy-top"
+  },
+  {
+   "id": "wc/xrgb/one-fill-bottom"
+  },
+  {
+   "id": "wc/xrgb/one-copy-bottom"
+  },
+  {
+   "id": "wc/xrgb/one-fill-left"
+  },
+  {
+   "id": "wc/xrgb/one-copy-left"
+  },
+  {
+   "id": "wc/xrgb/one-fill-right"
+  },
+  {
+   "id": "wc/xrgb/one-copy-right"
+  },
+  {
+   "id": "wc/rgb565/empty-right"
+  },
+  {
+   "id": "wc/rgb565/empty-left"
+  },
+  {
+   "id": "wc/rgb565/empty-below"
+  },
+  {
+   "id": "wc/rgb565/empty-above"
+  },
+  {
+   "id": "wc/rgb565/empty-width-0"
+  },
+  {
+   "id": "wc/rgb565/empty-height-0"
+  },
+  {
+   "id": "wc/rgb565/empty-clip-disjoint"
+  },
+  {
+   "id": "wc/rgb565/empty-src-outside"
+  },
+  {
+   "id": "wc/rgb565/one-fill-top-left"
+  },
+  {
+   "id": "wc/rgb565/one-copy-top-left"
+  },
+  {
+   "id": "wc/rgb565/one-fill-top-right"
+  },
+  {
+   "id": "wc/rgb565/one-copy-top-right"
+  },
+  {
+   "id": "wc/rgb565/one-fill-bottom-left"
+  },
+  {
+   "id": "wc/rgb565/one-copy-bottom-left"
+  },
+  {
+   "id": "wc/rgb565/one-fill-bottom-right"
+  },
+  {
+   "id": "wc/rgb565/one-copy-bottom-right"
+  },
+  {
+   "id": "wc/rgb565/one-fill-top"
+  },
+  {
+   "id": "wc/rgb565/one-copy-top"
+  },
+  {
+   "id": "wc/rgb565/one-fill-bottom"
+  },
+  {
+   "id": "wc/rgb565/one-copy-bottom"
+  },
+  {
+   "id": "wc/rgb565/one-fill-left"
+  },
+  {
+   "id": "wc/rgb565/one-copy-left"
+  },
+  {
+   "id": "wc/rgb565/one-fill-right"
+  },
+  {
+   "id": "wc/rgb565/one-copy-right"
+  },
+  {
+   "id": "wb/argb/empty-right"
+  },
+  {
+   "id": "wb/argb/empty-left"
+  },
+  {
+   "id": "wb/argb/empty-below"
+  },
+  {
+   "id": "wb/argb/empty-above"
+  },
+  {
+   "id": "wb/argb/empty-width-0"
+  },
+  {
+   "id": "wb/argb/empty-height-0"
+  },
+  {
+   "id": "wb/argb/empty-clip-disjoint"
+  },
+  {
+   "id": "wb/argb/empty-src-outside"
+  },
+  {
+   "id": "wb/argb/one-fill-top-left"
+  },
+  {
+   "id": "wb/argb/one-copy-top-left"
+  },
+  {
+   "id": "wb/argb/one-fill-top-right"
+  },
+  {
+   "id": "wb/argb/one-copy-top-right"
+  },
+  {
+   "id": "wb/argb/one-fill-bottom-left"
+  },
+  {
+   "id": "wb/argb/one-copy-bottom-left"
+  },
+  {
+   "id": "wb/argb/one-fill-bottom-right"
+  },
+  {
+   "id": "wb/argb/one-copy-bottom-right"
+  },
+  {
+   "id": "wb/argb/one-fill-top"
+  },
+  {
+   "id": "wb/argb/one-copy-top"
+  },
+  {
+   "id": "wb/argb/one-fill-bottom"
+  },
+  {
+   "id": "wb/argb/one-copy-bottom"
+  },
+  {
+   "id": "wb/argb/one-fill-left"
+  },
+  {
+   "id": "wb/argb/one-copy-left"
+  },
+  {
+   "id": "wb/argb/one-fill-right"
+  },
+  {
+   "id": "wb/argb/one-copy-right"
+  },
+  {
+   "id": "wb/argb/job-of-4-empties"
+  },
+  {
+   "id": "wb/argb/job-empty-and-one"
+  },
+  {
+   "id": "wb/xrgb/empty-right"
+  },
+  {
+   "id": "wb/xrgb/empty-left"
+  },
+  {
+   "id": "wb/xrgb/empty-below"
+  },
+  {
+   "id": "wb/xrgb/empty-above"
+  },
+  {
+   "id": "wb/xrgb/empty-width-0"
+  },
+  {
+   "id": "wb/xrgb/empty-height-0"
+  },
+  {
+   "id": "wb/xrgb/empty-clip-disjoint"
+  },
+  {
+   "id": "wb/xrgb/empty-src-outside"
+  },
+  {
+   "id": "wb/xrgb/one-fill-top-left"
+  },
+  {
+   "id": "wb/xrgb/one-copy-top-left"
+  },
+  {
+   "id": "wb/xrgb/one-fill-top-right"
+  },
+  {
+   "id": "wb/xrgb/one-copy-top-right"
+  },
+  {
+   "id": "wb/xrgb/one-fill-bottom-left"
+  },
+  {
+   "id": "wb/xrgb/one-copy-bottom-left"
+  },
+  {
+   "id": "wb/xrgb/one-fill-bottom-right"
+  },
+  {
+   "id": "wb/xrgb/one-copy-bottom-right"
+  },
+  {
+   "id": "wb/xrgb/one-fill-top"
+  },
+  {
+   "id": "wb/xrgb/one-copy-top"
+  },
+  {
+   "id": "wb/xrgb/one-fill-bottom"
+  },
+  {
+   "id": "wb/xrgb/one-copy-bottom"
+  },
+  {
+   "id": "wb/xrgb/one-fill-left"
+  },
+  {
+   "id": "wb/xrgb/one-copy-left"
+  },
+  {
+   "id": "wb/xrgb/one-fill-right"
+  },
+  {
+   "id": "wb/xrgb/one-copy-right"
+  },
+  {
+   "id": "wb/rgb565/empty-right"
+  },
+  {
+   "id": "wb/rgb565/empty-left"
+  },
+  {
+   "id": "wb/rgb565/empty-below"
+  },
+  {
+   "id": "wb/rgb565/empty-above"
+  },
+  {
+   "id": "wb/rgb565/empty-width-0"
+  },
+  {
+   "id": "wb/rgb565/empty-height-0"
+  },
+  {
+   "id": "wb/rgb565/empty-clip-disjoint"
+  },
+  {
+   "id": "wb/rgb565/empty-src-outside"
+  },
+  {
+   "id": "wb/rgb565/one-fill-top-left"
+  },
+  {
+   "id": "wb/rgb565/one-copy-top-left"
+  },
+  {
+   "id": "wb/rgb565/one-fill-top-right"
+  },
+  {
+   "id": "wb/rgb565/one-copy-top-right"
+  },
+  {
+   "id": "wb/rgb565/one-fill-bottom-left"
+  },
+  {
+   "id": "wb/rgb565/one-copy-bottom-left"
+  },
+  {
+   "id": "wb/rgb565/one-fill-bottom-right"
+  },
+  {
+   "id": "wb/rgb565/one-copy-bottom-right"
+  },
+  {
+   "id": "wb/rgb565/one-fill-top"
+  },
+  {
+   "id": "wb/rgb565/one-copy-top"
+  },
+  {
+   "id": "wb/rgb565/one-fill-bottom"
+  },
+  {
+   "id": "wb/rgb565/one-copy-bottom"
+  },
+  {
+   "id": "wb/rgb565/one-fill-left"
+  },
+  {
+   "id": "wb/rgb565/one-copy-left"
+  },
+  {
+   "id": "wb/rgb565/one-fill-right"
+  },
+  {
+   "id": "wb/rgb565/one-copy-right"
+  }
+ ]
+}

@@ -1,0 +1,543 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-native.bad-requests",
+ "source": "Every SUBMIT_2D validation in kernel/engine/poulsback_submit.c and poulsback_twod.c at driver HEAD, one case per condition",
+ "criteria": "The ioctl returns the named errno, the BOs keep their bytes and the engine counts no 2D job (no publication).",
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "submit-2d/args-bad-pointer",
+   "parameters": {
+    "errno": "EFAULT",
+    "condition": "the ioctl argument does not point at a readable (in) or writable (out) struct poulsback_submit_2d",
+    "where": "linux-6.1 drivers/gpu/drm/drm_ioctl.c:drm_ioctl (copy_from_user / copy_to_user)",
+    "note": "DRM layer, before and after the handler. A readable but read-only struct fails only on the copy back, after the handler's side effect."
+   }
+  },
+  {
+   "id": "submit-2d/device-unplugged",
+   "parameters": {
+    "errno": "ENODEV",
+    "condition": "the device was unplugged (drm_dev_is_unplugged)",
+    "where": "linux-6.1 drivers/gpu/drm/drm_ioctl.c:drm_ioctl (drm_dev_is_unplugged)",
+    "note": "psb_pci_remove calls drm_dev_unplug (linux.patch). A caller with the fd open needs root to provoke it (sysfs PCI remove)."
+   }
+  },
+  {
+   "id": "submit-2d/abi-unknown",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->abi != POULSBACK_EXEC_ABI",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl"
+   }
+  },
+  {
+   "id": "submit-2d/flags-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->flags != 0",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl"
+   }
+  },
+  {
+   "id": "submit-2d/context-zero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->context == 0",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl"
+   }
+  },
+  {
+   "id": "submit-2d/bo-count-zero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->bo_count == 0",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl",
+    "note": "The planner repeats this guard, and its row 'bo_count 0' tests that copy, not this check."
+   }
+  },
+  {
+   "id": "submit-2d/bo-count-over-16",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->bo_count > POULSBACK_2D_MAX_BOS (16)",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl",
+    "note": "The planner's redundant guard is tested (row 'bo_count 17'). This one is not."
+   }
+  },
+  {
+   "id": "submit-2d/surface-count-zero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->surface_count == 0",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl",
+    "note": "The planner's redundant guard is tested (row 'surface_count 0')."
+   }
+  },
+  {
+   "id": "submit-2d/surface-count-over-16",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->surface_count > POULSBACK_2D_MAX_SURFACES (16)",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl",
+    "note": "The planner's redundant guard is tested (row 'surface_count 17')."
+   }
+  },
+  {
+   "id": "submit-2d/op-count-zero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->op_count == 0",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl",
+    "note": "The planner's redundant guard is tested (row 'op_count 0')."
+   }
+  },
+  {
+   "id": "submit-2d/op-count-over-256",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->op_count > POULSBACK_2D_MAX_OPS (256)",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl",
+    "dell_test": "eng/lab/bo/bo-2d.c:cases refuse(\"ops-257\")",
+    "note": "The planner's redundant guard is tested (row 'op_count 257')."
+   }
+  },
+  {
+   "id": "submit-2d/reserved-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "any args->reserved[0..3] != 0",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl"
+   }
+  },
+  {
+   "id": "submit-2d/bos-bad-pointer",
+   "parameters": {
+    "errno": "EFAULT",
+    "condition": "copy_from_user(args->bos, bo_count * 8) faults",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl",
+    "note": "Checked before drm_dev_enter and the context lookup."
+   }
+  },
+  {
+   "id": "submit-2d/surfaces-bad-pointer",
+   "parameters": {
+    "errno": "EFAULT",
+    "condition": "copy_from_user(args->surfaces, surface_count * 32) faults",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl"
+   }
+  },
+  {
+   "id": "submit-2d/engine-unavailable",
+   "parameters": {
+    "errno": "ETIMEDOUT|EIO|EPROTO|EBUSY|ENODEV",
+    "condition": "poulsback_engine_get fails (engine wedged, or bring-up failed or blocked)",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl -> kernel/engine/poulsback_engine.c:poulsback_engine_get",
+    "note": "See context-create/engine-unavailable."
+   }
+  },
+  {
+   "id": "submit-2d/context-unknown",
+   "parameters": {
+    "errno": "ENOENT",
+    "condition": "idr_find finds no context for args->context",
+    "where": "kernel/engine/poulsback_context.c:poulsback_exec_context"
+   }
+  },
+  {
+   "id": "submit-2d/ops-bad-pointer",
+   "parameters": {
+    "errno": "EFAULT",
+    "condition": "copy_from_user(args->ops, op_count * 64) faults",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl"
+   }
+  },
+  {
+   "id": "submit-2d/bo-flags-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "bos[i].flags != 0 (WRITE included)",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl",
+    "dell_test": "eng/lab/bo/bo-2d.c:cases refuse(\"bo-flags\")"
+   }
+  },
+  {
+   "id": "submit-2d/bo-handle-unknown",
+   "parameters": {
+    "errno": "ENOENT",
+    "condition": "bos[i].handle names no GEM object in this file",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_resolve"
+   }
+  },
+  {
+   "id": "submit-2d/bo-handle-not-poulsback-object",
+   "parameters": {
+    "errno": "ENOENT",
+    "condition": "bos[i].handle names a non-poulsback GEM object (gma500 dumb buffer)",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_resolve"
+   }
+  },
+  {
+   "id": "submit-2d/bo-listed-twice",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "job->bos[k] == job->bos[i] for some k < i",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl",
+    "dell_test": "eng/lab/bo/bo-2d.c:cases refuse(\"bo-twice\")"
+   }
+  },
+  {
+   "id": "submit-2d/bo-not-2d-class",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "a listed BO's VA span is not inside the 2D class (any GENERAL, PDS, CODE, DEPTH or PARAMETER BO: all lie below 0xD0001000)",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan -> poulsback_vm_span_ok(POULSBACK_VM_2D)",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"BO below the 2D class\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested). The span_ok operands 'past the class' and 'size 0' (rows 'BO past the 2D class', 'BO of size 0') are unreachable for real BOs."
+   }
+  },
+  {
+   "id": "submit-2d/surface-bo-index-out-of-range",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "surfaces[i].bo >= bo_count",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan:surface",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"surface bo index\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/surface-reserved-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "surfaces[i].reserved[0] || surfaces[i].reserved[1]",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan:surface",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"surface reserved[0]\", \"surface reserved[1]\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/surface-format-zero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "surfaces[i].format == 0",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan:surface",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"surface format 0\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/surface-format-unknown",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "surfaces[i].format > POULSBACK_2D_RGB565 (3)",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan:surface",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"surface format 4\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/surface-offset-past-bo",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "surfaces[i].offset >= BO size",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan:surface",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"surface offset at the BO end\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/surface-width-zero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "surfaces[i].width == 0",
+    "where": "src/raster/sgx535_2d_encoder.c:check_surface (via kernel/engine/poulsback_twod.c:poulsback_twod_plan empty fill per surface)",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"surface width 0\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/surface-width-over-4095",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "surfaces[i].width > 4095",
+    "where": "src/raster/sgx535_2d_encoder.c:check_surface (via kernel/engine/poulsback_twod.c:poulsback_twod_plan empty fill per surface)",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"surface width 4096\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/surface-height-zero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "surfaces[i].height == 0",
+    "where": "src/raster/sgx535_2d_encoder.c:check_surface (via kernel/engine/poulsback_twod.c:poulsback_twod_plan empty fill per surface)",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"surface height 0\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/surface-height-over-4095",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "surfaces[i].height > 4095",
+    "where": "src/raster/sgx535_2d_encoder.c:check_surface (via kernel/engine/poulsback_twod.c:poulsback_twod_plan empty fill per surface)",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"surface height 4096\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/surface-stride-zero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "surfaces[i].stride == 0 (stride - 1 wraps)",
+    "where": "src/raster/sgx535_2d_encoder.c:check_surface (via kernel/engine/poulsback_twod.c:poulsback_twod_plan empty fill per surface)",
+    "note": "No row uses stride 0: 'surface stride below a row' uses 896. The encoder's offset and allocation domain operands are unreachable here (the 2D class keeps them in range)."
+   }
+  },
+  {
+   "id": "submit-2d/surface-stride-over-max",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "surfaces[i].stride > 16383 (16384 is the first 128-aligned value)",
+    "where": "src/raster/sgx535_2d_encoder.c:check_surface (via kernel/engine/poulsback_twod.c:poulsback_twod_plan empty fill per surface)",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"surface stride 16384\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/surface-offset-not-8-aligned",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "(BO VA - 0xD0000000 + surfaces[i].offset) % 8, i.e. offset % 8 (BO VAs are page-aligned)",
+    "where": "src/raster/sgx535_2d_encoder.c:check_surface (via kernel/engine/poulsback_twod.c:poulsback_twod_plan empty fill per surface)",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"surface offset not x8\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/surface-stride-not-128-aligned",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "surfaces[i].stride % 128 != 0",
+    "where": "src/raster/sgx535_2d_encoder.c:check_surface (via kernel/engine/poulsback_twod.c:poulsback_twod_plan empty fill per surface)",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"surface stride not x128\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/surface-stride-below-row",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "width * bpp > stride",
+    "where": "src/raster/sgx535_2d_encoder.c:check_surface (via kernel/engine/poulsback_twod.c:poulsback_twod_plan empty fill per surface)",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"surface stride below a row\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/surface-rows-past-bo",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "(height - 1) * stride + width * bpp > BO size - offset",
+    "where": "src/raster/sgx535_2d_encoder.c:check_surface (via kernel/engine/poulsback_twod.c:poulsback_twod_plan empty fill per surface)",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"surface rows past the BO\", \"surface last row past the BO\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/op-flags-unknown-bit",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "ops[i].flags & ~POULSBACK_2D_CLIP",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"op flags 2\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/op-rop-over-15",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "ops[i].rop > 15 (GXset)",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"op rop 16\"",
+    "dell_test": "eng/lab/bo/bo-2d.c:cases refuse(\"rop-16\")",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested). The planner refuses before the encoder, whose rop check would say UNSUPPORTED."
+   }
+  },
+  {
+   "id": "submit-2d/op-dst-out-of-range",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "ops[i].dst >= surface_count",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"op dst index\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/op-clip-x-without-flag",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "!(flags & CLIP) && clip.x != 0",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan",
+    "note": "The only host row sets clip.height."
+   }
+  },
+  {
+   "id": "submit-2d/op-clip-y-without-flag",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "!(flags & CLIP) && clip.y != 0",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan",
+    "note": "The only host row sets clip.height."
+   }
+  },
+  {
+   "id": "submit-2d/op-clip-width-without-flag",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "!(flags & CLIP) && clip.width != 0",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan",
+    "note": "The only host row sets clip.height."
+   }
+  },
+  {
+   "id": "submit-2d/op-clip-height-without-flag",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "!(flags & CLIP) && clip.height != 0",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"op clip without CLIP\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/op-kind-unknown",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "ops[i].kind not FILL (1) or COPY (2)",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"op kind 0\", \"op kind 3\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/fill-src-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "FILL with ops[i].src != 0",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"fill src\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/fill-src-x-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "FILL with ops[i].src_x != 0",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"fill src_x\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/fill-src-y-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "FILL with ops[i].src_y != 0",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"fill src_y\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/fill-rgb565-pixel-over-16-bits",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "FILL of an RGB565 destination with pixel > 0xffff",
+    "where": "src/raster/sgx535_2d_encoder.c:sgx535_2d_raster_fill (OUT_OF_RANGE)",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"fill RGB565 pixel 0x10000\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/copy-pixel-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "COPY with ops[i].pixel != 0",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"copy pixel\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/copy-src-out-of-range",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "COPY with ops[i].src >= surface_count",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"copy src index\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/copy-format-mismatch",
+   "parameters": {
+    "errno": "EOPNOTSUPP",
+    "condition": "COPY where src and dst formats differ",
+    "where": "src/raster/sgx535_2d_encoder.c:sgx535_2d_raster_copy (UNSUPPORTED)",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"copy between formats\"",
+    "dell_test": "eng/lab/bo/bo-2d.c:cases refuse(\"copy-formats\")",
+    "note": "The host row asserts POULSBACK_TWOD_UNSUPPORTED. This is the only EOPNOTSUPP at HEAD: there is no width-8 copy refusal (host rows 'copy 8 wide' and 'copy 8 high' assert OK). The src/dst rect size mismatch operand is unreachable (src rect reuses op->rect)."
+   }
+  },
+  {
+   "id": "submit-2d/copy-between-different-views-of-one-bo",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "COPY whose src and dst surfaces are on one BO but differ in offset, width, height or stride",
+    "where": "src/raster/sgx535_2d_encoder.c:identity_ok (UNPROVEN_ALIAS)",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"copy between views of a BO\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested). The different-BO overlap operand is unreachable: BOs never share VAs."
+   }
+  },
+  {
+   "id": "submit-2d/pixel-budget-exceeded",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "sum of clipped width*height over the job's ops > POULSBACK_2D_MAX_PIXELS (2^25)",
+    "where": "kernel/engine/poulsback_twod.c:poulsback_twod_plan",
+    "host_test": "tests/kernel/test_poulsback_twod.c:rows \"pixels 3 x 4095^2\"",
+    "note": "Host row asserts POULSBACK_TWOD_INVALID; submit.c maps it to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit-2d/out-syncobj-unknown",
+   "parameters": {
+    "errno": "ENOENT",
+    "condition": "args->out_syncobj != 0 && drm_syncobj_find fails",
+    "where": "kernel/engine/poulsback_submit.c:job_push"
+   }
+  },
+  {
+   "id": "submit-2d/in-syncobj-unknown",
+   "parameters": {
+    "errno": "ENOENT",
+    "condition": "args->in_syncobj != 0 names no syncobj",
+    "where": "kernel/engine/poulsback_submit.c:job_push -> drm_syncobj_find_fence"
+   }
+  },
+  {
+   "id": "submit-2d/in-syncobj-no-fence",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->in_syncobj names a syncobj with no fence",
+    "where": "kernel/engine/poulsback_submit.c:job_push -> drm_syncobj_find_fence"
+   }
+  }
+ ]
+}

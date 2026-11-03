@@ -1,0 +1,20 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-x11.xts5-rendering",
+ "source": "xts5 test purposes of the Xlib rendering sections, listed by the conformance build",
+ "criteria": "The test purpose reports PASS (tet result 0); UNTESTED, UNSUPPORTED, NOTINUSE and FAIL are not passes",
+ "runner": null,
+ "external": {
+  "source": "eng/lab/conformance/lists/xts5-m1.txt",
+  "member": null,
+  "select": [
+   "*"
+  ],
+  "count": 622,
+  "sha256": "d9f9644876b20c5c9454d3f6b470d7b7a987db19f17a75be66d3407b9169808d",
+  "source_sha256": "d9f9644876b20c5c9454d3f6b470d7b7a987db19f17a75be66d3407b9169808d",
+  "builder": "conformance-harnesses",
+  "note": "Selected by eng/lab/conformance/selections.py: Xlib8 and Xlib9, one case per TET purpose; TET PASS is the only pass"
+ },
+ "cases": []
+}

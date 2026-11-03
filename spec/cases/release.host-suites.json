@@ -1,0 +1,196 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "release.host-suites",
+ "source": "tools/build-userspace.py --help components and the unittest directories at driver HEAD",
+ "criteria": "The suite exits 0 in every flavor make check runs",
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "component/background-object"
+  },
+  {
+   "id": "component/clip-w1"
+  },
+  {
+   "id": "component/compiled-color0-packet"
+  },
+  {
+   "id": "component/depth-clear"
+  },
+  {
+   "id": "component/depth-cube-mesh"
+  },
+  {
+   "id": "component/depth-state"
+  },
+  {
+   "id": "component/depth-window-mesh"
+  },
+  {
+   "id": "component/draw-mask"
+  },
+  {
+   "id": "component/engine121"
+  },
+  {
+   "id": "component/fragment"
+  },
+  {
+   "id": "component/fragment-bool32-words"
+  },
+  {
+   "id": "component/fragment-ieq-words"
+  },
+  {
+   "id": "component/fragment-inot-words"
+  },
+  {
+   "id": "component/fragment-normalized"
+  },
+  {
+   "id": "component/fragment-raw-sign"
+  },
+  {
+   "id": "component/fragment-raw-sign-normalized"
+  },
+  {
+   "id": "component/fs-backend"
+  },
+  {
+   "id": "component/heap-layout"
+  },
+  {
+   "id": "component/isp-words"
+  },
+  {
+   "id": "component/iterator"
+  },
+  {
+   "id": "component/linear"
+  },
+  {
+   "id": "component/mte-state"
+  },
+  {
+   "id": "component/native-2d"
+  },
+  {
+   "id": "component/native-2d-encoder"
+  },
+  {
+   "id": "component/native-raster"
+  },
+  {
+   "id": "component/native-raster-layouts"
+  },
+  {
+   "id": "component/normalized-color0-background"
+  },
+  {
+   "id": "component/normalized-color0-mask"
+  },
+  {
+   "id": "component/normalized-color0-mask-list"
+  },
+  {
+   "id": "component/normalized-color0-task"
+  },
+  {
+   "id": "component/normalized-color0-tile16"
+  },
+  {
+   "id": "component/normalized-color0-window-list"
+  },
+  {
+   "id": "component/pack"
+  },
+  {
+   "id": "component/pbe-state"
+  },
+  {
+   "id": "component/pds-fragment"
+  },
+  {
+   "id": "component/pds-secondary"
+  },
+  {
+   "id": "component/pds-use-link"
+  },
+  {
+   "id": "component/pixel-event"
+  },
+  {
+   "id": "component/pixel-pds"
+  },
+  {
+   "id": "component/region-clip"
+  },
+  {
+   "id": "component/spm"
+  },
+  {
+   "id": "component/spm-state"
+  },
+  {
+   "id": "component/task-image"
+  },
+  {
+   "id": "component/task-launch"
+  },
+  {
+   "id": "component/task-packet"
+  },
+  {
+   "id": "component/task-pair"
+  },
+  {
+   "id": "component/task-pair-mask-set"
+  },
+  {
+   "id": "component/texture-layout"
+  },
+  {
+   "id": "component/texture-words"
+  },
+  {
+   "id": "component/texture2d-nearest"
+  },
+  {
+   "id": "component/use-code-bank"
+  },
+  {
+   "id": "component/use-encode"
+  },
+  {
+   "id": "component/usse"
+  },
+  {
+   "id": "component/varying-packet"
+  },
+  {
+   "id": "component/vertex"
+  },
+  {
+   "id": "component/vertex-dma"
+  },
+  {
+   "id": "component/vertex-pds"
+  },
+  {
+   "id": "component/vertex-use"
+  },
+  {
+   "id": "component/window-color0-packet"
+  },
+  {
+   "id": "component/window-mesh"
+  },
+  {
+   "id": "component/window-vertex"
+  },
+  {
+   "id": "component/zls"
+  }
+ ]
+}

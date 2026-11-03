@@ -1,0 +1,586 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-native.fill-all-rops",
+ "source": "eng/lab/bo/bo-2d-fixtures.c --list at workspace 569c3f6; case = job name with the fixture prefix removed; result line from out/bo-2d-fixtures.jsonl (status pass)",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "wc/argb/rop00/full"
+  },
+  {
+   "id": "wc/argb/rop00/sub"
+  },
+  {
+   "id": "wc/argb/rop01/full"
+  },
+  {
+   "id": "wc/argb/rop01/sub"
+  },
+  {
+   "id": "wc/argb/rop02/full"
+  },
+  {
+   "id": "wc/argb/rop02/sub"
+  },
+  {
+   "id": "wc/argb/rop03/full"
+  },
+  {
+   "id": "wc/argb/rop03/sub"
+  },
+  {
+   "id": "wc/argb/rop04/full"
+  },
+  {
+   "id": "wc/argb/rop04/sub"
+  },
+  {
+   "id": "wc/argb/rop05/full"
+  },
+  {
+   "id": "wc/argb/rop05/sub"
+  },
+  {
+   "id": "wc/argb/rop06/full"
+  },
+  {
+   "id": "wc/argb/rop06/sub"
+  },
+  {
+   "id": "wc/argb/rop07/full"
+  },
+  {
+   "id": "wc/argb/rop07/sub"
+  },
+  {
+   "id": "wc/argb/rop08/full"
+  },
+  {
+   "id": "wc/argb/rop08/sub"
+  },
+  {
+   "id": "wc/argb/rop09/full"
+  },
+  {
+   "id": "wc/argb/rop09/sub"
+  },
+  {
+   "id": "wc/argb/rop10/full"
+  },
+  {
+   "id": "wc/argb/rop10/sub"
+  },
+  {
+   "id": "wc/argb/rop11/full"
+  },
+  {
+   "id": "wc/argb/rop11/sub"
+  },
+  {
+   "id": "wc/argb/rop12/full"
+  },
+  {
+   "id": "wc/argb/rop12/sub"
+  },
+  {
+   "id": "wc/argb/rop13/full"
+  },
+  {
+   "id": "wc/argb/rop13/sub"
+  },
+  {
+   "id": "wc/argb/rop14/full"
+  },
+  {
+   "id": "wc/argb/rop14/sub"
+  },
+  {
+   "id": "wc/argb/rop15/full"
+  },
+  {
+   "id": "wc/argb/rop15/sub"
+  },
+  {
+   "id": "wc/xrgb/rop00/full"
+  },
+  {
+   "id": "wc/xrgb/rop00/sub"
+  },
+  {
+   "id": "wc/xrgb/rop01/full"
+  },
+  {
+   "id": "wc/xrgb/rop01/sub"
+  },
+  {
+   "id": "wc/xrgb/rop02/full"
+  },
+  {
+   "id": "wc/xrgb/rop02/sub"
+  },
+  {
+   "id": "wc/xrgb/rop03/full"
+  },
+  {
+   "id": "wc/xrgb/rop03/sub"
+  },
+  {
+   "id": "wc/xrgb/rop04/full"
+  },
+  {
+   "id": "wc/xrgb/rop04/sub"
+  },
+  {
+   "id": "wc/xrgb/rop05/full"
+  },
+  {
+   "id": "wc/xrgb/rop05/sub"
+  },
+  {
+   "id": "wc/xrgb/rop06/full"
+  },
+  {
+   "id": "wc/xrgb/rop06/sub"
+  },
+  {
+   "id": "wc/xrgb/rop07/full"
+  },
+  {
+   "id": "wc/xrgb/rop07/sub"
+  },
+  {
+   "id": "wc/xrgb/rop08/full"
+  },
+  {
+   "id": "wc/xrgb/rop08/sub"
+  },
+  {
+   "id": "wc/xrgb/rop09/full"
+  },
+  {
+   "id": "wc/xrgb/rop09/sub"
+  },
+  {
+   "id": "wc/xrgb/rop10/full"
+  },
+  {
+   "id": "wc/xrgb/rop10/sub"
+  },
+  {
+   "id": "wc/xrgb/rop11/full"
+  },
+  {
+   "id": "wc/xrgb/rop11/sub"
+  },
+  {
+   "id": "wc/xrgb/rop12/full"
+  },
+  {
+   "id": "wc/xrgb/rop12/sub"
+  },
+  {
+   "id": "wc/xrgb/rop13/full"
+  },
+  {
+   "id": "wc/xrgb/rop13/sub"
+  },
+  {
+   "id": "wc/xrgb/rop14/full"
+  },
+  {
+   "id": "wc/xrgb/rop14/sub"
+  },
+  {
+   "id": "wc/xrgb/rop15/full"
+  },
+  {
+   "id": "wc/xrgb/rop15/sub"
+  },
+  {
+   "id": "wc/rgb565/rop00/full"
+  },
+  {
+   "id": "wc/rgb565/rop00/sub"
+  },
+  {
+   "id": "wc/rgb565/rop01/full"
+  },
+  {
+   "id": "wc/rgb565/rop01/sub"
+  },
+  {
+   "id": "wc/rgb565/rop02/full"
+  },
+  {
+   "id": "wc/rgb565/rop02/sub"
+  },
+  {
+   "id": "wc/rgb565/rop03/full"
+  },
+  {
+   "id": "wc/rgb565/rop03/sub"
+  },
+  {
+   "id": "wc/rgb565/rop04/full"
+  },
+  {
+   "id": "wc/rgb565/rop04/sub"
+  },
+  {
+   "id": "wc/rgb565/rop05/full"
+  },
+  {
+   "id": "wc/rgb565/rop05/sub"
+  },
+  {
+   "id": "wc/rgb565/rop06/full"
+  },
+  {
+   "id": "wc/rgb565/rop06/sub"
+  },
+  {
+   "id": "wc/rgb565/rop07/full"
+  },
+  {
+   "id": "wc/rgb565/rop07/sub"
+  },
+  {
+   "id": "wc/rgb565/rop08/full"
+  },
+  {
+   "id": "wc/rgb565/rop08/sub"
+  },
+  {
+   "id": "wc/rgb565/rop09/full"
+  },
+  {
+   "id": "wc/rgb565/rop09/sub"
+  },
+  {
+   "id": "wc/rgb565/rop10/full"
+  },
+  {
+   "id": "wc/rgb565/rop10/sub"
+  },
+  {
+   "id": "wc/rgb565/rop11/full"
+  },
+  {
+   "id": "wc/rgb565/rop11/sub"
+  },
+  {
+   "id": "wc/rgb565/rop12/full"
+  },
+  {
+   "id": "wc/rgb565/rop12/sub"
+  },
+  {
+   "id": "wc/rgb565/rop13/full"
+  },
+  {
+   "id": "wc/rgb565/rop13/sub"
+  },
+  {
+   "id": "wc/rgb565/rop14/full"
+  },
+  {
+   "id": "wc/rgb565/rop14/sub"
+  },
+  {
+   "id": "wc/rgb565/rop15/full"
+  },
+  {
+   "id": "wc/rgb565/rop15/sub"
+  },
+  {
+   "id": "wb/argb/rop00/full"
+  },
+  {
+   "id": "wb/argb/rop00/sub"
+  },
+  {
+   "id": "wb/argb/rop01/full"
+  },
+  {
+   "id": "wb/argb/rop01/sub"
+  },
+  {
+   "id": "wb/argb/rop02/full"
+  },
+  {
+   "id": "wb/argb/rop02/sub"
+  },
+  {
+   "id": "wb/argb/rop03/full"
+  },
+  {
+   "id": "wb/argb/rop03/sub"
+  },
+  {
+   "id": "wb/argb/rop04/full"
+  },
+  {
+   "id": "wb/argb/rop04/sub"
+  },
+  {
+   "id": "wb/argb/rop05/full"
+  },
+  {
+   "id": "wb/argb/rop05/sub"
+  },
+  {
+   "id": "wb/argb/rop06/full"
+  },
+  {
+   "id": "wb/argb/rop06/sub"
+  },
+  {
+   "id": "wb/argb/rop07/full"
+  },
+  {
+   "id": "wb/argb/rop07/sub"
+  },
+  {
+   "id": "wb/argb/rop08/full"
+  },
+  {
+   "id": "wb/argb/rop08/sub"
+  },
+  {
+   "id": "wb/argb/rop09/full"
+  },
+  {
+   "id": "wb/argb/rop09/sub"
+  },
+  {
+   "id": "wb/argb/rop10/full"
+  },
+  {
+   "id": "wb/argb/rop10/sub"
+  },
+  {
+   "id": "wb/argb/rop11/full"
+  },
+  {
+   "id": "wb/argb/rop11/sub"
+  },
+  {
+   "id": "wb/argb/rop12/full"
+  },
+  {
+   "id": "wb/argb/rop12/sub"
+  },
+  {
+   "id": "wb/argb/rop13/full"
+  },
+  {
+   "id": "wb/argb/rop13/sub"
+  },
+  {
+   "id": "wb/argb/rop14/full"
+  },
+  {
+   "id": "wb/argb/rop14/sub"
+  },
+  {
+   "id": "wb/argb/rop15/full"
+  },
+  {
+   "id": "wb/argb/rop15/sub"
+  },
+  {
+   "id": "wb/xrgb/rop00/full"
+  },
+  {
+   "id": "wb/xrgb/rop00/sub"
+  },
+  {
+   "id": "wb/xrgb/rop01/full"
+  },
+  {
+   "id": "wb/xrgb/rop01/sub"
+  },
+  {
+   "id": "wb/xrgb/rop02/full"
+  },
+  {
+   "id": "wb/xrgb/rop02/sub"
+  },
+  {
+   "id": "wb/xrgb/rop03/full"
+  },
+  {
+   "id": "wb/xrgb/rop03/sub"
+  },
+  {
+   "id": "wb/xrgb/rop04/full"
+  },
+  {
+   "id": "wb/xrgb/rop04/sub"
+  },
+  {
+   "id": "wb/xrgb/rop05/full"
+  },
+  {
+   "id": "wb/xrgb/rop05/sub"
+  },
+  {
+   "id": "wb/xrgb/rop06/full"
+  },
+  {
+   "id": "wb/xrgb/rop06/sub"
+  },
+  {
+   "id": "wb/xrgb/rop07/full"
+  },
+  {
+   "id": "wb/xrgb/rop07/sub"
+  },
+  {
+   "id": "wb/xrgb/rop08/full"
+  },
+  {
+   "id": "wb/xrgb/rop08/sub"
+  },
+  {
+   "id": "wb/xrgb/rop09/full"
+  },
+  {
+   "id": "wb/xrgb/rop09/sub"
+  },
+  {
+   "id": "wb/xrgb/rop10/full"
+  },
+  {
+   "id": "wb/xrgb/rop10/sub"
+  },
+  {
+   "id": "wb/xrgb/rop11/full"
+  },
+  {
+   "id": "wb/xrgb/rop11/sub"
+  },
+  {
+   "id": "wb/xrgb/rop12/full"
+  },
+  {
+   "id": "wb/xrgb/rop12/sub"
+  },
+  {
+   "id": "wb/xrgb/rop13/full"
+  },
+  {
+   "id": "wb/xrgb/rop13/sub"
+  },
+  {
+   "id": "wb/xrgb/rop14/full"
+  },
+  {
+   "id": "wb/xrgb/rop14/sub"
+  },
+  {
+   "id": "wb/xrgb/rop15/full"
+  },
+  {
+   "id": "wb/xrgb/rop15/sub"
+  },
+  {
+   "id": "wb/rgb565/rop00/full"
+  },
+  {
+   "id": "wb/rgb565/rop00/sub"
+  },
+  {
+   "id": "wb/rgb565/rop01/full"
+  },
+  {
+   "id": "wb/rgb565/rop01/sub"
+  },
+  {
+   "id": "wb/rgb565/rop02/full"
+  },
+  {
+   "id": "wb/rgb565/rop02/sub"
+  },
+  {
+   "id": "wb/rgb565/rop03/full"
+  },
+  {
+   "id": "wb/rgb565/rop03/sub"
+  },
+  {
+   "id": "wb/rgb565/rop04/full"
+  },
+  {
+   "id": "wb/rgb565/rop04/sub"
+  },
+  {
+   "id": "wb/rgb565/rop05/full"
+  },
+  {
+   "id": "wb/rgb565/rop05/sub"
+  },
+  {
+   "id": "wb/rgb565/rop06/full"
+  },
+  {
+   "id": "wb/rgb565/rop06/sub"
+  },
+  {
+   "id": "wb/rgb565/rop07/full"
+  },
+  {
+   "id": "wb/rgb565/rop07/sub"
+  },
+  {
+   "id": "wb/rgb565/rop08/full"
+  },
+  {
+   "id": "wb/rgb565/rop08/sub"
+  },
+  {
+   "id": "wb/rgb565/rop09/full"
+  },
+  {
+   "id": "wb/rgb565/rop09/sub"
+  },
+  {
+   "id": "wb/rgb565/rop10/full"
+  },
+  {
+   "id": "wb/rgb565/rop10/sub"
+  },
+  {
+   "id": "wb/rgb565/rop11/full"
+  },
+  {
+   "id": "wb/rgb565/rop11/sub"
+  },
+  {
+   "id": "wb/rgb565/rop12/full"
+  },
+  {
+   "id": "wb/rgb565/rop12/sub"
+  },
+  {
+   "id": "wb/rgb565/rop13/full"
+  },
+  {
+   "id": "wb/rgb565/rop13/sub"
+  },
+  {
+   "id": "wb/rgb565/rop14/full"
+  },
+  {
+   "id": "wb/rgb565/rop14/sub"
+  },
+  {
+   "id": "wb/rgb565/rop15/full"
+  },
+  {
+   "id": "wb/rgb565/rop15/sub"
+  }
+ ]
+}

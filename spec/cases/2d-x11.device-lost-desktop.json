@@ -1,0 +1,25 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-x11.device-lost-desktop",
+ "source": "tests/acceptance/2d-x11.md#2d-x11.device-lost-desktop and docs/kernel/execution.md#the-loss",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "engine-wedge-with-x"
+  },
+  {
+   "id": "desktop-unaccelerated"
+  },
+  {
+   "id": "gl-client-error"
+  },
+  {
+   "id": "no-hold-release"
+  },
+  {
+   "id": "reboot-recovers"
+  }
+ ]
+}

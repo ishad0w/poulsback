@@ -1,0 +1,42 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gl21.glx-tfp",
+ "source": "Survey of the window-system sources, 2026-11-03 (Xorg 21.1.7 glx/, Mesa 26.2.4 src/glx, src/egl, src/loader, the DRI frontend)",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "glx-tfp-advertised",
+   "criteria": "GLX_EXT_texture_from_pixmap is in the client GLX extensions and a config binds RGB TEXTURE_2D"
+  },
+  {
+   "id": "glx-tfp-bind-bo-pixmap",
+   "criteria": "A filled 128x128 depth-24 pixmap bound with glXBindTexImageEXT samples its colour within 1"
+  },
+  {
+   "id": "glx-tfp-rebind-after-xdraw",
+   "criteria": "After another XFillRectangle, release and rebind show the new colour, no stale frame"
+  },
+  {
+   "id": "glx-tfp-argb32",
+   "criteria": "A depth-32 pixmap with alpha 0x80 bound RGBA samples alpha 0x80"
+  },
+  {
+   "id": "glx-tfp-bind-small-pixmap",
+   "criteria": "The same with a 32x32 pixmap; today BuffersFromPixmap answers BadPixmap until the DDX gives every exported pixmap a BO"
+  },
+  {
+   "id": "glx-pixmap-render-small",
+   "criteria": "A direct context renders into a 32x32 GLX pixmap and reads it back"
+  },
+  {
+   "id": "glx-pbuffer-small",
+   "criteria": "A direct context renders into a 32x32 pbuffer and reads it back"
+  },
+  {
+   "id": "egl-x11-image-pixmap",
+   "criteria": "eglCreateImageKHR(EGL_NATIVE_PIXMAP_KHR) of a filled pixmap samples its colour"
+  }
+ ]
+}

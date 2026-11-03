@@ -1,0 +1,38 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-x11.server-features",
+ "source": "tests/acceptance/2d-x11.md#2d-x11.server-features",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "cursor",
+   "criteria": "The cursor shows, moves and changes image (hardware cursor plane or the software cursor, as the result records), with no trails after window moves or VT switches"
+  },
+  {
+   "id": "gamma-ramp",
+   "criteria": "A RandR CRTC gamma ramp (xrandr --gamma) changes the panel output and the default ramp restores it exactly"
+  },
+  {
+   "id": "truecolor-colormap",
+   "criteria": "XAllocColor and XQueryColors on the default TrueColor visual return exact pixel values; the DDX advertises no visual it cannot render"
+  },
+  {
+   "id": "directcolor-or-refused",
+   "criteria": "A DirectColor visual, if the DDX offers one, changes output through XStoreColors; otherwise none is advertised"
+  },
+  {
+   "id": "composite-xfwm4",
+   "criteria": "xfwm4 with its compositor: redirected windows, shadows, opacity and a GL client in a window render correctly; no stale or leaked pixmaps after 10 min"
+  },
+  {
+   "id": "composite-unredirect-fullscreen",
+   "criteria": "A fullscreen GL client under the compositor unredirects (Present flips) and redirects back when covered"
+  },
+  {
+   "id": "server-regeneration",
+   "criteria": "When the last client exits the server regenerates; the next session is accelerated again, five times in one boot"
+  }
+ ]
+}

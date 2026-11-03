@@ -1,0 +1,49 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: 2026 ishad0w and the poulsback contributors
+# SPDX-License-Identifier: MIT
+#
+# Pre-commit gate: `make check` on the staged tree (docs/tests.md#pre-commit-hook).
+# The checkout may hold unstaged edits, so the working tree is never checked and
+# never stashed: the index is exported to tmpfs and checked there.
+#
+# Install (local, never pushed), from the driver checkout:
+#   ln -sf ../../tools/pre-commit .git/hooks/pre-commit
+set -eu
+
+top=$(git rev-parse --show-toplevel)
+# Resolve the prepared build root from the git common directory, including worktrees.
+workspace=${POULSBACK_WORKSPACE:-$(cd "$(git rev-parse --path-format=absolute --git-common-dir)/../.." && pwd)}
+# Run the optional product-admission policy before exporting the staged tree.
+if [ -f "$workspace/eng/lab/chain.py" ]; then
+	(cd "$top" && python3 -I -B "$workspace/eng/lab/chain.py" hook)
+fi
+base=/dev/shm/poulsback-precommit-$(id -u)
+mkdir -p "$base"
+# One check at a time: a fixed export path keeps the host suites' object cache warm.
+exec 9>"$base/lock"
+flock 9
+tree=$base/tree
+rm -rf "$tree"
+trap 'rm -rf "$tree"' EXIT INT TERM HUP
+git checkout-index --all --prefix="$tree/"
+# Tests run git in their own temporary repositories; the hook's GIT_DIR and
+# GIT_INDEX_FILE must not reach them.
+for name in $(env | sed -n 's/^\(GIT_[A-Za-z0-9_]*\)=.*/\1/p'); do
+	unset "$name"
+done
+cd "$tree"
+start=$(date +%s)
+python3 -I -B tools/quality.py --root "$tree" ratchet --base HEAD --repo "$top"
+if ! make check WORKSPACE="$workspace" BUILD_DIR="$base/build" >"$base/check.log" 2>&1; then
+	# The failing parts' own lines first; make prints the parts in the order they end.
+	summary=$(grep -E '^(FAIL|ERROR)|INVALID|new hit|no longer hits|fell to|the list allows|rose from|\*\*\*' \
+		"$base/check.log" | head -n 40)
+	if [ -n "$summary" ]; then
+		echo "$summary" >&2
+	else
+		tail -n 40 "$base/check.log" >&2
+	fi
+	echo "pre-commit: make check failed on the staged tree (full log: $base/check.log)" >&2
+	exit 1
+fi
+echo "pre-commit: make check passed on the staged tree in $(($(date +%s) - start)) s"

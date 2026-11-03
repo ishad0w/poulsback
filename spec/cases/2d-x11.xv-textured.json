@@ -1,0 +1,43 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-x11.xv-textured",
+ "source": "tests/acceptance/2d-x11.md#2d-x11.xv-textured",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "adaptor-attributes"
+  },
+  {
+   "id": "yv12"
+  },
+  {
+   "id": "i420"
+  },
+  {
+   "id": "yuy2"
+  },
+  {
+   "id": "uyvy"
+  },
+  {
+   "id": "scale-up"
+  },
+  {
+   "id": "scale-down"
+  },
+  {
+   "id": "clip-overlap"
+  },
+  {
+   "id": "shm-putimage"
+  },
+  {
+   "id": "color-key-or-composite"
+  },
+  {
+   "id": "two-ports"
+  }
+ ]
+}

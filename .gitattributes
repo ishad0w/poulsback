@@ -1,0 +1,9 @@
+# Unified diff context includes required whitespace; review the source itself.
+kernel/integration/*.patch -whitespace
+
+# Preserve the upstream exception text byte-for-byte, including its final blank line.
+LICENSES/Linux-syscall-note.txt whitespace=-blank-at-eof
+
+# The debt list is a set of lines: a merge keeps both sides' entries, and
+# `make reconcile` deletes what no longer hits (docs/tests.md#quality-gates).
+quality-debts.txt merge=union

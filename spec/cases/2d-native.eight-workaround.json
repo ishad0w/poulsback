@@ -1,0 +1,22 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-native.eight-workaround",
+ "source": "eng/lab/bo/bo-2d-matrix.c --list at workspace 569c3f6 (classes fill8, copy8, overlap8)",
+ "criteria": null,
+ "runner": null,
+ "external": {
+  "source": "eng/lab/bo/bo-2d-matrix.c",
+  "member": null,
+  "select": [
+   "fill8/*",
+   "copy8/*",
+   "overlap8/*"
+  ],
+  "count": 87314,
+  "sha256": "74543a3f352464b22beb5378f9a8d2ec136d3403757cdb30788ce2e83987e0fa",
+  "source_sha256": "302fb5cd77505fc734d9323d270ca69fc19a1b86084f6b5cb8f730807a0f2345",
+  "builder": "device-suite",
+  "note": "Every size with an 8 in the full cross. The kernel at driver HEAD accepts copies 8 wide or high (HW-2D-001: no width-8 erratum); every case must be exact."
+ },
+ "cases": []
+}

@@ -1,0 +1,734 @@
+# SPDX-FileCopyrightText: 2026 ishad0w and the poulsback contributors
+# SPDX-License-Identifier: MIT
+# msvdx-video black-box vectors, format v1; see README.md
+# known IDs x directions x field patterns x capacities
+encode id=0x81 dir=host cap=32 bsize=0x0000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x00000000 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=ok out=x:2081000000000000000000000000000000000000000000000000000000000000
+encode id=0x81 dir=host cap=31 bsize=0x0000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x00000000 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=length
+encode id=0x81 dir=host cap=0 bsize=0x0000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x00000000 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=length
+encode id=0x81 dir=host cap=2 bsize=0x0000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x00000000 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=length
+encode id=0x81 dir=host cap=64 bsize=0x0000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x00000000 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=ok out=x:2081000000000000000000000000000000000000000000000000000000000000
+encode id=0x81 dir=mtx cap=32 bsize=0x0000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x00000000 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=direction
+encode id=0x81 dir=bad cap=32 bsize=0x0000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x00000000 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=argument
+encode id=0x81 dir=host cap=32 bsize=0x0fff bsize_hi=0xf000 ptd=0xffffffff lldma=0xffffffff ctx=0xffffffff fence=0xffffffff mode=0xffffffff mb_first=0xffff mb_last=0xffff flags=0xffffffff => status=ok out=x:2081ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+encode id=0x81 dir=host cap=31 bsize=0x0fff bsize_hi=0xf000 ptd=0xffffffff lldma=0xffffffff ctx=0xffffffff fence=0xffffffff mode=0xffffffff mb_first=0xffff mb_last=0xffff flags=0xffffffff => status=length
+encode id=0x81 dir=host cap=0 bsize=0x0fff bsize_hi=0xf000 ptd=0xffffffff lldma=0xffffffff ctx=0xffffffff fence=0xffffffff mode=0xffffffff mb_first=0xffff mb_last=0xffff flags=0xffffffff => status=length
+encode id=0x81 dir=host cap=2 bsize=0x0fff bsize_hi=0xf000 ptd=0xffffffff lldma=0xffffffff ctx=0xffffffff fence=0xffffffff mode=0xffffffff mb_first=0xffff mb_last=0xffff flags=0xffffffff => status=length
+encode id=0x81 dir=host cap=64 bsize=0x0fff bsize_hi=0xf000 ptd=0xffffffff lldma=0xffffffff ctx=0xffffffff fence=0xffffffff mode=0xffffffff mb_first=0xffff mb_last=0xffff flags=0xffffffff => status=ok out=x:2081ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+encode id=0x81 dir=mtx cap=32 bsize=0x0fff bsize_hi=0xf000 ptd=0xffffffff lldma=0xffffffff ctx=0xffffffff fence=0xffffffff mode=0xffffffff mb_first=0xffff mb_last=0xffff flags=0xffffffff => status=direction
+encode id=0x81 dir=bad cap=32 bsize=0x0fff bsize_hi=0xf000 ptd=0xffffffff lldma=0xffffffff ctx=0xffffffff fence=0xffffffff mode=0xffffffff mb_first=0xffff mb_last=0xffff flags=0xffffffff => status=argument
+encode id=0x81 dir=host cap=32 bsize=0x05a0 bsize_hi=0xa000 ptd=0x13fe4a29 lldma=0x8ddbe9f4 ctx=0xec472146 fence=0x05934b51 mode=0xf3d2f88d mb_first=0xd36c mb_last=0xe56b flags=0xba52f52c => status=ok out=x:2081a0a5294afe13f4e9db8d462147ec514b93058df8d2f36cd36be52cf552ba
+encode id=0x81 dir=host cap=31 bsize=0x05a0 bsize_hi=0xa000 ptd=0x13fe4a29 lldma=0x8ddbe9f4 ctx=0xec472146 fence=0x05934b51 mode=0xf3d2f88d mb_first=0xd36c mb_last=0xe56b flags=0xba52f52c => status=length
+encode id=0x81 dir=host cap=0 bsize=0x05a0 bsize_hi=0xa000 ptd=0x13fe4a29 lldma=0x8ddbe9f4 ctx=0xec472146 fence=0x05934b51 mode=0xf3d2f88d mb_first=0xd36c mb_last=0xe56b flags=0xba52f52c => status=length
+encode id=0x81 dir=host cap=2 bsize=0x05a0 bsize_hi=0xa000 ptd=0x13fe4a29 lldma=0x8ddbe9f4 ctx=0xec472146 fence=0x05934b51 mode=0xf3d2f88d mb_first=0xd36c mb_last=0xe56b flags=0xba52f52c => status=length
+encode id=0x81 dir=host cap=64 bsize=0x05a0 bsize_hi=0xa000 ptd=0x13fe4a29 lldma=0x8ddbe9f4 ctx=0xec472146 fence=0x05934b51 mode=0xf3d2f88d mb_first=0xd36c mb_last=0xe56b flags=0xba52f52c => status=ok out=x:2081a0a5294afe13f4e9db8d462147ec514b93058df8d2f36cd36be52cf552ba
+encode id=0x81 dir=mtx cap=32 bsize=0x05a0 bsize_hi=0xa000 ptd=0x13fe4a29 lldma=0x8ddbe9f4 ctx=0xec472146 fence=0x05934b51 mode=0xf3d2f88d mb_first=0xd36c mb_last=0xe56b flags=0xba52f52c => status=direction
+encode id=0x81 dir=bad cap=32 bsize=0x05a0 bsize_hi=0xa000 ptd=0x13fe4a29 lldma=0x8ddbe9f4 ctx=0xec472146 fence=0x05934b51 mode=0xf3d2f88d mb_first=0xd36c mb_last=0xe56b flags=0xba52f52c => status=argument
+encode id=0x81 dir=host cap=32 bsize=0x0db7 bsize_hi=0x8000 ptd=0x18d23e0b lldma=0xbd7d41c2 ctx=0xbde46760 fence=0x10078364 mode=0xed051971 mb_first=0xd2e4 mb_last=0x57ae flags=0x7535d8ff => status=ok out=x:2081b78d0b3ed218c2417dbd6067e4bd64830710711905ede4d2ae57ffd83575
+encode id=0x81 dir=mtx cap=32 bsize=0x0db7 bsize_hi=0x8000 ptd=0x18d23e0b lldma=0xbd7d41c2 ctx=0xbde46760 fence=0x10078364 mode=0xed051971 mb_first=0xd2e4 mb_last=0x57ae flags=0x7535d8ff => status=direction
+encode id=0x81 dir=bad cap=32 bsize=0x0db7 bsize_hi=0x8000 ptd=0x18d23e0b lldma=0xbd7d41c2 ctx=0xbde46760 fence=0x10078364 mode=0xed051971 mb_first=0xd2e4 mb_last=0x57ae flags=0x7535d8ff => status=argument
+encode id=0x81 dir=host cap=32 bsize=0x02aa bsize_hi=0x5000 ptd=0xeb6d4896 lldma=0x0d8a9c89 ctx=0x9d69e304 fence=0x802f4380 mode=0x63b1824f mb_first=0x3dd3 mb_last=0x56b6 flags=0x7622fb6d => status=ok out=x:2081aa5296486deb899c8a0d04e3699d80432f804f82b163d33db6566dfb2276
+encode id=0x81 dir=mtx cap=32 bsize=0x02aa bsize_hi=0x5000 ptd=0xeb6d4896 lldma=0x0d8a9c89 ctx=0x9d69e304 fence=0x802f4380 mode=0x63b1824f mb_first=0x3dd3 mb_last=0x56b6 flags=0x7622fb6d => status=direction
+encode id=0x81 dir=bad cap=32 bsize=0x02aa bsize_hi=0x5000 ptd=0xeb6d4896 lldma=0x0d8a9c89 ctx=0x9d69e304 fence=0x802f4380 mode=0x63b1824f mb_first=0x3dd3 mb_last=0x56b6 flags=0x7622fb6d => status=argument
+encode id=0x81 dir=host cap=32 bsize=0x068a bsize_hi=0x2000 ptd=0x233ee82a lldma=0x394131d7 ctx=0xf000132a fence=0xbec06918 mode=0xcf852dc9 mb_first=0x2237 mb_last=0x3fe9 flags=0x663ad1d7 => status=ok out=x:20818a262ae83e23d73141392a1300f01869c0bec92d85cf3722e93fd7d13a66
+encode id=0x81 dir=mtx cap=32 bsize=0x068a bsize_hi=0x2000 ptd=0x233ee82a lldma=0x394131d7 ctx=0xf000132a fence=0xbec06918 mode=0xcf852dc9 mb_first=0x2237 mb_last=0x3fe9 flags=0x663ad1d7 => status=direction
+encode id=0x81 dir=bad cap=32 bsize=0x068a bsize_hi=0x2000 ptd=0x233ee82a lldma=0x394131d7 ctx=0xf000132a fence=0xbec06918 mode=0xcf852dc9 mb_first=0x2237 mb_last=0x3fe9 flags=0x663ad1d7 => status=argument
+encode id=0xc0 dir=host cap=12 hdr=0x0000 fence=0x00000000 flags=0x00000000 => status=direction
+encode id=0xc0 dir=mtx cap=12 hdr=0x0000 fence=0x00000000 flags=0x00000000 => status=ok out=x:0cc000000000000000000000
+encode id=0xc0 dir=mtx cap=11 hdr=0x0000 fence=0x00000000 flags=0x00000000 => status=length
+encode id=0xc0 dir=mtx cap=0 hdr=0x0000 fence=0x00000000 flags=0x00000000 => status=length
+encode id=0xc0 dir=mtx cap=2 hdr=0x0000 fence=0x00000000 flags=0x00000000 => status=length
+encode id=0xc0 dir=mtx cap=64 hdr=0x0000 fence=0x00000000 flags=0x00000000 => status=ok out=x:0cc000000000000000000000
+encode id=0xc0 dir=bad cap=12 hdr=0x0000 fence=0x00000000 flags=0x00000000 => status=argument
+encode id=0xc0 dir=host cap=12 hdr=0xffff fence=0xffffffff flags=0xffffffff => status=direction
+encode id=0xc0 dir=mtx cap=12 hdr=0xffff fence=0xffffffff flags=0xffffffff => status=ok out=x:0cc0ffffffffffffffffffff
+encode id=0xc0 dir=mtx cap=11 hdr=0xffff fence=0xffffffff flags=0xffffffff => status=length
+encode id=0xc0 dir=mtx cap=0 hdr=0xffff fence=0xffffffff flags=0xffffffff => status=length
+encode id=0xc0 dir=mtx cap=2 hdr=0xffff fence=0xffffffff flags=0xffffffff => status=length
+encode id=0xc0 dir=mtx cap=64 hdr=0xffff fence=0xffffffff flags=0xffffffff => status=ok out=x:0cc0ffffffffffffffffffff
+encode id=0xc0 dir=bad cap=12 hdr=0xffff fence=0xffffffff flags=0xffffffff => status=argument
+encode id=0xc0 dir=host cap=12 hdr=0xd537 fence=0xd2c5faa6 flags=0xdfb081ae => status=direction
+encode id=0xc0 dir=mtx cap=12 hdr=0xd537 fence=0xd2c5faa6 flags=0xdfb081ae => status=ok out=x:0cc037d5a6fac5d2ae81b0df
+encode id=0xc0 dir=mtx cap=11 hdr=0xd537 fence=0xd2c5faa6 flags=0xdfb081ae => status=length
+encode id=0xc0 dir=mtx cap=0 hdr=0xd537 fence=0xd2c5faa6 flags=0xdfb081ae => status=length
+encode id=0xc0 dir=mtx cap=2 hdr=0xd537 fence=0xd2c5faa6 flags=0xdfb081ae => status=length
+encode id=0xc0 dir=mtx cap=64 hdr=0xd537 fence=0xd2c5faa6 flags=0xdfb081ae => status=ok out=x:0cc037d5a6fac5d2ae81b0df
+encode id=0xc0 dir=bad cap=12 hdr=0xd537 fence=0xd2c5faa6 flags=0xdfb081ae => status=argument
+encode id=0xc0 dir=host cap=12 hdr=0xebec fence=0x49d13282 flags=0x9fa9ed02 => status=direction
+encode id=0xc0 dir=mtx cap=12 hdr=0xebec fence=0x49d13282 flags=0x9fa9ed02 => status=ok out=x:0cc0eceb8232d14902eda99f
+encode id=0xc0 dir=bad cap=12 hdr=0xebec fence=0x49d13282 flags=0x9fa9ed02 => status=argument
+encode id=0xc0 dir=host cap=12 hdr=0x7cc6 fence=0xb97bf8b1 flags=0x0bdacb67 => status=direction
+encode id=0xc0 dir=mtx cap=12 hdr=0x7cc6 fence=0xb97bf8b1 flags=0x0bdacb67 => status=ok out=x:0cc0c67cb1f87bb967cbda0b
+encode id=0xc0 dir=bad cap=12 hdr=0x7cc6 fence=0xb97bf8b1 flags=0x0bdacb67 => status=argument
+encode id=0xc0 dir=host cap=12 hdr=0x45bc fence=0x54f5d85c flags=0x103bdbc3 => status=direction
+encode id=0xc0 dir=mtx cap=12 hdr=0x45bc fence=0x54f5d85c flags=0x103bdbc3 => status=ok out=x:0cc0bc455cd8f554c3db3b10
+encode id=0xc0 dir=bad cap=12 hdr=0x45bc fence=0x54f5d85c flags=0x103bdbc3 => status=argument
+encode id=0xc2 dir=host cap=8 hdr=0x0000 ctx=0x00000000 => status=direction
+encode id=0xc2 dir=mtx cap=8 hdr=0x0000 ctx=0x00000000 => status=ok out=x:08c2000000000000
+encode id=0xc2 dir=mtx cap=7 hdr=0x0000 ctx=0x00000000 => status=length
+encode id=0xc2 dir=mtx cap=0 hdr=0x0000 ctx=0x00000000 => status=length
+encode id=0xc2 dir=mtx cap=2 hdr=0x0000 ctx=0x00000000 => status=length
+encode id=0xc2 dir=mtx cap=64 hdr=0x0000 ctx=0x00000000 => status=ok out=x:08c2000000000000
+encode id=0xc2 dir=bad cap=8 hdr=0x0000 ctx=0x00000000 => status=argument
+encode id=0xc2 dir=host cap=8 hdr=0xffff ctx=0xffffffff => status=direction
+encode id=0xc2 dir=mtx cap=8 hdr=0xffff ctx=0xffffffff => status=ok out=x:08c2ffffffffffff
+encode id=0xc2 dir=mtx cap=7 hdr=0xffff ctx=0xffffffff => status=length
+encode id=0xc2 dir=mtx cap=0 hdr=0xffff ctx=0xffffffff => status=length
+encode id=0xc2 dir=mtx cap=2 hdr=0xffff ctx=0xffffffff => status=length
+encode id=0xc2 dir=mtx cap=64 hdr=0xffff ctx=0xffffffff => status=ok out=x:08c2ffffffffffff
+encode id=0xc2 dir=bad cap=8 hdr=0xffff ctx=0xffffffff => status=argument
+encode id=0xc2 dir=host cap=8 hdr=0x4222 ctx=0x25b2d4b9 => status=direction
+encode id=0xc2 dir=mtx cap=8 hdr=0x4222 ctx=0x25b2d4b9 => status=ok out=x:08c22242b9d4b225
+encode id=0xc2 dir=mtx cap=7 hdr=0x4222 ctx=0x25b2d4b9 => status=length
+encode id=0xc2 dir=mtx cap=0 hdr=0x4222 ctx=0x25b2d4b9 => status=length
+encode id=0xc2 dir=mtx cap=2 hdr=0x4222 ctx=0x25b2d4b9 => status=length
+encode id=0xc2 dir=mtx cap=64 hdr=0x4222 ctx=0x25b2d4b9 => status=ok out=x:08c22242b9d4b225
+encode id=0xc2 dir=bad cap=8 hdr=0x4222 ctx=0x25b2d4b9 => status=argument
+encode id=0xc2 dir=host cap=8 hdr=0xae4b ctx=0xc4ece541 => status=direction
+encode id=0xc2 dir=mtx cap=8 hdr=0xae4b ctx=0xc4ece541 => status=ok out=x:08c24bae41e5ecc4
+encode id=0xc2 dir=bad cap=8 hdr=0xae4b ctx=0xc4ece541 => status=argument
+encode id=0xc2 dir=host cap=8 hdr=0xc503 ctx=0x674bb6df => status=direction
+encode id=0xc2 dir=mtx cap=8 hdr=0xc503 ctx=0x674bb6df => status=ok out=x:08c203c5dfb64b67
+encode id=0xc2 dir=bad cap=8 hdr=0xc503 ctx=0x674bb6df => status=argument
+encode id=0xc2 dir=host cap=8 hdr=0x9cf7 ctx=0x50afca55 => status=direction
+encode id=0xc2 dir=mtx cap=8 hdr=0x9cf7 ctx=0x50afca55 => status=ok out=x:08c2f79c55caaf50
+encode id=0xc2 dir=bad cap=8 hdr=0x9cf7 ctx=0x50afca55 => status=argument
+encode id=0xc5 dir=host cap=12 flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=direction
+encode id=0xc5 dir=mtx cap=12 flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=ok out=x:0cc500000000000000000000
+encode id=0xc5 dir=mtx cap=11 flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=length
+encode id=0xc5 dir=mtx cap=0 flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=length
+encode id=0xc5 dir=mtx cap=2 flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=length
+encode id=0xc5 dir=mtx cap=64 flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=ok out=x:0cc500000000000000000000
+encode id=0xc5 dir=bad cap=12 flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=argument
+encode id=0xc5 dir=host cap=12 flags16=0xffff fence=0xffffffff irq=0xffffffff => status=direction
+encode id=0xc5 dir=mtx cap=12 flags16=0xffff fence=0xffffffff irq=0xffffffff => status=ok out=x:0cc5ffffffffffffffffffff
+encode id=0xc5 dir=mtx cap=11 flags16=0xffff fence=0xffffffff irq=0xffffffff => status=length
+encode id=0xc5 dir=mtx cap=0 flags16=0xffff fence=0xffffffff irq=0xffffffff => status=length
+encode id=0xc5 dir=mtx cap=2 flags16=0xffff fence=0xffffffff irq=0xffffffff => status=length
+encode id=0xc5 dir=mtx cap=64 flags16=0xffff fence=0xffffffff irq=0xffffffff => status=ok out=x:0cc5ffffffffffffffffffff
+encode id=0xc5 dir=bad cap=12 flags16=0xffff fence=0xffffffff irq=0xffffffff => status=argument
+encode id=0xc5 dir=host cap=12 flags16=0xea47 fence=0xc947a602 irq=0x8d78e0e1 => status=direction
+encode id=0xc5 dir=mtx cap=12 flags16=0xea47 fence=0xc947a602 irq=0x8d78e0e1 => status=ok out=x:0cc547ea02a647c9e1e0788d
+encode id=0xc5 dir=mtx cap=11 flags16=0xea47 fence=0xc947a602 irq=0x8d78e0e1 => status=length
+encode id=0xc5 dir=mtx cap=0 flags16=0xea47 fence=0xc947a602 irq=0x8d78e0e1 => status=length
+encode id=0xc5 dir=mtx cap=2 flags16=0xea47 fence=0xc947a602 irq=0x8d78e0e1 => status=length
+encode id=0xc5 dir=mtx cap=64 flags16=0xea47 fence=0xc947a602 irq=0x8d78e0e1 => status=ok out=x:0cc547ea02a647c9e1e0788d
+encode id=0xc5 dir=bad cap=12 flags16=0xea47 fence=0xc947a602 irq=0x8d78e0e1 => status=argument
+encode id=0xc5 dir=host cap=12 flags16=0x8233 fence=0xbbcf79aa irq=0xcbb86937 => status=direction
+encode id=0xc5 dir=mtx cap=12 flags16=0x8233 fence=0xbbcf79aa irq=0xcbb86937 => status=ok out=x:0cc53382aa79cfbb3769b8cb
+encode id=0xc5 dir=bad cap=12 flags16=0x8233 fence=0xbbcf79aa irq=0xcbb86937 => status=argument
+encode id=0xc5 dir=host cap=12 flags16=0xa578 fence=0x5c7e244e irq=0x8602ae95 => status=direction
+encode id=0xc5 dir=mtx cap=12 flags16=0xa578 fence=0x5c7e244e irq=0x8602ae95 => status=ok out=x:0cc578a54e247e5c95ae0286
+encode id=0xc5 dir=bad cap=12 flags16=0xa578 fence=0x5c7e244e irq=0x8602ae95 => status=argument
+encode id=0xc5 dir=host cap=12 flags16=0x88dd fence=0x2021a37e irq=0x9d834279 => status=direction
+encode id=0xc5 dir=mtx cap=12 flags16=0x88dd fence=0x2021a37e irq=0x9d834279 => status=ok out=x:0cc5dd887ea321207942839d
+encode id=0xc5 dir=bad cap=12 flags16=0x88dd fence=0x2021a37e irq=0x9d834279 => status=argument
+encode id=0xc7 dir=host cap=12 flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=direction
+encode id=0xc7 dir=mtx cap=12 flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=ok out=x:0cc700000000000000000000
+encode id=0xc7 dir=mtx cap=11 flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=length
+encode id=0xc7 dir=mtx cap=0 flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=length
+encode id=0xc7 dir=mtx cap=2 flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=length
+encode id=0xc7 dir=mtx cap=64 flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=ok out=x:0cc700000000000000000000
+encode id=0xc7 dir=bad cap=12 flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=argument
+encode id=0xc7 dir=host cap=12 flags16=0xffff fence=0xffffffff irq=0xffffffff => status=direction
+encode id=0xc7 dir=mtx cap=12 flags16=0xffff fence=0xffffffff irq=0xffffffff => status=ok out=x:0cc7ffffffffffffffffffff
+encode id=0xc7 dir=mtx cap=11 flags16=0xffff fence=0xffffffff irq=0xffffffff => status=length
+encode id=0xc7 dir=mtx cap=0 flags16=0xffff fence=0xffffffff irq=0xffffffff => status=length
+encode id=0xc7 dir=mtx cap=2 flags16=0xffff fence=0xffffffff irq=0xffffffff => status=length
+encode id=0xc7 dir=mtx cap=64 flags16=0xffff fence=0xffffffff irq=0xffffffff => status=ok out=x:0cc7ffffffffffffffffffff
+encode id=0xc7 dir=bad cap=12 flags16=0xffff fence=0xffffffff irq=0xffffffff => status=argument
+encode id=0xc7 dir=host cap=12 flags16=0x0b7f fence=0x0937000f irq=0xcfe40614 => status=direction
+encode id=0xc7 dir=mtx cap=12 flags16=0x0b7f fence=0x0937000f irq=0xcfe40614 => status=ok out=x:0cc77f0b0f0037091406e4cf
+encode id=0xc7 dir=mtx cap=11 flags16=0x0b7f fence=0x0937000f irq=0xcfe40614 => status=length
+encode id=0xc7 dir=mtx cap=0 flags16=0x0b7f fence=0x0937000f irq=0xcfe40614 => status=length
+encode id=0xc7 dir=mtx cap=2 flags16=0x0b7f fence=0x0937000f irq=0xcfe40614 => status=length
+encode id=0xc7 dir=mtx cap=64 flags16=0x0b7f fence=0x0937000f irq=0xcfe40614 => status=ok out=x:0cc77f0b0f0037091406e4cf
+encode id=0xc7 dir=bad cap=12 flags16=0x0b7f fence=0x0937000f irq=0xcfe40614 => status=argument
+encode id=0xc7 dir=host cap=12 flags16=0x9167 fence=0xc21fbc88 irq=0x845a6faf => status=direction
+encode id=0xc7 dir=mtx cap=12 flags16=0x9167 fence=0xc21fbc88 irq=0x845a6faf => status=ok out=x:0cc7679188bc1fc2af6f5a84
+encode id=0xc7 dir=bad cap=12 flags16=0x9167 fence=0xc21fbc88 irq=0x845a6faf => status=argument
+encode id=0xc7 dir=host cap=12 flags16=0x8478 fence=0x376790d6 irq=0x6adb7f68 => status=direction
+encode id=0xc7 dir=mtx cap=12 flags16=0x8478 fence=0x376790d6 irq=0x6adb7f68 => status=ok out=x:0cc77884d6906737687fdb6a
+encode id=0xc7 dir=bad cap=12 flags16=0x8478 fence=0x376790d6 irq=0x6adb7f68 => status=argument
+encode id=0xc7 dir=host cap=12 flags16=0xc393 fence=0xeaf62496 irq=0xe2fa8724 => status=direction
+encode id=0xc7 dir=mtx cap=12 flags16=0xc393 fence=0xeaf62496 irq=0xe2fa8724 => status=ok out=x:0cc793c39624f6ea2487fae2
+encode id=0xc7 dir=bad cap=12 flags16=0xc393 fence=0xeaf62496 irq=0xe2fa8724 => status=argument
+# render buffer-size representation: low 12 bits vs preserved bits 15:12
+encode id=0x81 dir=host cap=32 bsize=0x0000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=ok out=x:2081000000000000000000000000000044332211000000000000000000000000
+encode id=0x81 dir=host cap=32 bsize=0x0000 bsize_hi=0x1000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=ok out=x:2081001000000000000000000000000044332211000000000000000000000000
+encode id=0x81 dir=host cap=32 bsize=0x0000 bsize_hi=0xf000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=ok out=x:208100f000000000000000000000000044332211000000000000000000000000
+encode id=0x81 dir=host cap=32 bsize=0x0000 bsize_hi=0x0001 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x0000 bsize_hi=0x0fff ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x0000 bsize_hi=0x8800 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x0001 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=ok out=x:2081010000000000000000000000000044332211000000000000000000000000
+encode id=0x81 dir=host cap=32 bsize=0x0001 bsize_hi=0x1000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=ok out=x:2081011000000000000000000000000044332211000000000000000000000000
+encode id=0x81 dir=host cap=32 bsize=0x0001 bsize_hi=0xf000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=ok out=x:208101f000000000000000000000000044332211000000000000000000000000
+encode id=0x81 dir=host cap=32 bsize=0x0001 bsize_hi=0x0001 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x0001 bsize_hi=0x0fff ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x0001 bsize_hi=0x8800 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x0fff bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=ok out=x:2081ff0f00000000000000000000000044332211000000000000000000000000
+encode id=0x81 dir=host cap=32 bsize=0x0fff bsize_hi=0x1000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=ok out=x:2081ff1f00000000000000000000000044332211000000000000000000000000
+encode id=0x81 dir=host cap=32 bsize=0x0fff bsize_hi=0xf000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=ok out=x:2081ffff00000000000000000000000044332211000000000000000000000000
+encode id=0x81 dir=host cap=32 bsize=0x0fff bsize_hi=0x0001 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x0fff bsize_hi=0x0fff ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x0fff bsize_hi=0x8800 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x1000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x1000 bsize_hi=0x1000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x1000 bsize_hi=0xf000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x1000 bsize_hi=0x0001 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x1000 bsize_hi=0x0fff ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x1000 bsize_hi=0x8800 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x8000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x8000 bsize_hi=0x1000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x8000 bsize_hi=0xf000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x8000 bsize_hi=0x0001 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x8000 bsize_hi=0x0fff ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x8000 bsize_hi=0x8800 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0xffff bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0xffff bsize_hi=0x1000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0xffff bsize_hi=0xf000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0xffff bsize_hi=0x0001 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0xffff bsize_hi=0x0fff ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0xffff bsize_hi=0x8800 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x01c0 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=ok out=x:2081c00100000000000000000000000044332211000000000000000000000000
+encode id=0x81 dir=host cap=32 bsize=0x01c0 bsize_hi=0x1000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=ok out=x:2081c01100000000000000000000000044332211000000000000000000000000
+encode id=0x81 dir=host cap=32 bsize=0x01c0 bsize_hi=0xf000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=ok out=x:2081c0f100000000000000000000000044332211000000000000000000000000
+encode id=0x81 dir=host cap=32 bsize=0x01c0 bsize_hi=0x0001 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x01c0 bsize_hi=0x0fff ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=32 bsize=0x01c0 bsize_hi=0x8800 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x11223344 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=range
+encode id=0x81 dir=host cap=31 bsize=0x1000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x00000000 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=length
+encode id=0x81 dir=mtx cap=32 bsize=0x1000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x00000000 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=direction
+encode id=0x81 dir=bad cap=32 bsize=0x1000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x00000000 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=argument
+# every ID without a layout, both directions and an invalid one
+encode id=0x00 dir=host cap=32 => status=unsupported
+encode id=0x00 dir=mtx cap=32 => status=unsupported
+encode id=0x00 dir=bad cap=32 => status=argument
+encode id=0x01 dir=host cap=32 => status=unsupported
+encode id=0x01 dir=mtx cap=32 => status=unsupported
+encode id=0x02 dir=host cap=32 => status=unsupported
+encode id=0x02 dir=mtx cap=32 => status=unsupported
+encode id=0x03 dir=host cap=32 => status=unsupported
+encode id=0x03 dir=mtx cap=32 => status=unsupported
+encode id=0x04 dir=host cap=32 => status=unsupported
+encode id=0x04 dir=mtx cap=32 => status=unsupported
+encode id=0x05 dir=host cap=32 => status=unsupported
+encode id=0x05 dir=mtx cap=32 => status=unsupported
+encode id=0x06 dir=host cap=32 => status=unsupported
+encode id=0x06 dir=mtx cap=32 => status=unsupported
+encode id=0x07 dir=host cap=32 => status=unsupported
+encode id=0x07 dir=mtx cap=32 => status=unsupported
+encode id=0x08 dir=host cap=32 => status=unsupported
+encode id=0x08 dir=mtx cap=32 => status=unsupported
+encode id=0x09 dir=host cap=32 => status=unsupported
+encode id=0x09 dir=mtx cap=32 => status=unsupported
+encode id=0x0a dir=host cap=32 => status=unsupported
+encode id=0x0a dir=mtx cap=32 => status=unsupported
+encode id=0x0b dir=host cap=32 => status=unsupported
+encode id=0x0b dir=mtx cap=32 => status=unsupported
+encode id=0x0c dir=host cap=32 => status=unsupported
+encode id=0x0c dir=mtx cap=32 => status=unsupported
+encode id=0x0d dir=host cap=32 => status=unsupported
+encode id=0x0d dir=mtx cap=32 => status=unsupported
+encode id=0x0e dir=host cap=32 => status=unsupported
+encode id=0x0e dir=mtx cap=32 => status=unsupported
+encode id=0x0f dir=host cap=32 => status=unsupported
+encode id=0x0f dir=mtx cap=32 => status=unsupported
+encode id=0x10 dir=host cap=32 => status=unsupported
+encode id=0x10 dir=mtx cap=32 => status=unsupported
+encode id=0x10 dir=bad cap=32 => status=argument
+encode id=0x11 dir=host cap=32 => status=unsupported
+encode id=0x11 dir=mtx cap=32 => status=unsupported
+encode id=0x12 dir=host cap=32 => status=unsupported
+encode id=0x12 dir=mtx cap=32 => status=unsupported
+encode id=0x13 dir=host cap=32 => status=unsupported
+encode id=0x13 dir=mtx cap=32 => status=unsupported
+encode id=0x14 dir=host cap=32 => status=unsupported
+encode id=0x14 dir=mtx cap=32 => status=unsupported
+encode id=0x15 dir=host cap=32 => status=unsupported
+encode id=0x15 dir=mtx cap=32 => status=unsupported
+encode id=0x16 dir=host cap=32 => status=unsupported
+encode id=0x16 dir=mtx cap=32 => status=unsupported
+encode id=0x17 dir=host cap=32 => status=unsupported
+encode id=0x17 dir=mtx cap=32 => status=unsupported
+encode id=0x18 dir=host cap=32 => status=unsupported
+encode id=0x18 dir=mtx cap=32 => status=unsupported
+encode id=0x19 dir=host cap=32 => status=unsupported
+encode id=0x19 dir=mtx cap=32 => status=unsupported
+encode id=0x1a dir=host cap=32 => status=unsupported
+encode id=0x1a dir=mtx cap=32 => status=unsupported
+encode id=0x1b dir=host cap=32 => status=unsupported
+encode id=0x1b dir=mtx cap=32 => status=unsupported
+encode id=0x1c dir=host cap=32 => status=unsupported
+encode id=0x1c dir=mtx cap=32 => status=unsupported
+encode id=0x1d dir=host cap=32 => status=unsupported
+encode id=0x1d dir=mtx cap=32 => status=unsupported
+encode id=0x1e dir=host cap=32 => status=unsupported
+encode id=0x1e dir=mtx cap=32 => status=unsupported
+encode id=0x1f dir=host cap=32 => status=unsupported
+encode id=0x1f dir=mtx cap=32 => status=unsupported
+encode id=0x20 dir=host cap=32 => status=unsupported
+encode id=0x20 dir=mtx cap=32 => status=unsupported
+encode id=0x20 dir=bad cap=32 => status=argument
+encode id=0x21 dir=host cap=32 => status=unsupported
+encode id=0x21 dir=mtx cap=32 => status=unsupported
+encode id=0x22 dir=host cap=32 => status=unsupported
+encode id=0x22 dir=mtx cap=32 => status=unsupported
+encode id=0x23 dir=host cap=32 => status=unsupported
+encode id=0x23 dir=mtx cap=32 => status=unsupported
+encode id=0x24 dir=host cap=32 => status=unsupported
+encode id=0x24 dir=mtx cap=32 => status=unsupported
+encode id=0x25 dir=host cap=32 => status=unsupported
+encode id=0x25 dir=mtx cap=32 => status=unsupported
+encode id=0x26 dir=host cap=32 => status=unsupported
+encode id=0x26 dir=mtx cap=32 => status=unsupported
+encode id=0x27 dir=host cap=32 => status=unsupported
+encode id=0x27 dir=mtx cap=32 => status=unsupported
+encode id=0x28 dir=host cap=32 => status=unsupported
+encode id=0x28 dir=mtx cap=32 => status=unsupported
+encode id=0x29 dir=host cap=32 => status=unsupported
+encode id=0x29 dir=mtx cap=32 => status=unsupported
+encode id=0x2a dir=host cap=32 => status=unsupported
+encode id=0x2a dir=mtx cap=32 => status=unsupported
+encode id=0x2b dir=host cap=32 => status=unsupported
+encode id=0x2b dir=mtx cap=32 => status=unsupported
+encode id=0x2c dir=host cap=32 => status=unsupported
+encode id=0x2c dir=mtx cap=32 => status=unsupported
+encode id=0x2d dir=host cap=32 => status=unsupported
+encode id=0x2d dir=mtx cap=32 => status=unsupported
+encode id=0x2e dir=host cap=32 => status=unsupported
+encode id=0x2e dir=mtx cap=32 => status=unsupported
+encode id=0x2f dir=host cap=32 => status=unsupported
+encode id=0x2f dir=mtx cap=32 => status=unsupported
+encode id=0x30 dir=host cap=32 => status=unsupported
+encode id=0x30 dir=mtx cap=32 => status=unsupported
+encode id=0x30 dir=bad cap=32 => status=argument
+encode id=0x31 dir=host cap=32 => status=unsupported
+encode id=0x31 dir=mtx cap=32 => status=unsupported
+encode id=0x32 dir=host cap=32 => status=unsupported
+encode id=0x32 dir=mtx cap=32 => status=unsupported
+encode id=0x33 dir=host cap=32 => status=unsupported
+encode id=0x33 dir=mtx cap=32 => status=unsupported
+encode id=0x34 dir=host cap=32 => status=unsupported
+encode id=0x34 dir=mtx cap=32 => status=unsupported
+encode id=0x35 dir=host cap=32 => status=unsupported
+encode id=0x35 dir=mtx cap=32 => status=unsupported
+encode id=0x36 dir=host cap=32 => status=unsupported
+encode id=0x36 dir=mtx cap=32 => status=unsupported
+encode id=0x37 dir=host cap=32 => status=unsupported
+encode id=0x37 dir=mtx cap=32 => status=unsupported
+encode id=0x38 dir=host cap=32 => status=unsupported
+encode id=0x38 dir=mtx cap=32 => status=unsupported
+encode id=0x39 dir=host cap=32 => status=unsupported
+encode id=0x39 dir=mtx cap=32 => status=unsupported
+encode id=0x3a dir=host cap=32 => status=unsupported
+encode id=0x3a dir=mtx cap=32 => status=unsupported
+encode id=0x3b dir=host cap=32 => status=unsupported
+encode id=0x3b dir=mtx cap=32 => status=unsupported
+encode id=0x3c dir=host cap=32 => status=unsupported
+encode id=0x3c dir=mtx cap=32 => status=unsupported
+encode id=0x3d dir=host cap=32 => status=unsupported
+encode id=0x3d dir=mtx cap=32 => status=unsupported
+encode id=0x3e dir=host cap=32 => status=unsupported
+encode id=0x3e dir=mtx cap=32 => status=unsupported
+encode id=0x3f dir=host cap=32 => status=unsupported
+encode id=0x3f dir=mtx cap=32 => status=unsupported
+encode id=0x40 dir=host cap=32 => status=unsupported
+encode id=0x40 dir=mtx cap=32 => status=unsupported
+encode id=0x40 dir=bad cap=32 => status=argument
+encode id=0x41 dir=host cap=32 => status=unsupported
+encode id=0x41 dir=mtx cap=32 => status=unsupported
+encode id=0x42 dir=host cap=32 => status=unsupported
+encode id=0x42 dir=mtx cap=32 => status=unsupported
+encode id=0x43 dir=host cap=32 => status=unsupported
+encode id=0x43 dir=mtx cap=32 => status=unsupported
+encode id=0x44 dir=host cap=32 => status=unsupported
+encode id=0x44 dir=mtx cap=32 => status=unsupported
+encode id=0x45 dir=host cap=32 => status=unsupported
+encode id=0x45 dir=mtx cap=32 => status=unsupported
+encode id=0x46 dir=host cap=32 => status=unsupported
+encode id=0x46 dir=mtx cap=32 => status=unsupported
+encode id=0x47 dir=host cap=32 => status=unsupported
+encode id=0x47 dir=mtx cap=32 => status=unsupported
+encode id=0x48 dir=host cap=32 => status=unsupported
+encode id=0x48 dir=mtx cap=32 => status=unsupported
+encode id=0x49 dir=host cap=32 => status=unsupported
+encode id=0x49 dir=mtx cap=32 => status=unsupported
+encode id=0x4a dir=host cap=32 => status=unsupported
+encode id=0x4a dir=mtx cap=32 => status=unsupported
+encode id=0x4b dir=host cap=32 => status=unsupported
+encode id=0x4b dir=mtx cap=32 => status=unsupported
+encode id=0x4c dir=host cap=32 => status=unsupported
+encode id=0x4c dir=mtx cap=32 => status=unsupported
+encode id=0x4d dir=host cap=32 => status=unsupported
+encode id=0x4d dir=mtx cap=32 => status=unsupported
+encode id=0x4e dir=host cap=32 => status=unsupported
+encode id=0x4e dir=mtx cap=32 => status=unsupported
+encode id=0x4f dir=host cap=32 => status=unsupported
+encode id=0x4f dir=mtx cap=32 => status=unsupported
+encode id=0x50 dir=host cap=32 => status=unsupported
+encode id=0x50 dir=mtx cap=32 => status=unsupported
+encode id=0x50 dir=bad cap=32 => status=argument
+encode id=0x51 dir=host cap=32 => status=unsupported
+encode id=0x51 dir=mtx cap=32 => status=unsupported
+encode id=0x52 dir=host cap=32 => status=unsupported
+encode id=0x52 dir=mtx cap=32 => status=unsupported
+encode id=0x53 dir=host cap=32 => status=unsupported
+encode id=0x53 dir=mtx cap=32 => status=unsupported
+encode id=0x54 dir=host cap=32 => status=unsupported
+encode id=0x54 dir=mtx cap=32 => status=unsupported
+encode id=0x55 dir=host cap=32 => status=unsupported
+encode id=0x55 dir=mtx cap=32 => status=unsupported
+encode id=0x56 dir=host cap=32 => status=unsupported
+encode id=0x56 dir=mtx cap=32 => status=unsupported
+encode id=0x57 dir=host cap=32 => status=unsupported
+encode id=0x57 dir=mtx cap=32 => status=unsupported
+encode id=0x58 dir=host cap=32 => status=unsupported
+encode id=0x58 dir=mtx cap=32 => status=unsupported
+encode id=0x59 dir=host cap=32 => status=unsupported
+encode id=0x59 dir=mtx cap=32 => status=unsupported
+encode id=0x5a dir=host cap=32 => status=unsupported
+encode id=0x5a dir=mtx cap=32 => status=unsupported
+encode id=0x5b dir=host cap=32 => status=unsupported
+encode id=0x5b dir=mtx cap=32 => status=unsupported
+encode id=0x5c dir=host cap=32 => status=unsupported
+encode id=0x5c dir=mtx cap=32 => status=unsupported
+encode id=0x5d dir=host cap=32 => status=unsupported
+encode id=0x5d dir=mtx cap=32 => status=unsupported
+encode id=0x5e dir=host cap=32 => status=unsupported
+encode id=0x5e dir=mtx cap=32 => status=unsupported
+encode id=0x5f dir=host cap=32 => status=unsupported
+encode id=0x5f dir=mtx cap=32 => status=unsupported
+encode id=0x60 dir=host cap=32 => status=unsupported
+encode id=0x60 dir=mtx cap=32 => status=unsupported
+encode id=0x60 dir=bad cap=32 => status=argument
+encode id=0x61 dir=host cap=32 => status=unsupported
+encode id=0x61 dir=mtx cap=32 => status=unsupported
+encode id=0x62 dir=host cap=32 => status=unsupported
+encode id=0x62 dir=mtx cap=32 => status=unsupported
+encode id=0x63 dir=host cap=32 => status=unsupported
+encode id=0x63 dir=mtx cap=32 => status=unsupported
+encode id=0x64 dir=host cap=32 => status=unsupported
+encode id=0x64 dir=mtx cap=32 => status=unsupported
+encode id=0x65 dir=host cap=32 => status=unsupported
+encode id=0x65 dir=mtx cap=32 => status=unsupported
+encode id=0x66 dir=host cap=32 => status=unsupported
+encode id=0x66 dir=mtx cap=32 => status=unsupported
+encode id=0x67 dir=host cap=32 => status=unsupported
+encode id=0x67 dir=mtx cap=32 => status=unsupported
+encode id=0x68 dir=host cap=32 => status=unsupported
+encode id=0x68 dir=mtx cap=32 => status=unsupported
+encode id=0x69 dir=host cap=32 => status=unsupported
+encode id=0x69 dir=mtx cap=32 => status=unsupported
+encode id=0x6a dir=host cap=32 => status=unsupported
+encode id=0x6a dir=mtx cap=32 => status=unsupported
+encode id=0x6b dir=host cap=32 => status=unsupported
+encode id=0x6b dir=mtx cap=32 => status=unsupported
+encode id=0x6c dir=host cap=32 => status=unsupported
+encode id=0x6c dir=mtx cap=32 => status=unsupported
+encode id=0x6d dir=host cap=32 => status=unsupported
+encode id=0x6d dir=mtx cap=32 => status=unsupported
+encode id=0x6e dir=host cap=32 => status=unsupported
+encode id=0x6e dir=mtx cap=32 => status=unsupported
+encode id=0x6f dir=host cap=32 => status=unsupported
+encode id=0x6f dir=mtx cap=32 => status=unsupported
+encode id=0x70 dir=host cap=32 => status=unsupported
+encode id=0x70 dir=mtx cap=32 => status=unsupported
+encode id=0x70 dir=bad cap=32 => status=argument
+encode id=0x71 dir=host cap=32 => status=unsupported
+encode id=0x71 dir=mtx cap=32 => status=unsupported
+encode id=0x72 dir=host cap=32 => status=unsupported
+encode id=0x72 dir=mtx cap=32 => status=unsupported
+encode id=0x73 dir=host cap=32 => status=unsupported
+encode id=0x73 dir=mtx cap=32 => status=unsupported
+encode id=0x74 dir=host cap=32 => status=unsupported
+encode id=0x74 dir=mtx cap=32 => status=unsupported
+encode id=0x75 dir=host cap=32 => status=unsupported
+encode id=0x75 dir=mtx cap=32 => status=unsupported
+encode id=0x76 dir=host cap=32 => status=unsupported
+encode id=0x76 dir=mtx cap=32 => status=unsupported
+encode id=0x77 dir=host cap=32 => status=unsupported
+encode id=0x77 dir=mtx cap=32 => status=unsupported
+encode id=0x78 dir=host cap=32 => status=unsupported
+encode id=0x78 dir=mtx cap=32 => status=unsupported
+encode id=0x79 dir=host cap=32 => status=unsupported
+encode id=0x79 dir=mtx cap=32 => status=unsupported
+encode id=0x7a dir=host cap=32 => status=unsupported
+encode id=0x7a dir=mtx cap=32 => status=unsupported
+encode id=0x7b dir=host cap=32 => status=unsupported
+encode id=0x7b dir=mtx cap=32 => status=unsupported
+encode id=0x7c dir=host cap=32 => status=unsupported
+encode id=0x7c dir=mtx cap=32 => status=unsupported
+encode id=0x7d dir=host cap=32 => status=unsupported
+encode id=0x7d dir=mtx cap=32 => status=unsupported
+encode id=0x7e dir=host cap=32 => status=unsupported
+encode id=0x7e dir=mtx cap=32 => status=unsupported
+encode id=0x7f dir=host cap=32 => status=unsupported
+encode id=0x7f dir=mtx cap=32 => status=unsupported
+encode id=0x80 dir=host cap=32 => status=unsupported
+encode id=0x80 dir=mtx cap=32 => status=unsupported
+encode id=0x80 dir=bad cap=32 => status=argument
+encode id=0x82 dir=host cap=32 => status=unsupported
+encode id=0x82 dir=mtx cap=32 => status=unsupported
+encode id=0x83 dir=host cap=32 => status=unsupported
+encode id=0x83 dir=mtx cap=32 => status=unsupported
+encode id=0x84 dir=host cap=32 => status=unsupported
+encode id=0x84 dir=mtx cap=32 => status=unsupported
+encode id=0x85 dir=host cap=32 => status=unsupported
+encode id=0x85 dir=mtx cap=32 => status=unsupported
+encode id=0x86 dir=host cap=32 => status=unsupported
+encode id=0x86 dir=mtx cap=32 => status=unsupported
+encode id=0x87 dir=host cap=32 => status=unsupported
+encode id=0x87 dir=mtx cap=32 => status=unsupported
+encode id=0x88 dir=host cap=32 => status=unsupported
+encode id=0x88 dir=mtx cap=32 => status=unsupported
+encode id=0x89 dir=host cap=32 => status=unsupported
+encode id=0x89 dir=mtx cap=32 => status=unsupported
+encode id=0x8a dir=host cap=32 => status=unsupported
+encode id=0x8a dir=mtx cap=32 => status=unsupported
+encode id=0x8b dir=host cap=32 => status=unsupported
+encode id=0x8b dir=mtx cap=32 => status=unsupported
+encode id=0x8c dir=host cap=32 => status=unsupported
+encode id=0x8c dir=mtx cap=32 => status=unsupported
+encode id=0x8d dir=host cap=32 => status=unsupported
+encode id=0x8d dir=mtx cap=32 => status=unsupported
+encode id=0x8e dir=host cap=32 => status=unsupported
+encode id=0x8e dir=mtx cap=32 => status=unsupported
+encode id=0x8f dir=host cap=32 => status=unsupported
+encode id=0x8f dir=mtx cap=32 => status=unsupported
+encode id=0x90 dir=host cap=32 => status=unsupported
+encode id=0x90 dir=mtx cap=32 => status=unsupported
+encode id=0x90 dir=bad cap=32 => status=argument
+encode id=0x91 dir=host cap=32 => status=unsupported
+encode id=0x91 dir=mtx cap=32 => status=unsupported
+encode id=0x92 dir=host cap=32 => status=unsupported
+encode id=0x92 dir=mtx cap=32 => status=unsupported
+encode id=0x93 dir=host cap=32 => status=unsupported
+encode id=0x93 dir=mtx cap=32 => status=unsupported
+encode id=0x94 dir=host cap=32 => status=unsupported
+encode id=0x94 dir=mtx cap=32 => status=unsupported
+encode id=0x95 dir=host cap=32 => status=unsupported
+encode id=0x95 dir=mtx cap=32 => status=unsupported
+encode id=0x96 dir=host cap=32 => status=unsupported
+encode id=0x96 dir=mtx cap=32 => status=unsupported
+encode id=0x97 dir=host cap=32 => status=unsupported
+encode id=0x97 dir=mtx cap=32 => status=unsupported
+encode id=0x98 dir=host cap=32 => status=unsupported
+encode id=0x98 dir=mtx cap=32 => status=unsupported
+encode id=0x99 dir=host cap=32 => status=unsupported
+encode id=0x99 dir=mtx cap=32 => status=unsupported
+encode id=0x9a dir=host cap=32 => status=unsupported
+encode id=0x9a dir=mtx cap=32 => status=unsupported
+encode id=0x9b dir=host cap=32 => status=unsupported
+encode id=0x9b dir=mtx cap=32 => status=unsupported
+encode id=0x9c dir=host cap=32 => status=unsupported
+encode id=0x9c dir=mtx cap=32 => status=unsupported
+encode id=0x9d dir=host cap=32 => status=unsupported
+encode id=0x9d dir=mtx cap=32 => status=unsupported
+encode id=0x9e dir=host cap=32 => status=unsupported
+encode id=0x9e dir=mtx cap=32 => status=unsupported
+encode id=0x9f dir=host cap=32 => status=unsupported
+encode id=0x9f dir=mtx cap=32 => status=unsupported
+encode id=0xa0 dir=host cap=32 => status=unsupported
+encode id=0xa0 dir=mtx cap=32 => status=unsupported
+encode id=0xa0 dir=bad cap=32 => status=argument
+encode id=0xa1 dir=host cap=32 => status=unsupported
+encode id=0xa1 dir=mtx cap=32 => status=unsupported
+encode id=0xa2 dir=host cap=32 => status=unsupported
+encode id=0xa2 dir=mtx cap=32 => status=unsupported
+encode id=0xa3 dir=host cap=32 => status=unsupported
+encode id=0xa3 dir=mtx cap=32 => status=unsupported
+encode id=0xa4 dir=host cap=32 => status=unsupported
+encode id=0xa4 dir=mtx cap=32 => status=unsupported
+encode id=0xa5 dir=host cap=32 => status=unsupported
+encode id=0xa5 dir=mtx cap=32 => status=unsupported
+encode id=0xa6 dir=host cap=32 => status=unsupported
+encode id=0xa6 dir=mtx cap=32 => status=unsupported
+encode id=0xa7 dir=host cap=32 => status=unsupported
+encode id=0xa7 dir=mtx cap=32 => status=unsupported
+encode id=0xa8 dir=host cap=32 => status=unsupported
+encode id=0xa8 dir=mtx cap=32 => status=unsupported
+encode id=0xa9 dir=host cap=32 => status=unsupported
+encode id=0xa9 dir=mtx cap=32 => status=unsupported
+encode id=0xaa dir=host cap=32 => status=unsupported
+encode id=0xaa dir=mtx cap=32 => status=unsupported
+encode id=0xab dir=host cap=32 => status=unsupported
+encode id=0xab dir=mtx cap=32 => status=unsupported
+encode id=0xac dir=host cap=32 => status=unsupported
+encode id=0xac dir=mtx cap=32 => status=unsupported
+encode id=0xad dir=host cap=32 => status=unsupported
+encode id=0xad dir=mtx cap=32 => status=unsupported
+encode id=0xae dir=host cap=32 => status=unsupported
+encode id=0xae dir=mtx cap=32 => status=unsupported
+encode id=0xaf dir=host cap=32 => status=unsupported
+encode id=0xaf dir=mtx cap=32 => status=unsupported
+encode id=0xb0 dir=host cap=32 => status=unsupported
+encode id=0xb0 dir=mtx cap=32 => status=unsupported
+encode id=0xb0 dir=bad cap=32 => status=argument
+encode id=0xb1 dir=host cap=32 => status=unsupported
+encode id=0xb1 dir=mtx cap=32 => status=unsupported
+encode id=0xb2 dir=host cap=32 => status=unsupported
+encode id=0xb2 dir=mtx cap=32 => status=unsupported
+encode id=0xb3 dir=host cap=32 => status=unsupported
+encode id=0xb3 dir=mtx cap=32 => status=unsupported
+encode id=0xb4 dir=host cap=32 => status=unsupported
+encode id=0xb4 dir=mtx cap=32 => status=unsupported
+encode id=0xb5 dir=host cap=32 => status=unsupported
+encode id=0xb5 dir=mtx cap=32 => status=unsupported
+encode id=0xb6 dir=host cap=32 => status=unsupported
+encode id=0xb6 dir=mtx cap=32 => status=unsupported
+encode id=0xb7 dir=host cap=32 => status=unsupported
+encode id=0xb7 dir=mtx cap=32 => status=unsupported
+encode id=0xb8 dir=host cap=32 => status=unsupported
+encode id=0xb8 dir=mtx cap=32 => status=unsupported
+encode id=0xb9 dir=host cap=32 => status=unsupported
+encode id=0xb9 dir=mtx cap=32 => status=unsupported
+encode id=0xba dir=host cap=32 => status=unsupported
+encode id=0xba dir=mtx cap=32 => status=unsupported
+encode id=0xbb dir=host cap=32 => status=unsupported
+encode id=0xbb dir=mtx cap=32 => status=unsupported
+encode id=0xbc dir=host cap=32 => status=unsupported
+encode id=0xbc dir=mtx cap=32 => status=unsupported
+encode id=0xbd dir=host cap=32 => status=unsupported
+encode id=0xbd dir=mtx cap=32 => status=unsupported
+encode id=0xbe dir=host cap=32 => status=unsupported
+encode id=0xbe dir=mtx cap=32 => status=unsupported
+encode id=0xbf dir=host cap=32 => status=unsupported
+encode id=0xbf dir=mtx cap=32 => status=unsupported
+encode id=0xc1 dir=host cap=32 => status=unsupported
+encode id=0xc1 dir=mtx cap=32 => status=unsupported
+encode id=0xc3 dir=host cap=32 => status=unsupported
+encode id=0xc3 dir=mtx cap=32 => status=unsupported
+encode id=0xc4 dir=host cap=32 => status=unsupported
+encode id=0xc4 dir=mtx cap=32 => status=unsupported
+encode id=0xc6 dir=host cap=32 => status=unsupported
+encode id=0xc6 dir=mtx cap=32 => status=unsupported
+encode id=0xc8 dir=host cap=32 => status=unsupported
+encode id=0xc8 dir=mtx cap=32 => status=unsupported
+encode id=0xc9 dir=host cap=32 => status=unsupported
+encode id=0xc9 dir=mtx cap=32 => status=unsupported
+encode id=0xca dir=host cap=32 => status=unsupported
+encode id=0xca dir=mtx cap=32 => status=unsupported
+encode id=0xcb dir=host cap=32 => status=unsupported
+encode id=0xcb dir=mtx cap=32 => status=unsupported
+encode id=0xcc dir=host cap=32 => status=unsupported
+encode id=0xcc dir=mtx cap=32 => status=unsupported
+encode id=0xcd dir=host cap=32 => status=unsupported
+encode id=0xcd dir=mtx cap=32 => status=unsupported
+encode id=0xce dir=host cap=32 => status=unsupported
+encode id=0xce dir=mtx cap=32 => status=unsupported
+encode id=0xcf dir=host cap=32 => status=unsupported
+encode id=0xcf dir=mtx cap=32 => status=unsupported
+encode id=0xd0 dir=host cap=32 => status=unsupported
+encode id=0xd0 dir=mtx cap=32 => status=unsupported
+encode id=0xd0 dir=bad cap=32 => status=argument
+encode id=0xd1 dir=host cap=32 => status=unsupported
+encode id=0xd1 dir=mtx cap=32 => status=unsupported
+encode id=0xd2 dir=host cap=32 => status=unsupported
+encode id=0xd2 dir=mtx cap=32 => status=unsupported
+encode id=0xd3 dir=host cap=32 => status=unsupported
+encode id=0xd3 dir=mtx cap=32 => status=unsupported
+encode id=0xd4 dir=host cap=32 => status=unsupported
+encode id=0xd4 dir=mtx cap=32 => status=unsupported
+encode id=0xd5 dir=host cap=32 => status=unsupported
+encode id=0xd5 dir=mtx cap=32 => status=unsupported
+encode id=0xd6 dir=host cap=32 => status=unsupported
+encode id=0xd6 dir=mtx cap=32 => status=unsupported
+encode id=0xd7 dir=host cap=32 => status=unsupported
+encode id=0xd7 dir=mtx cap=32 => status=unsupported
+encode id=0xd8 dir=host cap=32 => status=unsupported
+encode id=0xd8 dir=mtx cap=32 => status=unsupported
+encode id=0xd9 dir=host cap=32 => status=unsupported
+encode id=0xd9 dir=mtx cap=32 => status=unsupported
+encode id=0xda dir=host cap=32 => status=unsupported
+encode id=0xda dir=mtx cap=32 => status=unsupported
+encode id=0xdb dir=host cap=32 => status=unsupported
+encode id=0xdb dir=mtx cap=32 => status=unsupported
+encode id=0xdc dir=host cap=32 => status=unsupported
+encode id=0xdc dir=mtx cap=32 => status=unsupported
+encode id=0xdd dir=host cap=32 => status=unsupported
+encode id=0xdd dir=mtx cap=32 => status=unsupported
+encode id=0xde dir=host cap=32 => status=unsupported
+encode id=0xde dir=mtx cap=32 => status=unsupported
+encode id=0xdf dir=host cap=32 => status=unsupported
+encode id=0xdf dir=mtx cap=32 => status=unsupported
+encode id=0xe0 dir=host cap=32 => status=unsupported
+encode id=0xe0 dir=mtx cap=32 => status=unsupported
+encode id=0xe0 dir=bad cap=32 => status=argument
+encode id=0xe1 dir=host cap=32 => status=unsupported
+encode id=0xe1 dir=mtx cap=32 => status=unsupported
+encode id=0xe2 dir=host cap=32 => status=unsupported
+encode id=0xe2 dir=mtx cap=32 => status=unsupported
+encode id=0xe3 dir=host cap=32 => status=unsupported
+encode id=0xe3 dir=mtx cap=32 => status=unsupported
+encode id=0xe4 dir=host cap=32 => status=unsupported
+encode id=0xe4 dir=mtx cap=32 => status=unsupported
+encode id=0xe5 dir=host cap=32 => status=unsupported
+encode id=0xe5 dir=mtx cap=32 => status=unsupported
+encode id=0xe6 dir=host cap=32 => status=unsupported
+encode id=0xe6 dir=mtx cap=32 => status=unsupported
+encode id=0xe7 dir=host cap=32 => status=unsupported
+encode id=0xe7 dir=mtx cap=32 => status=unsupported
+encode id=0xe8 dir=host cap=32 => status=unsupported
+encode id=0xe8 dir=mtx cap=32 => status=unsupported
+encode id=0xe9 dir=host cap=32 => status=unsupported
+encode id=0xe9 dir=mtx cap=32 => status=unsupported
+encode id=0xea dir=host cap=32 => status=unsupported
+encode id=0xea dir=mtx cap=32 => status=unsupported
+encode id=0xeb dir=host cap=32 => status=unsupported
+encode id=0xeb dir=mtx cap=32 => status=unsupported
+encode id=0xec dir=host cap=32 => status=unsupported
+encode id=0xec dir=mtx cap=32 => status=unsupported
+encode id=0xed dir=host cap=32 => status=unsupported
+encode id=0xed dir=mtx cap=32 => status=unsupported
+encode id=0xee dir=host cap=32 => status=unsupported
+encode id=0xee dir=mtx cap=32 => status=unsupported
+encode id=0xef dir=host cap=32 => status=unsupported
+encode id=0xef dir=mtx cap=32 => status=unsupported
+encode id=0xf0 dir=host cap=32 => status=unsupported
+encode id=0xf0 dir=mtx cap=32 => status=unsupported
+encode id=0xf0 dir=bad cap=32 => status=argument
+encode id=0xf1 dir=host cap=32 => status=unsupported
+encode id=0xf1 dir=mtx cap=32 => status=unsupported
+encode id=0xf2 dir=host cap=32 => status=unsupported
+encode id=0xf2 dir=mtx cap=32 => status=unsupported
+encode id=0xf3 dir=host cap=32 => status=unsupported
+encode id=0xf3 dir=mtx cap=32 => status=unsupported
+encode id=0xf4 dir=host cap=32 => status=unsupported
+encode id=0xf4 dir=mtx cap=32 => status=unsupported
+encode id=0xf5 dir=host cap=32 => status=unsupported
+encode id=0xf5 dir=mtx cap=32 => status=unsupported
+encode id=0xf6 dir=host cap=32 => status=unsupported
+encode id=0xf6 dir=mtx cap=32 => status=unsupported
+encode id=0xf7 dir=host cap=32 => status=unsupported
+encode id=0xf7 dir=mtx cap=32 => status=unsupported
+encode id=0xf8 dir=host cap=32 => status=unsupported
+encode id=0xf8 dir=mtx cap=32 => status=unsupported
+encode id=0xf9 dir=host cap=32 => status=unsupported
+encode id=0xf9 dir=mtx cap=32 => status=unsupported
+encode id=0xfa dir=host cap=32 => status=unsupported
+encode id=0xfa dir=mtx cap=32 => status=unsupported
+encode id=0xfb dir=host cap=32 => status=unsupported
+encode id=0xfb dir=mtx cap=32 => status=unsupported
+encode id=0xfc dir=host cap=32 => status=unsupported
+encode id=0xfc dir=mtx cap=32 => status=unsupported
+encode id=0xfd dir=host cap=32 => status=unsupported
+encode id=0xfd dir=mtx cap=32 => status=unsupported
+encode id=0xfe dir=host cap=32 => status=unsupported
+encode id=0xfe dir=mtx cap=32 => status=unsupported
+encode id=0xff dir=host cap=32 => status=unsupported
+encode id=0xff dir=mtx cap=32 => status=unsupported
+# absent message or output
+encode id=0x81 dir=host cap=32 null=message bsize=0x0000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x00000000 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=argument
+encode id=0x81 dir=host cap=32 null=output bsize=0x0000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x00000000 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=argument
+encode id=0x81 dir=bad cap=32 null=message null=output bsize=0x0000 bsize_hi=0x0000 ptd=0x00000000 lldma=0x00000000 ctx=0x00000000 fence=0x00000000 mode=0x00000000 mb_first=0x0000 mb_last=0x0000 flags=0x00000000 => status=argument
+encode id=0xc0 dir=mtx cap=32 null=message hdr=0x0000 fence=0x00000000 flags=0x00000000 => status=argument
+encode id=0xc0 dir=mtx cap=32 null=output hdr=0x0000 fence=0x00000000 flags=0x00000000 => status=argument
+encode id=0xc0 dir=bad cap=32 null=message null=output hdr=0x0000 fence=0x00000000 flags=0x00000000 => status=argument
+encode id=0xc2 dir=mtx cap=32 null=message hdr=0x0000 ctx=0x00000000 => status=argument
+encode id=0xc2 dir=mtx cap=32 null=output hdr=0x0000 ctx=0x00000000 => status=argument
+encode id=0xc2 dir=bad cap=32 null=message null=output hdr=0x0000 ctx=0x00000000 => status=argument
+encode id=0xc5 dir=mtx cap=32 null=message flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=argument
+encode id=0xc5 dir=mtx cap=32 null=output flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=argument
+encode id=0xc5 dir=bad cap=32 null=message null=output flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=argument
+encode id=0xc7 dir=mtx cap=32 null=message flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=argument
+encode id=0xc7 dir=mtx cap=32 null=output flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=argument
+encode id=0xc7 dir=bad cap=32 null=message null=output flags16=0x0000 fence=0x00000000 irq=0x00000000 => status=argument

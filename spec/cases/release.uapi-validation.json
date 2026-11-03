@@ -1,0 +1,866 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "release.uapi-validation",
+ "source": "Every validation of the six ioctls in kernel/ at driver HEAD, one case per condition",
+ "criteria": "The ioctl returns the named errno and nothing is published (no job, no mapping, BO bytes unchanged)",
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "bo-create/args-bad-pointer",
+   "parameters": {
+    "errno": "EFAULT",
+    "condition": "the ioctl argument does not point at a readable (in) or writable (out) struct poulsback_bo_create",
+    "where": "linux-6.1 drivers/gpu/drm/drm_ioctl.c:drm_ioctl (copy_from_user / copy_to_user)",
+    "note": "DRM layer, before and after the handler. A readable but read-only struct fails only on the copy back, after the handler's side effect."
+   }
+  },
+  {
+   "id": "bo-create/device-unplugged",
+   "parameters": {
+    "errno": "ENODEV",
+    "condition": "the device was unplugged (drm_dev_is_unplugged)",
+    "where": "linux-6.1 drivers/gpu/drm/drm_ioctl.c:drm_ioctl (drm_dev_is_unplugged)",
+    "note": "psb_pci_remove calls drm_dev_unplug (linux.patch). A caller with the fd open needs root to provoke it (sysfs PCI remove)."
+   }
+  },
+  {
+   "id": "bo-create/abi-unknown",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->abi != POULSBACK_BO_ABI",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_create_ioctl",
+    "dell_test": "eng/lab/bo/bo-stress.c:main refusals (c.abi = 2)"
+   }
+  },
+  {
+   "id": "bo-create/flags-unknown-bit",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->flags & ~(POULSBACK_BO_CPU_WC | POULSBACK_BO_SCANOUT)",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_create_ioctl",
+    "note": "bo-stress's 'c.flags = 2' predates SCANOUT. 2 is SCANOUT now, so it tests bo-create/scanout-without-cpu-wc. No client sets an unknown bit such as 4."
+   }
+  },
+  {
+   "id": "bo-create/handle-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->handle != 0",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_create_ioctl",
+    "dell_test": "eng/lab/bo/bo-stress.c:main refusals (c.handle = 1)"
+   }
+  },
+  {
+   "id": "bo-create/gpu-va-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->gpu_va != 0",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_create_ioctl",
+    "dell_test": "eng/lab/bo/bo-stress.c:main refusals (c.gpu_va = 1)"
+   }
+  },
+  {
+   "id": "bo-create/mmap-offset-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->mmap_offset != 0",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_create_ioctl"
+   }
+  },
+  {
+   "id": "bo-create/reserved-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "any args->reserved[0..3] != 0",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_create_ioctl",
+    "dell_test": "eng/lab/bo/bo-stress.c:main refusals (c.reserved[3] = 1)"
+   }
+  },
+  {
+   "id": "bo-create/bo-class-out-of-range",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->bo_class >= POULSBACK_VM_CLASSES (6)",
+    "where": "kernel/memory/poulsback_vm_layout.c:poulsback_vm_check_bo (POULSBACK_VM_BAD_CLASS)",
+    "host_test": "tests/kernel/test_poulsback_vm_layout.c:main (check_bo(POULSBACK_VM_CLASSES, 4096) == BAD_CLASS)",
+    "note": "Host test asserts the helper's status, not the ioctl's errno (the mapping is untested). bo-stress's 'c.bo_class = 5' is stale: class 5 is PARAMETER, a valid class, so that create now succeeds and the CHECK fails. No client uses class 6."
+   }
+  },
+  {
+   "id": "bo-create/size-zero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->size == 0",
+    "where": "kernel/memory/poulsback_vm_layout.c:poulsback_vm_check_bo (POULSBACK_VM_BAD_SIZE)",
+    "host_test": "tests/kernel/test_poulsback_vm_layout.c:main (check_bo(GENERAL, 0) == BAD_SIZE)",
+    "dell_test": "eng/lab/bo/bo-stress.c:main refusals (c.size = 0)",
+    "note": "Host test asserts the helper's status, not the ioctl's errno (the mapping is untested)."
+   }
+  },
+  {
+   "id": "bo-create/size-over-class-limit",
+   "parameters": {
+    "errno": "E2BIG",
+    "condition": "args->size > the class's max_bytes (GENERAL/2D 64 MiB, DEPTH 16 MiB, PDS/PARAMETER 1 MiB, CODE 512 KiB)",
+    "where": "kernel/memory/poulsback_vm_layout.c:poulsback_vm_check_bo (POULSBACK_VM_TOO_BIG)",
+    "host_test": "tests/kernel/test_poulsback_vm_layout.c:main (check_bo(GENERAL, 64 MiB + 1) == TOO_BIG; PDS, DEPTH, PARAMETER, CODE, ~0)",
+    "dell_test": "eng/lab/bo/bo-stress.c:main refusals (GENERAL 64 MiB + 1, CODE 0x80001, PDS 1 MiB + 1)",
+    "note": "Host test asserts the helper's status, not the ioctl's errno (the mapping is untested)."
+   }
+  },
+  {
+   "id": "bo-create/scanout-without-cpu-wc",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->flags & SCANOUT && !(args->flags & CPU_WC)",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_create_ioctl",
+    "dell_test": "eng/lab/bo/bo-stress.c:main refusals (c.flags = 2)",
+    "note": "The Dell case is accidental: it was written as an unknown-flag refusal."
+   }
+  },
+  {
+   "id": "bo-create/scanout-class-not-general-or-2d",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "SCANOUT | CPU_WC with bo_class other than GENERAL or 2D",
+    "where": "kernel/memory/poulsback_vm_layout.c:poulsback_vm_scanout_ok",
+    "host_test": "tests/kernel/test_poulsback_vm_layout.c:main (scanout_ok(c, 4096) false for every class except GENERAL and 2D)",
+    "note": "Host test asserts the helper's status, not the ioctl's errno (the mapping is untested)."
+   }
+  },
+  {
+   "id": "bo-create/scanout-size-over-16mib",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "SCANOUT | CPU_WC, GENERAL or 2D, page-rounded size > 16 MiB",
+    "where": "kernel/memory/poulsback_vm_layout.c:poulsback_vm_scanout_ok",
+    "host_test": "tests/kernel/test_poulsback_vm_layout.c:main (!scanout_ok(GENERAL, 16 MiB + 4096))",
+    "note": "Host test asserts the helper's status, not the ioctl's errno (the mapping is untested)."
+   }
+  },
+  {
+   "id": "bo-create/device-budget-exhausted",
+   "parameters": {
+    "errno": "ENOSPC",
+    "condition": "size > BO_TOTAL_BYTES (256 MiB, all files together) - bo_total_bytes",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_create_ioctl",
+    "dell_test": "eng/lab/bo/bo-stress.c:main device cap (a fifth 64 MiB GENERAL BO)"
+   }
+  },
+  {
+   "id": "bo-create/class-va-range-full",
+   "parameters": {
+    "errno": "ENOSPC",
+    "condition": "the file's VA range for the class has no hole (drm_mm_insert_node_in_range), e.g. a 7th 512 KiB CODE BO in one file (6 windows)",
+    "where": "kernel/gem/poulsback_bo.c:bo_open -> kernel/memory/poulsback_vm.c:poulsback_vm_map",
+    "note": "Reported through drm_gem_handle_create. CODE (3 MiB) fills first. PARAMETER (192 MiB of 1 MiB BOs) can fill before the 256 MiB device budget does."
+   }
+  },
+  {
+   "id": "bo-create/out-of-memory",
+   "parameters": {
+    "errno": "ENOMEM",
+    "condition": "kzalloc, shmem pages (drm_gem_get_pages) or set_pages_array_wc fails",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_create_ioctl",
+    "note": "Only under system memory pressure from elsewhere: the 256 MiB budget caps what this ioctl can pin."
+   }
+  },
+  {
+   "id": "bo-info/args-bad-pointer",
+   "parameters": {
+    "errno": "EFAULT",
+    "condition": "the ioctl argument does not point at a readable (in) or writable (out) struct poulsback_bo_info",
+    "where": "linux-6.1 drivers/gpu/drm/drm_ioctl.c:drm_ioctl (copy_from_user / copy_to_user)",
+    "note": "DRM layer, before and after the handler. A readable but read-only struct fails only on the copy back, after the handler's side effect."
+   }
+  },
+  {
+   "id": "bo-info/device-unplugged",
+   "parameters": {
+    "errno": "ENODEV",
+    "condition": "the device was unplugged (drm_dev_is_unplugged)",
+    "where": "linux-6.1 drivers/gpu/drm/drm_ioctl.c:drm_ioctl (drm_dev_is_unplugged)",
+    "note": "psb_pci_remove calls drm_dev_unplug (linux.patch). A caller with the fd open needs root to provoke it (sysfs PCI remove)."
+   }
+  },
+  {
+   "id": "bo-info/abi-unknown",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->abi != POULSBACK_BO_ABI",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_info_ioctl"
+   }
+  },
+  {
+   "id": "bo-info/flags-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->flags != 0 (an output field)",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_info_ioctl"
+   }
+  },
+  {
+   "id": "bo-info/bo-class-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->bo_class != 0 (an output field)",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_info_ioctl"
+   }
+  },
+  {
+   "id": "bo-info/size-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->size != 0 (an output field)",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_info_ioctl"
+   }
+  },
+  {
+   "id": "bo-info/gpu-va-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->gpu_va != 0 (an output field)",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_info_ioctl"
+   }
+  },
+  {
+   "id": "bo-info/mmap-offset-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->mmap_offset != 0 (an output field)",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_info_ioctl"
+   }
+  },
+  {
+   "id": "bo-info/reserved-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "any args->reserved[0..3] != 0",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_info_ioctl"
+   }
+  },
+  {
+   "id": "bo-info/handle-unknown",
+   "parameters": {
+    "errno": "ENOENT",
+    "condition": "drm_gem_object_lookup(file, args->handle) finds nothing (0, closed, another file's)",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_info_ioctl",
+    "note": "bo_fill's 'no mapping in this file' ENOENT is unreachable: a live handle always has its mapping."
+   }
+  },
+  {
+   "id": "bo-info/handle-not-poulsback-object",
+   "parameters": {
+    "errno": "ENOENT",
+    "condition": "the handle names a GEM object that is not a poulsback BO (to_bo NULL), e.g. a gma500 dumb buffer from MODE_CREATE_DUMB on card0",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_info_ioctl",
+    "note": "A distinct check from handle-unknown. It needs the primary node, since dumb create is not render-allowed."
+   }
+  },
+  {
+   "id": "context-create/args-bad-pointer",
+   "parameters": {
+    "errno": "EFAULT",
+    "condition": "the ioctl argument does not point at a readable (in) or writable (out) struct poulsback_context_create",
+    "where": "linux-6.1 drivers/gpu/drm/drm_ioctl.c:drm_ioctl (copy_from_user / copy_to_user)",
+    "note": "DRM layer, before and after the handler. A readable but read-only struct fails only on the copy back, after the handler's side effect."
+   }
+  },
+  {
+   "id": "context-create/device-unplugged",
+   "parameters": {
+    "errno": "ENODEV",
+    "condition": "the device was unplugged (drm_dev_is_unplugged)",
+    "where": "linux-6.1 drivers/gpu/drm/drm_ioctl.c:drm_ioctl (drm_dev_is_unplugged)",
+    "note": "psb_pci_remove calls drm_dev_unplug (linux.patch). A caller with the fd open needs root to provoke it (sysfs PCI remove)."
+   }
+  },
+  {
+   "id": "context-create/abi-unknown",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->abi != POULSBACK_EXEC_ABI",
+    "where": "kernel/engine/poulsback_context.c:poulsback_context_create_ioctl",
+    "dell_test": "eng/lab/bo/ctx-probe.c:main (c.abi = 2)"
+   }
+  },
+  {
+   "id": "context-create/flags-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->flags != 0",
+    "where": "kernel/engine/poulsback_context.c:poulsback_context_create_ioctl",
+    "dell_test": "eng/lab/bo/ctx-probe.c:main (c.flags = 1)"
+   }
+  },
+  {
+   "id": "context-create/handle-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->handle != 0",
+    "where": "kernel/engine/poulsback_context.c:poulsback_context_create_ioctl",
+    "dell_test": "eng/lab/bo/ctx-probe.c:main (c.handle = 5)"
+   }
+  },
+  {
+   "id": "context-create/reserved-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "any args->reserved[0..4] != 0",
+    "where": "kernel/engine/poulsback_context.c:poulsback_context_create_ioctl",
+    "dell_test": "eng/lab/bo/ctx-probe.c:main (c.reserved[4] = 1)"
+   }
+  },
+  {
+   "id": "context-create/engine-unavailable",
+   "parameters": {
+    "errno": "ETIMEDOUT|EIO|EPROTO|EBUSY|ENODEV",
+    "condition": "poulsback_engine_get fails: the engine is wedged (e->error) or its bring-up fails",
+    "where": "kernel/engine/poulsback_context.c:poulsback_context_create_ioctl -> kernel/engine/poulsback_engine.c:poulsback_engine_get",
+    "note": "A caller provokes it with a job that times out (ETIMEDOUT) or faults (EIO). Nothing resets, so every later create in the boot fails. Bring-up returns ENODEV when the SGX is not in probe state, and EBUSY when PM or removal closed the SGX source. The handler's '!exec || !vm' ENODEV is unreachable."
+   }
+  },
+  {
+   "id": "context-create/too-many-contexts",
+   "parameters": {
+    "errno": "ENOSPC",
+    "condition": "exec->count >= FILE_CONTEXTS (64 live contexts in this file)",
+    "where": "kernel/engine/poulsback_context.c:poulsback_context_create_ioctl"
+   }
+  },
+  {
+   "id": "context-destroy/args-bad-pointer",
+   "parameters": {
+    "errno": "EFAULT",
+    "condition": "the ioctl argument does not point at a readable (in) or writable (out) struct poulsback_context_destroy",
+    "where": "linux-6.1 drivers/gpu/drm/drm_ioctl.c:drm_ioctl (copy_from_user / copy_to_user)",
+    "note": "DRM layer, before and after the handler. A readable but read-only struct fails only on the copy back, after the handler's side effect."
+   }
+  },
+  {
+   "id": "context-destroy/device-unplugged",
+   "parameters": {
+    "errno": "ENODEV",
+    "condition": "the device was unplugged (drm_dev_is_unplugged)",
+    "where": "linux-6.1 drivers/gpu/drm/drm_ioctl.c:drm_ioctl (drm_dev_is_unplugged)",
+    "note": "psb_pci_remove calls drm_dev_unplug (linux.patch). A caller with the fd open needs root to provoke it (sysfs PCI remove)."
+   }
+  },
+  {
+   "id": "context-destroy/abi-unknown",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->abi != POULSBACK_EXEC_ABI",
+    "where": "kernel/engine/poulsback_context.c:poulsback_context_destroy_ioctl"
+   }
+  },
+  {
+   "id": "context-destroy/reserved-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->reserved[0] || args->reserved[1]",
+    "where": "kernel/engine/poulsback_context.c:poulsback_context_destroy_ioctl"
+   }
+  },
+  {
+   "id": "context-destroy/handle-unknown",
+   "parameters": {
+    "errno": "ENOENT",
+    "condition": "idr_remove finds no context for args->handle (0, already destroyed, never made, another file's)",
+    "where": "kernel/engine/poulsback_context.c:poulsback_context_destroy_ioctl",
+    "dell_test": "eng/lab/bo/ctx-probe.c:main (destroy(2) twice, destroy(99))",
+    "note": "The '!exec' EINVAL is unreachable: driver_priv is set at open."
+   }
+  },
+  {
+   "id": "submit/args-bad-pointer",
+   "parameters": {
+    "errno": "EFAULT",
+    "condition": "the ioctl argument does not point at a readable (in) or writable (out) struct poulsback_submit",
+    "where": "linux-6.1 drivers/gpu/drm/drm_ioctl.c:drm_ioctl (copy_from_user / copy_to_user)",
+    "note": "DRM layer, before and after the handler. A readable but read-only struct fails only on the copy back, after the handler's side effect."
+   }
+  },
+  {
+   "id": "submit/device-unplugged",
+   "parameters": {
+    "errno": "ENODEV",
+    "condition": "the device was unplugged (drm_dev_is_unplugged)",
+    "where": "linux-6.1 drivers/gpu/drm/drm_ioctl.c:drm_ioctl (drm_dev_is_unplugged)",
+    "note": "psb_pci_remove calls drm_dev_unplug (linux.patch). A caller with the fd open needs root to provoke it (sysfs PCI remove)."
+   }
+  },
+  {
+   "id": "submit/abi-unknown",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->abi != POULSBACK_EXEC_ABI",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_ioctl"
+   }
+  },
+  {
+   "id": "submit/flags-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->flags != 0",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_ioctl"
+   }
+  },
+  {
+   "id": "submit/context-zero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->context == 0",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_ioctl"
+   }
+  },
+  {
+   "id": "submit/width-zero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->width == 0",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_ioctl"
+   }
+  },
+  {
+   "id": "submit/height-zero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->height == 0",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_ioctl"
+   }
+  },
+  {
+   "id": "submit/width-over-2047",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->width > POULSBACK_SUBMIT_MAX_SIZE (2047)",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_ioctl"
+   }
+  },
+  {
+   "id": "submit/height-over-2047",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->height > POULSBACK_SUBMIT_MAX_SIZE (2047)",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_ioctl"
+   }
+  },
+  {
+   "id": "submit/bo-count-zero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->bo_count == 0",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_ioctl"
+   }
+  },
+  {
+   "id": "submit/bo-count-over-64",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->bo_count > POULSBACK_SUBMIT_MAX_BOS (64)",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_ioctl"
+   }
+  },
+  {
+   "id": "submit/reserved-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "any args->reserved[0..3] != 0",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_ioctl",
+    "note": "The scene_build EINVAL after it is unreachable: width and height are already 1-2047."
+   }
+  },
+  {
+   "id": "submit/engine-unavailable",
+   "parameters": {
+    "errno": "ETIMEDOUT|EIO|EPROTO|EBUSY|ENODEV",
+    "condition": "poulsback_engine_get fails (engine wedged, or bring-up failed or blocked)",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_ioctl -> kernel/engine/poulsback_engine.c:poulsback_engine_get",
+    "note": "See context-create/engine-unavailable. A caller wedges the engine with a hanging or faulting job, and every later SUBMIT in the boot fails."
+   }
+  },
+  {
+   "id": "submit/scene-allocation-fails",
+   "parameters": {
+    "errno": "ENOMEM",
+    "condition": "on the context's first SUBMIT, scene_create returns NULL",
+    "where": "kernel/engine/poulsback_context.c:poulsback_exec_context",
+    "note": "A caller can provoke it without memory pressure. Destroy a context while its job is still running or not yet freed, then create a new one: the idr reuses the lowest handle, the old scene still reserves that 1 MiB scene slot, and poulsback_vm_map_fixed fails (drm_mm_reserve_node -ENOSPC). The ioctl reports -ENOMEM. A held job keeps the slot for good."
+   }
+  },
+  {
+   "id": "submit/context-unknown",
+   "parameters": {
+    "errno": "ENOENT",
+    "condition": "idr_find finds no context for args->context in this file",
+    "where": "kernel/engine/poulsback_context.c:poulsback_exec_context"
+   }
+  },
+  {
+   "id": "submit/bos-bad-pointer",
+   "parameters": {
+    "errno": "EFAULT",
+    "condition": "copy_from_user(args->bos, bo_count * 8) faults",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_ioctl"
+   }
+  },
+  {
+   "id": "submit/bo-flags-unknown-bit",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "bos[i].flags & ~POULSBACK_SUBMIT_BO_WRITE",
+    "where": "kernel/engine/poulsback_submit.c:poulsback_submit_ioctl"
+   }
+  },
+  {
+   "id": "submit/bo-handle-unknown",
+   "parameters": {
+    "errno": "ENOENT",
+    "condition": "bos[i].handle names no GEM object in this file",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_resolve"
+   }
+  },
+  {
+   "id": "submit/bo-handle-not-poulsback-object",
+   "parameters": {
+    "errno": "ENOENT",
+    "condition": "bos[i].handle names a non-poulsback GEM object (gma500 dumb buffer)",
+    "where": "kernel/gem/poulsback_bo.c:poulsback_bo_resolve"
+   }
+  },
+  {
+   "id": "submit/ta-reg-count-over-7",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->ta_reg_count > POULSBACK_REG_TA_SLOTS (7)",
+    "where": "kernel/engine/poulsback_submit.c:submit_regs",
+    "note": "Stricter than the UAPI's POULSBACK_SUBMIT_MAX_REGS (32)."
+   }
+  },
+  {
+   "id": "submit/ta-regs-bad-pointer",
+   "parameters": {
+    "errno": "EFAULT",
+    "condition": "copy_from_user(args->ta_regs, ta_reg_count * 16) faults",
+    "where": "kernel/engine/poulsback_submit.c:submit_regs"
+   }
+  },
+  {
+   "id": "submit/raster-reg-count-over-26",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->raster_reg_count > POULSBACK_REG_RASTER_SLOTS (26)",
+    "where": "kernel/engine/poulsback_submit.c:submit_regs",
+    "note": "Checked only after every TA register passes."
+   }
+  },
+  {
+   "id": "submit/raster-regs-bad-pointer",
+   "parameters": {
+    "errno": "EFAULT",
+    "condition": "copy_from_user(args->raster_regs, raster_reg_count * 16) faults",
+    "where": "kernel/engine/poulsback_submit.c:submit_regs"
+   }
+  },
+  {
+   "id": "submit/reg-bo-index-out-of-range",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "regs[i].bo != 0 && regs[i].bo - 1 >= args->bo_count",
+    "where": "kernel/engine/poulsback_submit.c:submit_regs",
+    "note": "Applies to both phases (TA and raster). The same holds for every submit/reg-* case."
+   }
+  },
+  {
+   "id": "submit/reg-bo-offset-past-bo",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "regs[i].bo != 0 && regs[i].bo_offset >= the BO's size",
+    "where": "kernel/engine/poulsback_submit.c:submit_regs",
+    "note": "Only the start address is checked, not the extent the register makes the GPU access."
+   }
+  },
+  {
+   "id": "submit/reg-bo-offset-without-bo",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "regs[i].bo == 0 && regs[i].bo_offset != 0",
+    "where": "kernel/engine/poulsback_submit.c:submit_regs"
+   }
+  },
+  {
+   "id": "submit/reg-offset-not-in-phase-table",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "regs[i].offset is not in this phase's table (e.g. a raster register in ta_regs, or a kick or DPM register)",
+    "where": "kernel/engine/poulsback_regtable.c:poulsback_reg_resolve (POULSBACK_REG_UNKNOWN)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (forbidden[] in both phases; TA 0x400; RASTER 0x238)",
+    "note": "Host check asserts the POULSBACK_REG_* status; submit_regs maps every refusal to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit/reg-set-twice",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "one offset twice in one phase's list",
+    "where": "kernel/engine/poulsback_regtable.c:poulsback_reg_resolve (POULSBACK_REG_DUPLICATE)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (0x400 resolved twice == DUPLICATE)",
+    "note": "Host check asserts the POULSBACK_REG_* status; submit_regs maps every refusal to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit/reg-set-incomplete",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "a phase's list without every register of its table (any one left out, or none)",
+    "where": "kernel/engine/poulsback_submit.c:submit_regs (poulsback_reg_complete)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (each TA and raster register left out, an empty set)",
+    "note": "Refused before the job is pushed; nothing is queued."
+   }
+  },
+  {
+   "id": "submit/reg-plain-with-bo",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "a PLAIN register with regs[i].bo != 0",
+    "where": "kernel/engine/poulsback_regtable.c:poulsback_reg_resolve (POULSBACK_REG_UNEXPECTED_BO)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (0x204 and 0x410 with a BO)",
+    "note": "Host check asserts the POULSBACK_REG_* status; submit_regs maps every refusal to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit/reg-plain-value-outside-mask",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "PLAIN value & ~mask (only 0x218 TE_PSG has a mask: bit 24)",
+    "where": "kernel/engine/poulsback_regtable.c:poulsback_reg_resolve (POULSBACK_REG_BAD_VALUE)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (TA 0x218 = 0x01400000)",
+    "note": "Host check asserts the POULSBACK_REG_* status; submit_regs maps every refusal to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit/reg-va-without-bo",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "a VA register (0x238, 0xa5c) with bo == 0",
+    "where": "kernel/engine/poulsback_regtable.c:poulsback_reg_resolve (POULSBACK_REG_NEEDS_BO)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (TA 0x238 without a BO)",
+    "note": "Host check asserts the POULSBACK_REG_* status; submit_regs maps every refusal to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit/reg-va-value-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "a VA register with a BO and value != 0",
+    "where": "kernel/engine/poulsback_regtable.c:poulsback_reg_resolve (POULSBACK_REG_BAD_ADDRESS)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (TA 0x238 value 4 with a BO)",
+    "note": "Host check asserts the POULSBACK_REG_* status; submit_regs maps every refusal to -EINVAL (mapping untested). The 'va >> 32' operand is unreachable from the ioctl (every class ends at or below 0xE0000000)."
+   }
+  },
+  {
+   "id": "submit/reg-va-misaligned",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "BO VA + bo_offset not 4-aligned (0x238) or 16-aligned (0xa5c)",
+    "where": "kernel/engine/poulsback_regtable.c:poulsback_reg_resolve (POULSBACK_REG_BAD_ADDRESS)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (0x238 at ...682; 0xa5c at ...1a8)",
+    "note": "Host check asserts the POULSBACK_REG_* status; submit_regs maps every refusal to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit/reg-depth-base-value-without-bo",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "a VA_LOW28/VA_HIGH4 register (0x484-0x490, 0xcb0) with bo == 0 and value != 0",
+    "where": "kernel/engine/poulsback_regtable.c:poulsback_reg_resolve (POULSBACK_REG_NEEDS_BO)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (RASTER 0x484 = 0x1000 without a BO)",
+    "note": "Host check asserts the POULSBACK_REG_* status; submit_regs maps every refusal to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit/reg-depth-base-value-with-bo",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "a VA_LOW28/VA_HIGH4 register with a BO and value != 0",
+    "where": "kernel/engine/poulsback_regtable.c:poulsback_reg_resolve (POULSBACK_REG_BAD_ADDRESS)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (RASTER 0xcb0 value 1 with a BO)",
+    "note": "Host check asserts the POULSBACK_REG_* status; submit_regs maps every refusal to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit/reg-bgobj-value-outside-tspdatasize",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "0x4c4 value & ~0x3f000000 (with or without a BO)",
+    "where": "kernel/engine/poulsback_regtable.c:poulsback_reg_resolve (POULSBACK_REG_BAD_VALUE)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (0x4c4 = 0x2200000; 0x2000010 with a BO)",
+    "note": "Host check asserts the POULSBACK_REG_* status; submit_regs maps every refusal to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit/reg-bgobj-value-without-bo",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "0x4c4 with bo == 0 and value != 0",
+    "where": "kernel/engine/poulsback_regtable.c:poulsback_reg_resolve (POULSBACK_REG_NEEDS_BO)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (0x4c4 = 0x2000000 without a BO)",
+    "note": "Host check asserts the POULSBACK_REG_* status; submit_regs maps every refusal to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit/reg-bgobj-bo-below-parameter-class",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "0x4c4 BO address < 0x34000000 (a PDS BO)",
+    "where": "kernel/engine/poulsback_regtable.c:poulsback_reg_resolve (POULSBACK_REG_BAD_ADDRESS)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (0x4c4 at 0x32000000)",
+    "note": "Host check asserts the POULSBACK_REG_* status; submit_regs maps every refusal to -EINVAL (mapping untested). The host address is in the device range. A caller hits this condition with a PDS BO."
+   }
+  },
+  {
+   "id": "submit/reg-bgobj-bo-above-parameter-class",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "0x4c4 BO address >= 0x40000000 (a CODE, DEPTH, GENERAL or 2D BO)",
+    "where": "kernel/engine/poulsback_regtable.c:poulsback_reg_resolve (POULSBACK_REG_BAD_ADDRESS)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (0x4c4 at 0x40000000 and 0x60000000)",
+    "note": "Host check asserts the POULSBACK_REG_* status; submit_regs maps every refusal to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit/reg-bgobj-misaligned",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "0x4c4 BO address not 16-aligned",
+    "where": "kernel/engine/poulsback_regtable.c:poulsback_reg_resolve (POULSBACK_REG_BAD_ADDRESS)",
+    "host_test": "tests/kernel/test_poulsback_regtable.c:main (0x4c4 at 0x34200008)",
+    "note": "Host check asserts the POULSBACK_REG_* status; submit_regs maps every refusal to -EINVAL (mapping untested)."
+   }
+  },
+  {
+   "id": "submit/bo-listed-twice",
+   "parameters": {
+    "errno": "EALREADY",
+    "condition": "one GEM object twice in the BO list (the same handle, or two handles of one object)",
+    "where": "kernel/engine/poulsback_submit.c:job_push -> drm_gem_lock_reservations (ww_mutex on a resv this ctx already holds)",
+    "note": "SUBMIT has no explicit duplicate check, unlike SUBMIT_2D (EINVAL). The ww_mutex's EALREADY leaks out after the whole request was validated and built."
+   }
+  },
+  {
+   "id": "submit/out-syncobj-unknown",
+   "parameters": {
+    "errno": "ENOENT",
+    "condition": "args->out_syncobj != 0 && drm_syncobj_find fails",
+    "where": "kernel/engine/poulsback_submit.c:job_push"
+   }
+  },
+  {
+   "id": "submit/in-syncobj-unknown",
+   "parameters": {
+    "errno": "ENOENT",
+    "condition": "args->in_syncobj != 0 names no syncobj",
+    "where": "kernel/engine/poulsback_submit.c:job_push -> drm_syncobj_find_fence"
+   }
+  },
+  {
+   "id": "submit/in-syncobj-no-fence",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "args->in_syncobj names a syncobj with no fence (created unsignaled, never submitted)",
+    "where": "kernel/engine/poulsback_submit.c:job_push -> drm_syncobj_find_fence (flags 0, no WAIT_FOR_SUBMIT)"
+   }
+  },
+  {
+   "id": "display-info/args-bad-pointer",
+   "parameters": {
+    "errno": "EFAULT",
+    "condition": "the ioctl argument does not point at a readable (in) or writable (out) struct poulsback_display_info",
+    "where": "linux-6.1 drivers/gpu/drm/drm_ioctl.c:drm_ioctl (copy_from_user / copy_to_user)",
+    "note": "DRM layer, before and after the handler. A readable but read-only struct fails only on the copy back, after the handler's side effect."
+   }
+  },
+  {
+   "id": "display-info/device-unplugged",
+   "parameters": {
+    "errno": "ENODEV",
+    "condition": "the device was unplugged (drm_dev_is_unplugged)",
+    "where": "linux-6.1 drivers/gpu/drm/drm_ioctl.c:drm_ioctl (drm_dev_is_unplugged)",
+    "note": "psb_pci_remove calls drm_dev_unplug (linux.patch). A caller with the fd open needs root to provoke it (sysfs PCI remove)."
+   }
+  },
+  {
+   "id": "display-info/abi-unknown",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "info->abi != POULSBACK_BO_ABI",
+    "where": "kernel/display/poulsback_display_psb_source.c:poulsback_display_info_ioctl"
+   }
+  },
+  {
+   "id": "display-info/reserved-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "any info->reserved[0..2] != 0 (memchr_inv)",
+    "where": "kernel/display/poulsback_display_psb_source.c:poulsback_display_info_ioctl",
+    "note": "Its outputs (width, height, stride, format) may be nonzero on input. BO_INFO refuses that."
+   }
+  },
+  {
+   "id": "submit/duplicate-bo-handle",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "the same handle twice in the BO list",
+    "where": "not validated at driver HEAD a8d68f4 (survey 2026-11-03)",
+    "note": "today EALREADY from reservation locking after the job is built; SUBMIT_2D refuses it with EINVAL"
+   }
+  },
+  {
+   "id": "submit/depth-base-split-across-bos",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "0xcb0 (VA_HIGH4) and 0x484-0x490 (VA_LOW28) name different BOs, or one names none",
+    "where": "not validated at driver HEAD a8d68f4 (survey 2026-11-03)",
+    "note": "today accepted: the combined address can reach the shared DPM tables (0x48000000) or scene slots (0x4C000000) mapped in every file"
+   }
+  },
+  {
+   "id": "submit/register-range-outside-bo",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "a register address plus the extent the GPU touches from it (depth buffer, control stream) ends past its BO",
+    "where": "not validated at driver HEAD a8d68f4 (survey 2026-11-03)",
+    "note": "today only bo_offset < BO size is checked"
+   }
+  },
+  {
+   "id": "submit/written-bo-not-marked",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "a BO the job writes (target, depth store) is not flagged POULSBACK_SUBMIT_BO_WRITE",
+    "where": "not validated at driver HEAD a8d68f4 (survey 2026-11-03)",
+    "note": "today the flag is trusted: such a BO is fenced as read-only"
+   }
+  },
+  {
+   "id": "submit/context-handle-reuse",
+   "parameters": {
+    "errno": "none",
+    "condition": "a new context reusing a destroyed context handle while that context job still holds the scene slot",
+    "where": "not validated at driver HEAD a8d68f4 (survey 2026-11-03)",
+    "note": "today the first SUBMIT fails with a spurious ENOMEM; expected: success once the slot frees, or a distinct slot"
+   }
+  },
+  {
+   "id": "display-info/output-fields-nonzero",
+   "parameters": {
+    "errno": "EINVAL",
+    "condition": "width, height, stride or format nonzero on input",
+    "where": "not validated at driver HEAD a8d68f4 (survey 2026-11-03)",
+    "note": "BO_INFO refuses nonzero outputs; DISPLAY_INFO accepts them"
+   }
+  }
+ ]
+}

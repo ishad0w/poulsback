@@ -1,0 +1,50 @@
+[
+  {
+    "id": "rendercheck",
+    "binary": "rendercheck",
+    "args": [
+      "-i",
+      "1",
+      "-t",
+      "fill,blend",
+      "-o",
+      "Src,Over",
+      "-f",
+      "a8r8g8b8"
+    ],
+    "kind": "correctness",
+    "description": "X Render fill and blend numerical checks",
+    "window": "internal"
+  },
+  {
+    "id": "x11-fill",
+    "binary": "x11perf",
+    "args": [
+      "-reps",
+      "10",
+      "-repeat",
+      "1",
+      "-rect10",
+      "-rect500"
+    ],
+    "kind": "throughput",
+    "description": "Small and large X11 rectangle fills",
+    "window": "600x600"
+  },
+  {
+    "id": "x11-copy",
+    "binary": "x11perf",
+    "args": [
+      "-reps",
+      "10",
+      "-repeat",
+      "1",
+      "-copywinwin10",
+      "-copywinwin500",
+      "-scroll500"
+    ],
+    "kind": "throughput",
+    "description": "X11 window copies and overlapping scroll",
+    "window": "600x600"
+  }
+]

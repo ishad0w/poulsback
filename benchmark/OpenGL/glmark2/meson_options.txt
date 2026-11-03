@@ -1,0 +1,18 @@
+option('flavors', type : 'array',
+       choices : [
+           'drm-gl',
+           'drm-glesv2',
+           'gbm-gl',
+           'gbm-glesv2',
+           'wayland-gl',
+           'wayland-glesv2',
+           'x11-gl',
+           'x11-glesv2',
+           'x11-gl-egl'
+        ],
+        value : []
+)
+
+option('data-path', type : 'string', value : '')
+option('extras-path', type : 'string', value : '')
+option('version-suffix', type : 'string', value : '')

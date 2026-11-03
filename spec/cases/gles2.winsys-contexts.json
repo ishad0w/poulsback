@@ -1,0 +1,46 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gles2.winsys-contexts",
+ "source": "the parameters of this case, one case per cell; eng/lab/gltest/gltest.c drives EGL on GBM",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "egl-gbm-window"
+  },
+  {
+   "id": "egl-pbuffer"
+  },
+  {
+   "id": "egl-surfaceless"
+  },
+  {
+   "id": "contexts-2-independent"
+  },
+  {
+   "id": "contexts-4-independent"
+  },
+  {
+   "id": "shared-resources"
+  },
+  {
+   "id": "make-current-switch"
+  },
+  {
+   "id": "context-destroy-inflight"
+  },
+  {
+   "id": "threads-concurrent-submit"
+  },
+  {
+   "id": "process-dmabuf-share"
+  },
+  {
+   "id": "fence-timeout-propagation"
+  },
+  {
+   "id": "context-loss-late-completion"
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gles2.shader-flow",
+ "source": "VK-GL-CTS opengl-es-cts-3.2.14.0 aosp_mustpass/main/gles2-main.txt as the lab lists it (eng/lab/conformance/lists/deqp-gles2-m1.txt), the part selected by its patterns",
+ "criteria": "dEQP reports Pass; NotSupported, QualityWarning, CompatibilityWarning, Fail, Crash and Timeout are not passes (an optional extension test needs an accepted exclusion)",
+ "runner": null,
+ "external": {
+  "source": "eng/lab/conformance/lists/deqp-gles2-m1.txt",
+  "member": null,
+  "select": [
+   "dEQP-GLES2.functional.shaders.loops.*",
+   "dEQP-GLES2.functional.shaders.indexing.*",
+   "dEQP-GLES2.functional.shaders.functions.*",
+   "dEQP-GLES2.functional.shaders.function.*",
+   "dEQP-GLES2.functional.shaders.struct.*",
+   "dEQP-GLES2.functional.shaders.conditionals.*",
+   "dEQP-GLES2.functional.shaders.return.*",
+   "dEQP-GLES2.functional.shaders.discard.*"
+  ],
+  "count": 1659,
+  "sha256": "0626814719584250a1d345336a70502df329638f3b0ad51b90548aeca000e08c",
+  "source_sha256": "47d14a5e9abe302ae120c6622ee459ba3069cdea9086d74d578575fbe01e163b",
+  "builder": "conformance-harnesses",
+  "note": "Pinned list; partitioned among the gles2 families without overlap"
+ },
+ "cases": []
+}

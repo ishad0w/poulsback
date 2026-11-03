@@ -1,0 +1,26 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gl21.wsi-software-detect",
+ "source": "Survey of the window-system sources, 2026-11-03 (Xorg 21.1.7 glx/, Mesa 26.2.4 src/glx, src/egl, src/loader, the DRI frontend)",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "glx-indirect-refused",
+   "criteria": "LIBGL_ALWAYS_INDIRECT=1 fails to create a context (no +iglx); with +iglx the detector reports the indirect llvmpipe context"
+  },
+  {
+   "id": "gl-process-maps-ours",
+   "criteria": "A GL test process maps the run dir libGL, libEGL and libgallium, and no Debian *_dri.so, libGLX_mesa, libEGL_mesa or libLLVM"
+  },
+  {
+   "id": "glx-system-libgl-detected",
+   "criteria": "Negative control: without the run dir libraries glxinfo shows llvmpipe and the direct-accelerated precheck fails"
+  },
+  {
+   "id": "glx-software-env-refused",
+   "criteria": "LIBGL_ALWAYS_SOFTWARE=1 with our libGL fails to create a context; nothing renders in software"
+  }
+ ]
+}

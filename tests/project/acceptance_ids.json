@@ -1,0 +1,808 @@
+{
+  "requirements": {
+    "2d-native.contract": {
+      "mandatory": true,
+      "required_backend": "SOURCE",
+      "cases": {
+        "2d-native.contract-manifest": "SOURCE"
+      }
+    },
+    "2d-native.fill-rop": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.fill-all-rops": "HARDWARE"
+      }
+    },
+    "2d-native.copy-rop": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.copy-all-rops": "HARDWARE"
+      }
+    },
+    "2d-native.geometry": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.size-boundaries": "HARDWARE",
+        "2d-native.zero-and-edge": "HARDWARE"
+      }
+    },
+    "2d-native.dimension-eight": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.eight-workaround": "HARDWARE"
+      }
+    },
+    "2d-native.clipping": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.clip-every-side": "HARDWARE"
+      }
+    },
+    "2d-native.layout": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.pitch-offset": "HARDWARE"
+      }
+    },
+    "2d-native.overlap": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.overlap-directions": "HARDWARE"
+      }
+    },
+    "2d-native.visibility": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.upload-download": "HARDWARE",
+        "2d-native.gpu-chain": "HARDWARE"
+      }
+    },
+    "2d-native.queue-fences": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.queue-order": "HARDWARE"
+      }
+    },
+    "2d-native.clients": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.client-isolation": "HARDWARE"
+      }
+    },
+    "2d-native.lifetime": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.close-under-load": "HARDWARE"
+      }
+    },
+    "2d-native.rejects": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.bad-requests": "HARDWARE"
+      }
+    },
+    "2d-native.motion": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.numbered-motion": "HARDWARE"
+      }
+    },
+    "2d-native.stress": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.long-stress": "HARDWARE"
+      }
+    },
+    "2d-native.hardware-attribution": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-native.path-attribution": "HARDWARE"
+      }
+    },
+    "2d-x11.backend": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-x11.backend-identity": "HARDWARE",
+        "2d-x11.exa-operations": "HARDWARE"
+      }
+    },
+    "2d-x11.composite": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-x11.composite-operators": "HARDWARE"
+      }
+    },
+    "2d-x11.text": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-x11.glyph-images": "HARDWARE"
+      }
+    },
+    "2d-x11.transform": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-x11.transforms": "HARDWARE"
+      }
+    },
+    "2d-x11.damage": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-x11.desktop-damage": "HARDWARE"
+      }
+    },
+    "2d-x11.presentation": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-x11.present-order": "HARDWARE"
+      }
+    },
+    "2d-x11.desktop-stress": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-x11.desktop-long": "HARDWARE"
+      }
+    },
+    "gles2.spec-catalog": {
+      "mandatory": true,
+      "required_backend": "SOURCE",
+      "cases": {
+        "gles2.spec-to-case-map": "SOURCE"
+      }
+    },
+    "gles2.usse-pds": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gles2.hardware-microprograms": "HARDWARE"
+      }
+    },
+    "gles2.arithmetic": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gles2.alu-vectors": "HARDWARE",
+        "gles2.shader-flow": "HARDWARE"
+      }
+    },
+    "gles2.compiler": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gles2.nir-backend": "HARDWARE"
+      }
+    },
+    "gles2.geometry": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gles2.draw-primitives": "HARDWARE"
+      }
+    },
+    "gles2.raster-interpolation": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gles2.raster-states": "HARDWARE"
+      }
+    },
+    "gles2.textures": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gles2.texture-matrix": "HARDWARE"
+      }
+    },
+    "gles2.framebuffer": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gles2.fbo-states": "HARDWARE"
+      }
+    },
+    "gles2.fragment-state": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gles2.fragment-state-matrix": "HARDWARE"
+      }
+    },
+    "gles2.api-errors": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gles2.objects-errors": "HARDWARE"
+      }
+    },
+    "gles2.contexts-winsys": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gles2.winsys-contexts": "HARDWARE",
+        "gles2.egl-x11": "HARDWARE"
+      }
+    },
+    "gles2.conformance": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gles2.external-conformance": "HARDWARE",
+        "gles2.khr-gles2": "HARDWARE"
+      }
+    },
+    "gles2.stress-visual": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gles2.repeated-scene": "HARDWARE"
+      }
+    },
+    "gl21.spec-catalog": {
+      "mandatory": true,
+      "required_backend": "SOURCE",
+      "cases": {
+        "gl21.spec-to-case-map": "SOURCE"
+      }
+    },
+    "gl21.legacy-pipeline": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gl21.fixed-function": "HARDWARE"
+      }
+    },
+    "gl21.extended-graphics": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gl21.extra-features": "HARDWARE"
+      }
+    },
+    "gl21.glx": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gl21.glx-contexts": "HARDWARE"
+      }
+    },
+    "gl21.conformance": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gl21.external-conformance": "HARDWARE"
+      }
+    },
+    "vulkan-feasibility.requirements": {
+      "mandatory": true,
+      "required_backend": "FEASIBILITY",
+      "cases": {
+        "vulkan-feasibility.spec-map": "FEASIBILITY"
+      }
+    },
+    "vulkan-feasibility.verdict": {
+      "mandatory": true,
+      "required_backend": "FEASIBILITY",
+      "cases": {
+        "vulkan-feasibility.verdict-review": "FEASIBILITY"
+      }
+    },
+    "mpeg2.profile": {
+      "mandatory": true,
+      "required_backend": "SOURCE",
+      "cases": {
+        "mpeg2.profile-matrix": "SOURCE"
+      }
+    },
+    "mpeg2.firmware-transport": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "mpeg2.firmware-pair": "HARDWARE"
+      }
+    },
+    "mpeg2.first-frame": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "mpeg2.first-intra": "HARDWARE"
+      }
+    },
+    "mpeg2.picture-types": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "mpeg2.prediction-sequences": "HARDWARE"
+      }
+    },
+    "mpeg2.field-crop-layout": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "mpeg2.surface-layouts": "HARDWARE"
+      }
+    },
+    "mpeg2.errors-lifetime": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "mpeg2.decode-error-matrix": "HARDWARE"
+      }
+    },
+    "mpeg2.vaapi": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "mpeg2.vaapi-configurations": "HARDWARE"
+      }
+    },
+    "mpeg2.decode-presentation": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "mpeg2.headless-then-visible": "HARDWARE"
+      }
+    },
+    "mpeg2.realtime-stress": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "mpeg2.playback-long": "HARDWARE"
+      }
+    },
+    "h264.profile": {
+      "mandatory": true,
+      "required_backend": "SOURCE",
+      "cases": {
+        "h264.profile-matrix": "SOURCE"
+      }
+    },
+    "h264.firmware-transport": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "h264.firmware-pair": "HARDWARE"
+      }
+    },
+    "h264.first-frame": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "h264.first-intra": "HARDWARE"
+      }
+    },
+    "h264.picture-types": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "h264.prediction-sequences": "HARDWARE"
+      }
+    },
+    "h264.field-crop-layout": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "h264.surface-layouts": "HARDWARE"
+      }
+    },
+    "h264.errors-lifetime": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "h264.decode-error-matrix": "HARDWARE"
+      }
+    },
+    "h264.vaapi": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "h264.vaapi-configurations": "HARDWARE"
+      }
+    },
+    "h264.decode-presentation": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "h264.headless-then-visible": "HARDWARE"
+      }
+    },
+    "h264.realtime-stress": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "h264.playback-long": "HARDWARE"
+      }
+    },
+    "vc1.profile": {
+      "mandatory": true,
+      "required_backend": "SOURCE",
+      "cases": {
+        "vc1.profile-matrix": "SOURCE"
+      }
+    },
+    "vc1.firmware-transport": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "vc1.firmware-pair": "HARDWARE"
+      }
+    },
+    "vc1.first-frame": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "vc1.first-intra": "HARDWARE"
+      }
+    },
+    "vc1.picture-types": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "vc1.prediction-sequences": "HARDWARE"
+      }
+    },
+    "vc1.field-crop-layout": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "vc1.surface-layouts": "HARDWARE"
+      }
+    },
+    "vc1.errors-lifetime": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "vc1.decode-error-matrix": "HARDWARE"
+      }
+    },
+    "vc1.vaapi": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "vc1.vaapi-configurations": "HARDWARE"
+      }
+    },
+    "vc1.decode-presentation": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "vc1.headless-then-visible": "HARDWARE"
+      }
+    },
+    "vc1.realtime-stress": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "vc1.playback-long": "HARDWARE"
+      }
+    },
+    "vpp.feasibility": {
+      "mandatory": true,
+      "required_backend": "FEASIBILITY",
+      "cases": {
+        "vpp.capability-map": "FEASIBILITY"
+      }
+    },
+    "vpp.correctness": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "vpp.operation-matrix": "HARDWARE"
+      }
+    },
+    "encode-feasibility.silicon": {
+      "mandatory": true,
+      "required_backend": "FEASIBILITY",
+      "cases": {
+        "encode-feasibility.device-evidence": "FEASIBILITY"
+      }
+    },
+    "encode-feasibility.verdict": {
+      "mandatory": true,
+      "required_backend": "FEASIBILITY",
+      "cases": {
+        "encode-feasibility.decision": "FEASIBILITY"
+      }
+    },
+    "release.cpu-collector-baseline": {
+      "mandatory": true,
+      "required_backend": "CPU_VM",
+      "cases": {
+        "release.collector-regression": "CPU_VM"
+      }
+    },
+    "release.cpu-queue-baseline": {
+      "mandatory": true,
+      "required_backend": "CPU_VM",
+      "cases": {
+        "release.queue-cpu-regression": "CPU_VM"
+      }
+    },
+    "release.cpu-video-reference-baseline": {
+      "mandatory": true,
+      "required_backend": "CPU_VM",
+      "cases": {
+        "release.video-reference-regression": "CPU_VM"
+      }
+    },
+    "release.provenance": {
+      "mandatory": true,
+      "required_backend": "CPU_VM",
+      "cases": {
+        "release.build-bindings": "CPU_VM"
+      }
+    },
+    "release.kernel-health": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "release.telemetry-per-trial": "HARDWARE"
+      }
+    },
+    "release.power-correctness": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "release.power-edges": "HARDWARE"
+      }
+    },
+    "release.pm-modeset": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "release.lifecycle": "HARDWARE"
+      }
+    },
+    "release.hang-recovery": {
+      "mandatory": true,
+      "required_backend": "MIXED",
+      "cases": {
+        "release.recovery-model": "CPU_VM",
+        "release.recovery-hardware": "HARDWARE"
+      }
+    },
+    "release.irq-retirement": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "release.completion-correlation": "HARDWARE"
+      }
+    },
+    "release.visual-evidence": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "release.images-frames": "HARDWARE"
+      }
+    },
+    "release.firmware-contract": {
+      "mandatory": true,
+      "required_backend": "SOURCE",
+      "cases": {
+        "release.firmware-inventory": "SOURCE"
+      }
+    },
+    "release.firmware-open-replacement": {
+      "mandatory": false,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "release.open-firmware": "HARDWARE"
+      }
+    },
+    "release.code-quality": {
+      "mandatory": true,
+      "required_backend": "SOURCE",
+      "cases": {
+        "release.interfaces-review": "SOURCE"
+      }
+    },
+    "release.documentation": {
+      "mandatory": true,
+      "required_backend": "SOURCE",
+      "cases": {
+        "release.docs-crosscheck": "SOURCE"
+      }
+    },
+    "release.performance": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "release.performance-baselines": "HARDWARE"
+      }
+    },
+    "2d-x11.core": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-x11.x2d-fixture": "HARDWARE",
+        "2d-x11.xts5-rendering": "HARDWARE"
+      }
+    },
+    "2d-x11.output-control": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-x11.outputs": "HARDWARE"
+      }
+    },
+    "2d-x11.xv": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-x11.xv-textured": "HARDWARE"
+      }
+    },
+    "2d-x11.device-lost": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-x11.device-lost-desktop": "HARDWARE"
+      }
+    },
+    "2d-x11.server": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "2d-x11.server-features": "HARDWARE"
+      }
+    },
+    "gles2.gallium": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gles2.gallium-context-hooks": "HARDWARE",
+        "gles2.gallium-screen-hooks": "HARDWARE",
+        "gles2.gallium-caps": "HARDWARE",
+        "gles2.gallium-shader-caps": "HARDWARE",
+        "gles2.gallium-formats": "HARDWARE"
+      }
+    },
+    "gl21.extensions": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gl21.advertised-extensions": "HARDWARE"
+      }
+    },
+    "gl21.window-system": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "gl21.wsi-configs": "HARDWARE",
+        "gl21.glx-tfp": "HARDWARE",
+        "gl21.wsi-software-detect": "HARDWARE"
+      }
+    },
+    "release.quality-gates": {
+      "mandatory": true,
+      "required_backend": "CPU_VM",
+      "cases": {
+        "release.quality-checks": "CPU_VM"
+      }
+    },
+    "release.uapi": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "release.uapi-validation": "HARDWARE",
+        "release.uapi-fuzz": "HARDWARE"
+      }
+    },
+    "release.kms": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "release.kms-display": "HARDWARE"
+      }
+    },
+    "release.gem-prime": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "release.bo-prime": "HARDWARE"
+      }
+    },
+    "release.job-lifecycle": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "release.jobs": "HARDWARE"
+      }
+    },
+    "release.soak": {
+      "mandatory": true,
+      "required_backend": "HARDWARE",
+      "cases": {
+        "release.soak-2h": "HARDWARE"
+      }
+    },
+    "release.host": {
+      "mandatory": true,
+      "required_backend": "CPU_VM",
+      "cases": {
+        "release.host-suites": "CPU_VM"
+      }
+    }
+  },
+  "milestones": {
+    "integration.kernel-foundation": {
+      "required_backend": "CPU_VM",
+      "cases": {
+        "integration.kernel-contracts": "CPU_VM"
+      }
+    },
+    "integration.bootstrap": {
+      "required_backend": "HARDWARE",
+      "cases": {
+        "integration.bootstrap-only": "HARDWARE",
+        "integration.engine-bring-up": "HARDWARE"
+      }
+    },
+    "integration.dpm": {
+      "required_backend": "HARDWARE",
+      "cases": {
+        "integration.dpm-init": "HARDWARE",
+        "integration.dpm-pool": "HARDWARE"
+      }
+    },
+    "integration.triangle": {
+      "required_backend": "HARDWARE",
+      "cases": {
+        "integration.triangle64": "HARDWARE",
+        "integration.triangle-pair64": "HARDWARE"
+      }
+    },
+    "integration.repeatable-3d": {
+      "required_backend": "HARDWARE",
+      "cases": {
+        "integration.repeat-depth": "HARDWARE"
+      }
+    },
+    "integration.presentation": {
+      "required_backend": "HARDWARE",
+      "cases": {
+        "integration.typed-kms": "HARDWARE",
+        "integration.kms-flips": "HARDWARE"
+      }
+    },
+    "integration.egl-images": {
+      "required_backend": "HARDWARE",
+      "cases": {
+        "integration.egl-gbm-sharing": "HARDWARE"
+      }
+    },
+    "integration.xorg": {
+      "required_backend": "HARDWARE",
+      "cases": {
+        "integration.xorg-dri3": "HARDWARE"
+      }
+    },
+    "integration.gears": {
+      "required_backend": "HARDWARE",
+      "cases": {
+        "integration.gears-acceptance": "HARDWARE",
+        "integration.glxheads-acceptance": "HARDWARE"
+      }
+    }
+  }
+}

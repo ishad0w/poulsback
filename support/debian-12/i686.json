@@ -1,0 +1,48 @@
+{
+  "schema": "poulsback-build-target-v1",
+  "id": "debian-12-i686",
+  "kind": "reference",
+  "architecture": {
+    "cpu_family": "x86",
+    "cpu": "i686",
+    "abi": "linux-gnu-ilp32",
+    "endian": "little",
+    "pointer_bits": 32,
+    "elf_class": 32,
+    "elf_machine": 3,
+    "c_flags": [
+      "-march=i686",
+      "-mtune=generic"
+    ]
+  },
+  "inputs": {
+    "kernel_lock": "kernel/integration/linux.lock.json",
+    "kernel_patch": "kernel/integration/linux.patch",
+    "graphics_lock": "src/gallium/graphics.lock.json"
+  },
+  "toolchain": {
+    "family": "gcc",
+    "native_machine": "i686",
+    "c": "gcc",
+    "cpp": "g++",
+    "pkg_config": "pkg-config",
+    "kernel_arch": "x86"
+  },
+  "graphics": {
+    "c_flags": [
+      "-march=i686",
+      "-mtune=atom"
+    ],
+    "libdir": "lib/i386-linux-gnu",
+    "pkg_config_dirs": [
+      "usr/lib/i386-linux-gnu/pkgconfig",
+      "usr/lib/pkgconfig",
+      "usr/share/pkgconfig"
+    ]
+  },
+  "build_metadata": {
+    "host": "debian12-i386",
+    "user": "poulsback",
+    "timestamp": "2026-02-01 00:00:00 UTC"
+  }
+}

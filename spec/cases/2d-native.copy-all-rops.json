@@ -1,0 +1,586 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-native.copy-all-rops",
+ "source": "eng/lab/bo/bo-2d-fixtures.c --list at workspace 569c3f6; case = job name with the fixture prefix removed; result line from out/bo-2d-fixtures.jsonl (status pass)",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "wc-to-wc/argb/rop00"
+  },
+  {
+   "id": "wc-to-wc/argb/rop01"
+  },
+  {
+   "id": "wc-to-wc/argb/rop02"
+  },
+  {
+   "id": "wc-to-wc/argb/rop03"
+  },
+  {
+   "id": "wc-to-wc/argb/rop04"
+  },
+  {
+   "id": "wc-to-wc/argb/rop05"
+  },
+  {
+   "id": "wc-to-wc/argb/rop06"
+  },
+  {
+   "id": "wc-to-wc/argb/rop07"
+  },
+  {
+   "id": "wc-to-wc/argb/rop08"
+  },
+  {
+   "id": "wc-to-wc/argb/rop09"
+  },
+  {
+   "id": "wc-to-wc/argb/rop10"
+  },
+  {
+   "id": "wc-to-wc/argb/rop11"
+  },
+  {
+   "id": "wc-to-wc/argb/rop12"
+  },
+  {
+   "id": "wc-to-wc/argb/rop13"
+  },
+  {
+   "id": "wc-to-wc/argb/rop14"
+  },
+  {
+   "id": "wc-to-wc/argb/rop15"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop00"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop01"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop02"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop03"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop04"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop05"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop06"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop07"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop08"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop09"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop10"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop11"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop12"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop13"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop14"
+  },
+  {
+   "id": "wc-to-wc/xrgb/rop15"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop00"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop01"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop02"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop03"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop04"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop05"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop06"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop07"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop08"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop09"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop10"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop11"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop12"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop13"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop14"
+  },
+  {
+   "id": "wc-to-wc/rgb565/rop15"
+  },
+  {
+   "id": "wb-to-wb/argb/rop00"
+  },
+  {
+   "id": "wb-to-wb/argb/rop01"
+  },
+  {
+   "id": "wb-to-wb/argb/rop02"
+  },
+  {
+   "id": "wb-to-wb/argb/rop03"
+  },
+  {
+   "id": "wb-to-wb/argb/rop04"
+  },
+  {
+   "id": "wb-to-wb/argb/rop05"
+  },
+  {
+   "id": "wb-to-wb/argb/rop06"
+  },
+  {
+   "id": "wb-to-wb/argb/rop07"
+  },
+  {
+   "id": "wb-to-wb/argb/rop08"
+  },
+  {
+   "id": "wb-to-wb/argb/rop09"
+  },
+  {
+   "id": "wb-to-wb/argb/rop10"
+  },
+  {
+   "id": "wb-to-wb/argb/rop11"
+  },
+  {
+   "id": "wb-to-wb/argb/rop12"
+  },
+  {
+   "id": "wb-to-wb/argb/rop13"
+  },
+  {
+   "id": "wb-to-wb/argb/rop14"
+  },
+  {
+   "id": "wb-to-wb/argb/rop15"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop00"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop01"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop02"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop03"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop04"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop05"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop06"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop07"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop08"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop09"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop10"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop11"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop12"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop13"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop14"
+  },
+  {
+   "id": "wb-to-wb/xrgb/rop15"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop00"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop01"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop02"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop03"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop04"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop05"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop06"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop07"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop08"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop09"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop10"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop11"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop12"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop13"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop14"
+  },
+  {
+   "id": "wb-to-wb/rgb565/rop15"
+  },
+  {
+   "id": "wc-to-wb/argb/rop00"
+  },
+  {
+   "id": "wc-to-wb/argb/rop01"
+  },
+  {
+   "id": "wc-to-wb/argb/rop02"
+  },
+  {
+   "id": "wc-to-wb/argb/rop03"
+  },
+  {
+   "id": "wc-to-wb/argb/rop04"
+  },
+  {
+   "id": "wc-to-wb/argb/rop05"
+  },
+  {
+   "id": "wc-to-wb/argb/rop06"
+  },
+  {
+   "id": "wc-to-wb/argb/rop07"
+  },
+  {
+   "id": "wc-to-wb/argb/rop08"
+  },
+  {
+   "id": "wc-to-wb/argb/rop09"
+  },
+  {
+   "id": "wc-to-wb/argb/rop10"
+  },
+  {
+   "id": "wc-to-wb/argb/rop11"
+  },
+  {
+   "id": "wc-to-wb/argb/rop12"
+  },
+  {
+   "id": "wc-to-wb/argb/rop13"
+  },
+  {
+   "id": "wc-to-wb/argb/rop14"
+  },
+  {
+   "id": "wc-to-wb/argb/rop15"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop00"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop01"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop02"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop03"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop04"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop05"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop06"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop07"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop08"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop09"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop10"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop11"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop12"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop13"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop14"
+  },
+  {
+   "id": "wc-to-wb/xrgb/rop15"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop00"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop01"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop02"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop03"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop04"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop05"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop06"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop07"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop08"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop09"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop10"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop11"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop12"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop13"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop14"
+  },
+  {
+   "id": "wc-to-wb/rgb565/rop15"
+  },
+  {
+   "id": "wb-to-wc/argb/rop00"
+  },
+  {
+   "id": "wb-to-wc/argb/rop01"
+  },
+  {
+   "id": "wb-to-wc/argb/rop02"
+  },
+  {
+   "id": "wb-to-wc/argb/rop03"
+  },
+  {
+   "id": "wb-to-wc/argb/rop04"
+  },
+  {
+   "id": "wb-to-wc/argb/rop05"
+  },
+  {
+   "id": "wb-to-wc/argb/rop06"
+  },
+  {
+   "id": "wb-to-wc/argb/rop07"
+  },
+  {
+   "id": "wb-to-wc/argb/rop08"
+  },
+  {
+   "id": "wb-to-wc/argb/rop09"
+  },
+  {
+   "id": "wb-to-wc/argb/rop10"
+  },
+  {
+   "id": "wb-to-wc/argb/rop11"
+  },
+  {
+   "id": "wb-to-wc/argb/rop12"
+  },
+  {
+   "id": "wb-to-wc/argb/rop13"
+  },
+  {
+   "id": "wb-to-wc/argb/rop14"
+  },
+  {
+   "id": "wb-to-wc/argb/rop15"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop00"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop01"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop02"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop03"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop04"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop05"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop06"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop07"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop08"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop09"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop10"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop11"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop12"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop13"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop14"
+  },
+  {
+   "id": "wb-to-wc/xrgb/rop15"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop00"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop01"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop02"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop03"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop04"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop05"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop06"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop07"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop08"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop09"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop10"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop11"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop12"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop13"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop14"
+  },
+  {
+   "id": "wb-to-wc/rgb565/rop15"
+  }
+ ]
+}

@@ -1,0 +1,28 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gles2.nir-backend",
+ "source": "VK-GL-CTS opengl-es-cts-3.2.14.0 aosp_mustpass/main/gles2-main.txt as the lab lists it (eng/lab/conformance/lists/deqp-gles2-m1.txt), the part selected by its patterns",
+ "criteria": "dEQP reports Pass; NotSupported, QualityWarning, CompatibilityWarning, Fail, Crash and Timeout are not passes (an optional extension test needs an accepted exclusion)",
+ "runner": null,
+ "external": {
+  "source": "eng/lab/conformance/lists/deqp-gles2-m1.txt",
+  "member": null,
+  "select": [
+   "dEQP-GLES2.functional.shaders.preprocessor.*",
+   "dEQP-GLES2.functional.shaders.invalid_implicit_conversions.*",
+   "dEQP-GLES2.functional.shaders.keywords.*",
+   "dEQP-GLES2.functional.shaders.constants.*",
+   "dEQP-GLES2.functional.shaders.scoping.*",
+   "dEQP-GLES2.functional.shaders.linkage.*",
+   "dEQP-GLES2.functional.shaders.qualification_order.*",
+   "dEQP-GLES2.functional.shaders.reserved_operators.*",
+   "dEQP-GLES2.functional.shaders.declarations.*"
+  ],
+  "count": 1135,
+  "sha256": "53b49c21b462f5f833062306a9968e1c72ff4da80c4f651e472e58434f378b0c",
+  "source_sha256": "47d14a5e9abe302ae120c6622ee459ba3069cdea9086d74d578575fbe01e163b",
+  "builder": "conformance-harnesses",
+  "note": "Pinned list; partitioned among the gles2 families without overlap"
+ },
+ "cases": []
+}

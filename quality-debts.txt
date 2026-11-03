@@ -1,0 +1,1119 @@
+# SPDX-FileCopyrightText: 2026 ishad0w and the poulsback contributors
+# SPDX-License-Identifier: MIT
+
+# Quality debts: today's hits of the quality gates (docs/tests.md#quality-gates).
+#
+# One entry per line:   GATE SUBJECT ENDS REASON
+#   GATE     make check: sources, test-only, tools, static, warning, clones, size
+#            (tools/quality.py check) and stale (tools/check-project.py);
+#            make check-reach: dead, test-reach, never-runs (tools/quality.py reach);
+#            make coverage: those and coverage (tools/coverage.py)
+#   SUBJECT  path, or path:symbol; counted gates (warning, clones) take SUBJECT=COUNT
+#   ENDS     the review ID (CR1-M01) or the plan step (P4c-6) that removes the debt
+#   REASON   free text
+#
+# A hit missing here fails, and so does an entry that no longer hits: delete the
+# entry in the commit that fixes it. A count may only fall; lower it when it does.
+# `closed:` lists IDs and steps that are done; an entry naming one fails.
+# Each command's `--hits` prints its current hits in this format.
+#
+# CR1 IDs already done:
+closed: CR1-K01 CR1-K02 CR1-K06 CR1-K10 CR1-K11 CR1-K13 CR1-K14 CR1-K15 CR1-K16 CR1-K17 CR1-M06 CR1-X01 CR1-X02 CR1-X03 CR1-X04 CR1-T02 CR1-T03 CR1-T04 CR1-T07 CR1-T10 CR1-T11 CR1-T01 CR1-T06 CR1-T09
+
+# QC-dead (d): product files only test builds compile
+test-only src/compiler/linear.c CR1-M12 only test builds compile or include it
+test-only src/raster/sgx535_2d_encoder_v1.c CR1-M12 only test builds compile or include it
+test-only src/raster/sgx535_2d_encoder_v1.h CR1-M12 only test builds compile or include it
+test-only src/raster/sgx535_clip_viewport_generic_f32.h CR1-M12 only test builds compile or include it
+test-only src/raster/sgx535_clip_viewport_generic_f32.inc CR1-M12 only test builds compile or include it
+test-only src/raster/sgx535_clip_viewport_mesh.c CR1-M12 only test builds compile or include it
+test-only src/raster/sgx535_clip_viewport_mesh.h CR1-M12 only test builds compile or include it
+test-only src/raster/sgx535_clip_viewport_mesh_internal.h CR1-M12 only test builds compile or include it
+test-only src/video/mpeg2_dc_fixture.c video-decode only test builds compile or include it
+test-only src/video/mpeg2_dc_fixture.h video-decode only test builds compile or include it
+test-only src/video/mpeg2_va029.c video-decode only test builds compile or include it
+test-only src/video/mpeg2_va029.h video-decode only test builds compile or include it
+test-only src/video/msvdx_firmware.c video-decode only test builds compile or include it
+test-only src/video/msvdx_firmware.h video-decode only test builds compile or include it
+test-only src/video/msvdx_owned.c video-decode only test builds compile or include it
+test-only src/video/msvdx_owned.h video-decode only test builds compile or include it
+test-only src/video/msvdx_proto.c video-decode only test builds compile or include it
+test-only src/video/msvdx_proto.h video-decode only test builds compile or include it
+test-only src/video/msvdx_transport.c video-decode only test builds compile or include it
+test-only src/video/msvdx_transport.h video-decode only test builds compile or include it
+
+# QC-dead (e): tools and tests nothing uses
+tools tests/kernel/test_display_gtt.c Q1 nothing runs it, or it serves only unused tools or dead code
+tools tests/kernel/test_legacy_gem.c Q1 nothing runs it, or it serves only unused tools or dead code
+tools tests/unit/test_mpeg2_dc_fixture.c video-decode tests only test-only video code
+tools tests/unit/test_mpeg2_va029.c video-decode tests only test-only video code
+tools tests/unit/test_msvdx_firmware.c video-decode tests only test-only video code
+tools tests/unit/test_msvdx_owned.c video-decode tests only test-only video code
+tools tests/unit/test_msvdx_proto.c video-decode tests only test-only video code
+tools tests/unit/test_msvdx_transport.c video-decode tests only test-only video code
+tools tools/check-display-gtt.py Q1 nothing runs it, or it serves only unused tools or dead code
+tools tools/check-gem-policy.py Q1 nothing runs it, or it serves only unused tools or dead code
+tools tools/fetch-kernel.py Q1 nothing runs it, or it serves only unused tools or dead code
+tools tools/render-logo.py Q1 nothing runs it, or it serves only unused tools or dead code
+tools tools/window_scene_inputs.py CR1-M12 the --corpus input of test_clip_viewport_mesh.py, M12's clip-viewport fixture: nothing in the loop runs it
+
+# QC-warnings: globals that should be static
+static kernel/integration/poulsback_foreign_mmu.inc:psb_mmu_flush Q1 global named by no other translation unit: make it static
+static kernel/source/sgx535_source_epoch.c:sgx535_epoch_busy Q1 global named by no other translation unit: make it static
+static kernel/engine/poulsback_engine.c:poulsback_engine_power_down R4-1 the teardown's P, unwired until gma500's unload calls it: global named by no other translation unit: make it static
+static kernel/engine/poulsback_engine.c:poulsback_engine_quiesce R4-1 the teardown's Q, unwired until gma500's unload calls it: global named by no other translation unit: make it static
+static kernel/engine/poulsback_engine.c:poulsback_engine_release R4-1 the teardown's F, unwired until gma500's unload calls it: global named by no other translation unit: make it static
+static src/compiler/bitwise.c:sgx535_const_ushr_decode CR1-M12 global named by no other translation unit: make it static
+static src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_bcsel_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: global named by no other translation unit: make it static
+static src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_fneu_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: global named by no other translation unit: make it static
+static src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_iand_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: global named by no other translation unit: make it static
+static src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_ieq_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: global named by no other translation unit: make it static
+static src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_inot_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: global named by no other translation unit: make it static
+static src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_ior_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: global named by no other translation unit: make it static
+static src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_options_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: global named by no other translation unit: make it static
+static src/compiler/compare_nir.c:sgx535_nir_fragment_compare_options_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: global named by no other translation unit: make it static
+static src/compiler/fragment_nir_adapter.c:sgx535_nir_fragment_const_ushr_options_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: global named by no other translation unit: make it static
+static src/compiler/fragment_nir_adapter.c:sgx535_nir_fragment_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: global named by no other translation unit: make it static
+static src/compiler/fragment_nir_adapter.c:sgx535_nir_fragment_raw_sign_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: global named by no other translation unit: make it static
+static src/compiler/fragment_nir_adapter.c:sgx535_nir_project_dri_color0 P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: global named by no other translation unit: make it static
+static src/compiler/fragment_nir_adapter.c:sgx535_nir_project_fragment P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: global named by no other translation unit: make it static
+static src/compiler/fragment_raw_sign_normalized_nir.c:sgx535_nir_project_dri_color0_raw_sign_normalized_candidate CR1-M12 global named by no other translation unit: make it static
+static src/gallium/mesa/poulsback/poulsback_program.c:poulsback_fragment_uniform_snapshot CR1-M01 global named by no other translation unit: make it static
+static src/gallium/mesa/poulsback/poulsback_sampler.c:poulsback_sampler_state_snapshot CR1-M01 global named by no other translation unit: make it static
+static src/raster/sgx535_background_object.c:sgx535_background_clip_viewport_bind_seed CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_background_object.c:sgx535_background_clip_viewport_seed CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_background_object.c:sgx535_background_window_mesh_bind_full_owner_seed CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_background_object.c:sgx535_background_window_mesh_bind_seed CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_f32_ordered_bound_validate CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_ordered_bound_validate CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_preserve_bind CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_preserve_bound_validate CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_preserve_build CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_preserve_validate CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_state_bind CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_state_bound_validate CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_state_build CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_state_validate CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh_gl_window.inc:sgx535_depth_window_mesh_gl_window_bind CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh_gl_window.inc:sgx535_depth_window_mesh_gl_window_bound_validate CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh_gl_window.inc:sgx535_depth_window_mesh_gl_window_build CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh_gl_window.inc:sgx535_depth_window_mesh_gl_window_validate CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh_single_sample.inc:sgx535_depth_window_mesh_single_sample_bind CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh_single_sample.inc:sgx535_depth_window_mesh_single_sample_bound_validate CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_task_packet.c:sgx535_task_pair_mask_set_packet_validate CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_window_mesh.c:sgx535_window_mesh_no_input_source CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_window_mesh.c:sgx535_window_mesh_storage_plan CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_window_mesh_gl_window.inc:sgx535_window_mesh_gl_window_background_bound_validate CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_window_mesh_gl_window.inc:sgx535_window_mesh_gl_window_background_validate CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_window_mesh_gl_window.inc:sgx535_window_mesh_gl_window_bind CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_window_mesh_gl_window.inc:sgx535_window_mesh_gl_window_bound_validate CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_window_mesh_gl_window.inc:sgx535_window_mesh_gl_window_build CR1-M12 global named by no other translation unit: make it static
+static src/raster/sgx535_window_mesh_gl_window.inc:sgx535_window_mesh_gl_window_validate CR1-M12 global named by no other translation unit: make it static
+
+# QC-warnings: warnings per file and flag
+warning kernel/integration/poulsback_foreign_mmu.inc:-Wmissing-prototypes=4 Q1 -Wmissing-prototypes warnings in this file
+
+# QC-clones: cloned regions per file
+clones kernel/debug/sgx535_trace.h=1 Q1 cloned with kernel/display/poulsback_display_gtt.c, src/gallium/mesa/poulsback/poulsback_resource.c, src/xorg/poulsback_exa.c
+clones kernel/display/poulsback_display.c=1 Q1 cloned with src/raster/sgx535_normalized_color0_background.inc
+clones kernel/display/poulsback_display_gtt.c=8 Q1 cloned with kernel/debug/sgx535_trace.h, kernel/display/poulsback_display_gtt_reservation.inc, kernel/display/poulsback_display_psb_source.c
+clones kernel/display/poulsback_display_gtt_reservation.inc=6 Q1 cloned with kernel/display/poulsback_display_gtt.c, kernel/display/poulsback_display_psb_source.c, src/gallium/mesa/poulsback/poulsback_context_depth_submit.c
+clones kernel/display/poulsback_display_psb_source.c=24 Q1 cloned with kernel/display/poulsback_display_gtt.c, kernel/display/poulsback_display_gtt_reservation.inc, src/gallium/mesa/poulsback/poulsback_context_depth_submit.c
+clones kernel/engine/poulsback_context.c=1 Q1 cloned with kernel/engine/poulsback_submit.c, kernel/gem/poulsback_bo.c
+clones kernel/engine/poulsback_regtable.c=1 Q1 cloned with itself
+clones kernel/engine/poulsback_submit.c=4 CR1-K09 cloned with kernel/engine/poulsback_context.c
+clones kernel/gem/poulsback_bo.c=2 Q1 cloned with kernel/engine/poulsback_context.c
+clones src/compiler/bitwise.c=4 Q1 cloned with src/compiler/pack.c, src/compiler/usse.c
+clones src/compiler/bool32_nir.c=17 Q1 cloned with src/compiler/compare_nir.c, src/compiler/fragment_nir_adapter.c, src/compiler/nir_adapter.c
+clones src/compiler/compare_nir.c=1 Q1 cloned with src/compiler/bool32_nir.c
+clones src/compiler/fragment.c=3 Q1 cloned with src/compiler/linear.c
+clones src/compiler/fragment_nir_adapter.c=11 Q1 cloned with kernel/display/poulsback_display_gtt.c, src/compiler/bool32_nir.c, src/compiler/fragment_raw_sign_normalized_nir.c
+clones src/compiler/fragment_raw_sign_normalized_nir.c=4 Q1 cloned with src/compiler/fragment_nir_adapter.c
+clones src/compiler/linear.c=1 Q1 cloned with src/compiler/fragment.c
+clones src/compiler/nir_adapter.c=1 Q1 cloned with src/compiler/bool32_nir.c, src/compiler/fragment_nir_adapter.c
+clones src/compiler/pack.c=3 Q1 cloned with src/compiler/bitwise.c, src/compiler/usse.c
+clones src/compiler/sgx535_fragment_bool32.h=1 Q1 cloned with src/compiler/sgx535_fragment_compare.h, src/compiler/sgx535_fragment_internal.h
+clones src/compiler/sgx535_fragment_compare.h=1 Q1 cloned with src/compiler/sgx535_fragment_bool32.h
+clones src/compiler/sgx535_fragment_internal.h=1 Q1 cloned with src/compiler/sgx535_fragment_bool32.h
+clones src/compiler/sgx535_usse.h=4 Q1 cloned with itself
+clones src/compiler/texture2d.c=2 Q1 cloned with itself
+clones src/compiler/usse.c=6 Q1 cloned with src/compiler/bitwise.c, src/compiler/pack.c
+clones src/compiler/vertex_nir_adapter.c=4 Q1 cloned with itself
+clones src/gallium/mesa/poulsback/poulsback_color0_task.c=6 CR1-M14 cloned with src/compiler/fragment_nir_adapter.c, src/gallium/mesa/poulsback/poulsback_draw.c, src/gallium/mesa/poulsback/poulsback_program.c
+clones src/gallium/mesa/poulsback/poulsback_draw.c=6 Q1 cloned with src/gallium/mesa/poulsback/poulsback_color0_task.c, src/gallium/mesa/poulsback/poulsback_context.c, src/gallium/mesa/poulsback/poulsback_scene_window_mesh.c
+clones src/gallium/mesa/poulsback/poulsback_engine.c=1 Q1 cloned with src/gallium/mesa/poulsback/poulsback_scene_samples.c
+clones src/gallium/mesa/poulsback/poulsback_engine.h=1 Q1 cloned with src/gallium/mesa/poulsback/poulsback_image.h
+clones src/gallium/mesa/poulsback/poulsback_frame.c=6 Q1 cloned with src/raster/sgx535_depth_window_mesh.c, src/raster/sgx535_window_mesh.c
+clones src/gallium/mesa/poulsback/poulsback_frame_gpu.c=2 Q1 cloned with src/gallium/mesa/poulsback/poulsback_frame.c (one file until P4c step 6f split it)
+clones src/gallium/mesa/poulsback/poulsback_image.c=7 Q1 cloned with src/gallium/mesa/poulsback/poulsback_resource.c
+clones src/gallium/mesa/poulsback/poulsback_image.h=1 Q1 cloned with src/gallium/mesa/poulsback/poulsback_engine.h
+clones src/gallium/mesa/poulsback/poulsback_resource.c=12 Q1 cloned with kernel/debug/sgx535_trace.h, kernel/display/poulsback_display_gtt.c, src/compiler/fragment_nir_adapter.c
+clones src/gallium/mesa/poulsback/poulsback_sampler.c=4 Q1 cloned with itself
+clones src/gallium/mesa/poulsback/poulsback_scene_samples.c=2 Q1 cloned with src/gallium/mesa/poulsback/poulsback_engine.c
+clones src/raster/sgx535_2d_encoder.c=2 Q1 cloned with src/raster/sgx535_2d_encoder_v1.c
+clones src/raster/sgx535_2d_encoder.h=2 Q1 cloned with src/raster/sgx535_2d_encoder_v1.h, src/raster/sgx535_texture_layout.h
+clones src/raster/sgx535_2d_encoder_v1.c=4 Q1 cloned with src/raster/sgx535_2d_encoder.c
+clones src/raster/sgx535_2d_encoder_v1.h=1 Q1 cloned with src/raster/sgx535_2d_encoder.h
+clones src/raster/sgx535_background_launch.h=1 Q1 cloned with src/raster/sgx535_normalized_color0_background.h, src/raster/sgx535_normalized_color0_mask.h, src/raster/sgx535_normalized_color0_mask_list.h
+clones src/raster/sgx535_background_object.c=11 CR1-M14 cloned with kernel/display/poulsback_display_gtt.c, kernel/display/poulsback_display_gtt_reservation.inc, kernel/display/poulsback_display_psb_source.c
+clones src/raster/sgx535_background_object.h=1 Q1 cloned with src/raster/sgx535_task_packet.h
+clones src/raster/sgx535_background_pair.c=5 Q1 cloned with kernel/display/poulsback_display_psb_source.c, src/raster/sgx535_background_object.c, src/raster/sgx535_compiled_color0_packet.c
+clones src/raster/sgx535_clip_viewport_generic_f32.h=1 Q1 cloned with src/raster/sgx535_clip_viewport_mesh.h, src/raster/sgx535_depth_window_mesh_gl_window.h, src/raster/sgx535_depth_window_mesh_preserve.h
+clones src/raster/sgx535_clip_viewport_generic_f32.inc=5 Q1 cloned with src/raster/sgx535_clip_viewport_mesh.c, src/raster/sgx535_depth_window_mesh.c, src/raster/sgx535_depth_window_mesh_gl_window.inc
+clones src/raster/sgx535_clip_viewport_mesh.c=27 Q1 cloned with kernel/display/poulsback_display_gtt.c, kernel/display/poulsback_display_gtt_reservation.inc, kernel/display/poulsback_display_psb_source.c
+clones src/raster/sgx535_clip_viewport_mesh.h=2 Q1 cloned with src/raster/sgx535_clip_viewport_generic_f32.h, src/raster/sgx535_depth_window_mesh_gl_window.h, src/raster/sgx535_depth_window_mesh_preserve.h
+clones src/raster/sgx535_compiled_color0_packet.c=6 CR1-M14 cloned with kernel/display/poulsback_display_psb_source.c, src/raster/sgx535_background_object.c, src/raster/sgx535_background_pair.c
+clones src/raster/sgx535_compiled_color0_packet.h=1 Q1 cloned with src/raster/sgx535_normalized_color0_background.h, src/raster/sgx535_normalized_color0_mask_list.h, src/raster/sgx535_normalized_color0_task.h
+clones src/raster/sgx535_depth_clear.c=5 Q1 cloned with src/raster/sgx535_background_object.c, src/raster/sgx535_background_pair.c, src/raster/sgx535_compiled_color0_packet.c
+clones src/raster/sgx535_depth_window_mesh.c=42 CR1-M14 cloned with kernel/display/poulsback_display_gtt.c, kernel/display/poulsback_display_gtt_reservation.inc, kernel/display/poulsback_display_psb_source.c
+clones src/raster/sgx535_depth_window_mesh.h=1 Q1 cloned with src/raster/sgx535_window_mesh.h
+clones src/raster/sgx535_depth_window_mesh_gl_window.h=1 Q1 cloned with src/raster/sgx535_clip_viewport_generic_f32.h, src/raster/sgx535_clip_viewport_mesh.h, src/raster/sgx535_depth_window_mesh_preserve.h
+clones src/raster/sgx535_depth_window_mesh_gl_window.inc=3 Q1 cloned with src/raster/sgx535_clip_viewport_generic_f32.inc, src/raster/sgx535_clip_viewport_mesh.c, src/raster/sgx535_depth_window_mesh.c
+clones src/raster/sgx535_depth_window_mesh_preserve.h=1 Q1 cloned with src/raster/sgx535_clip_viewport_generic_f32.h, src/raster/sgx535_clip_viewport_mesh.h, src/raster/sgx535_depth_window_mesh_gl_window.h
+clones src/raster/sgx535_depth_window_mesh_single_sample.h=1 Q1 cloned with src/raster/sgx535_clip_viewport_generic_f32.h, src/raster/sgx535_clip_viewport_mesh.h, src/raster/sgx535_depth_window_mesh_gl_window.h
+clones src/raster/sgx535_depth_window_mesh_single_sample.inc=7 Q1 cloned with src/raster/sgx535_clip_viewport_generic_f32.inc, src/raster/sgx535_clip_viewport_mesh.c, src/raster/sgx535_depth_window_mesh.c
+clones src/raster/sgx535_depth_window_mesh_state.h=1 Q1 cloned with src/raster/sgx535_clip_viewport_generic_f32.h, src/raster/sgx535_clip_viewport_mesh.h, src/raster/sgx535_depth_window_mesh_gl_window.h
+clones src/raster/sgx535_engine121.c=7 CR1-M14 cloned with itself
+clones src/raster/sgx535_normalized_color0_background.h=1 Q1 cloned with src/raster/sgx535_background_launch.h, src/raster/sgx535_compiled_color0_packet.h, src/raster/sgx535_normalized_color0_mask.h
+clones src/raster/sgx535_normalized_color0_background.inc=6 Q1 cloned with kernel/display/poulsback_display.c, src/raster/sgx535_background_object.c, src/raster/sgx535_background_pair.c
+clones src/raster/sgx535_normalized_color0_launch.inc=9 Q1 cloned with kernel/display/poulsback_display_psb_source.c, src/gallium/mesa/poulsback/poulsback_scene_mask_list.c, src/gallium/mesa/poulsback/poulsback_scene_window_mesh.c
+clones src/raster/sgx535_normalized_color0_list_internal.h=4 Q1 cloned with src/raster/sgx535_normalized_color0_task.c, src/raster/sgx535_varying_packet.c
+clones src/raster/sgx535_normalized_color0_mask.h=1 Q1 cloned with src/gallium/mesa/poulsback/poulsback_scene_mask_list.h, src/gallium/mesa/poulsback/poulsback_scene_window_mesh.h, src/raster/sgx535_background_launch.h
+clones src/raster/sgx535_normalized_color0_mask.inc=10 Q1 cloned with src/raster/sgx535_compiled_color0_packet.c, src/raster/sgx535_depth_clear.c, src/raster/sgx535_depth_window_mesh.c
+clones src/raster/sgx535_normalized_color0_mask_list.c=10 CR1-M14 cloned with kernel/display/poulsback_display_gtt.c, kernel/display/poulsback_display_gtt_reservation.inc, kernel/display/poulsback_display_psb_source.c
+clones src/raster/sgx535_normalized_color0_mask_list.h=1 Q1 cloned with src/gallium/mesa/poulsback/poulsback_scene_mask_list.h, src/gallium/mesa/poulsback/poulsback_scene_window_mesh.h, src/raster/sgx535_background_launch.h
+clones src/raster/sgx535_normalized_color0_mask_list_launch.inc=4 Q1 cloned with kernel/display/poulsback_display_gtt.c, kernel/display/poulsback_display_gtt_reservation.inc, kernel/display/poulsback_display_psb_source.c
+clones src/raster/sgx535_normalized_color0_task.c=11 CR1-M14 cloned with kernel/display/poulsback_display_psb_source.c, src/raster/sgx535_background_object.c, src/raster/sgx535_background_pair.c
+clones src/raster/sgx535_normalized_color0_task.h=2 Q1 cloned with src/gallium/mesa/poulsback/poulsback_scene_mask_list.h, src/gallium/mesa/poulsback/poulsback_scene_window_mesh.h, src/raster/sgx535_compiled_color0_packet.h
+clones src/raster/sgx535_normalized_color0_window_list.h=1 Q1 cloned with src/gallium/mesa/poulsback/poulsback_scene_mask_list.h, src/gallium/mesa/poulsback/poulsback_scene_window_mesh.h, src/raster/sgx535_background_launch.h
+clones src/raster/sgx535_normalized_color0_window_list_launch.inc=5 Q1 cloned with kernel/display/poulsback_display_gtt.c, kernel/display/poulsback_display_gtt_reservation.inc, kernel/display/poulsback_display_psb_source.c
+clones src/raster/sgx535_pixel_event.c=2 Q1 cloned with itself
+clones src/raster/sgx535_task_image.h=1 Q1 cloned with src/raster/sgx535_task_packet.h
+clones src/raster/sgx535_task_launch.c=9 CR1-M14 cloned with kernel/display/poulsback_display_psb_source.c, src/gallium/mesa/poulsback/poulsback_scene_mask_list.c, src/gallium/mesa/poulsback/poulsback_scene_window_mesh.c
+clones src/raster/sgx535_task_launch.h=1 Q1 cloned with src/gallium/mesa/poulsback/poulsback_scene_mask_list.h, src/gallium/mesa/poulsback/poulsback_scene_window_mesh.h, src/raster/sgx535_normalized_color0_mask.h
+clones src/raster/sgx535_task_launch_prefix_internal.h=2 Q1 cloned with src/raster/sgx535_task_launch.c
+clones src/raster/sgx535_task_packet.c=16 Q1 cloned with kernel/display/poulsback_display_gtt.c, kernel/display/poulsback_display_psb_source.c, src/raster/sgx535_background_object.c
+clones src/raster/sgx535_task_packet.h=2 Q1 cloned with src/raster/sgx535_background_object.h, src/raster/sgx535_task_image.h
+clones src/raster/sgx535_texture_layout.c=11 Q1 cloned with itself
+clones src/raster/sgx535_texture_layout.h=1 Q1 cloned with src/raster/sgx535_2d_encoder.h, src/raster/sgx535_depth_window_mesh.c
+clones src/raster/sgx535_varying_packet.c=6 Q1 cloned with kernel/display/poulsback_display_psb_source.c, src/raster/sgx535_background_object.c, src/raster/sgx535_background_pair.c
+clones src/raster/sgx535_window_mesh.c=33 CR1-M14 cloned with kernel/display/poulsback_display_gtt.c, kernel/display/poulsback_display_gtt_reservation.inc, kernel/display/poulsback_display_psb_source.c
+clones src/raster/sgx535_window_mesh.h=3 Q1 cloned with src/raster/sgx535_clip_viewport_mesh.h, src/raster/sgx535_depth_window_mesh.h, src/raster/sgx535_normalized_color0_mask_list.h
+clones src/raster/sgx535_window_mesh_gl_window.h=1 Q1 cloned with src/raster/sgx535_clip_viewport_generic_f32.h, src/raster/sgx535_clip_viewport_mesh.h, src/raster/sgx535_depth_window_mesh_gl_window.h
+clones src/raster/sgx535_window_mesh_gl_window.inc=3 Q1 cloned with kernel/display/poulsback_display_psb_source.c, src/gallium/mesa/poulsback/poulsback_color0_task.c, src/raster/sgx535_background_object.c
+clones src/raster/sgx535_window_mesh_internal.h=2 Q1 cloned with src/raster/sgx535_clip_viewport_generic_f32.h, src/raster/sgx535_clip_viewport_mesh.h, src/raster/sgx535_window_mesh_gl_window.h
+clones src/raster/sgx535_window_mesh_single_sample.inc=13 Q1 cloned with src/raster/sgx535_clip_viewport_generic_f32.inc, src/raster/sgx535_clip_viewport_mesh.c, src/raster/sgx535_depth_window_mesh.c
+clones src/video/mpeg2_dc_fixture.c=2 video-decode cloned with src/video/msvdx_firmware.c
+clones src/video/mpeg2_va029.c=4 video-decode cloned with src/raster/sgx535_background_object.c, src/raster/sgx535_clip_viewport_mesh.c, src/raster/sgx535_depth_window_mesh.c
+clones src/video/msvdx_firmware.c=1 video-decode cloned with src/raster/sgx535_background_object.c, src/raster/sgx535_clip_viewport_mesh.c, src/raster/sgx535_depth_window_mesh.c
+clones src/video/msvdx_owned.c=3 video-decode cloned with src/raster/sgx535_depth_clear.c
+clones src/video/msvdx_proto.c=3 video-decode cloned with src/raster/sgx535_background_object.c, src/raster/sgx535_clip_viewport_mesh.c, src/raster/sgx535_depth_window_mesh.c
+clones src/video/msvdx_transport.c=1 video-decode cloned with src/raster/sgx535_background_object.c, src/raster/sgx535_clip_viewport_mesh.c, src/raster/sgx535_depth_window_mesh.c
+clones src/xorg/poulsback_display.c=2 Q1 cloned with src/raster/sgx535_background_object.c, src/raster/sgx535_window_mesh.c
+clones src/xorg/poulsback_exa.c=3 Q1 cloned with kernel/debug/sgx535_trace.h, kernel/display/poulsback_display_gtt.c, src/compiler/fragment_nir_adapter.c
+
+# QC-size: files over 1,500 lines, functions over 200
+size kernel/display/poulsback_display_psb_source.c CR1-K12 file over 1,500 lines
+size src/compiler/fragment_nir_adapter.c:alu CR1-M17 function over 200 lines
+size src/raster/sgx535_clip_viewport_mesh.c:cv_emit_profile CR1-M17 function over 200 lines
+size src/raster/sgx535_depth_window_mesh.c CR1-M17 file over 1,500 lines
+size src/raster/sgx535_task_packet.c:construct_words CR1-M17 function over 200 lines
+size src/raster/sgx535_window_mesh.c CR1-M17 file over 1,500 lines
+size src/raster/sgx535_window_mesh.c:construct CR1-M17 function over 200 lines
+
+# QC-stale: names nothing defines
+stale kernel/engine/poulsback_twod.h:sgx535_2d_raster Q1 names no symbol, string or file in the tree
+
+# QC-dead (b, c): functions the product links drop (make check-reach)
+dead src/compiler/bitwise.c:sgx535_const_ushr_decode CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_background_object.c:sgx535_background_clip_viewport_bind_seed CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_background_object.c:sgx535_background_clip_viewport_seed CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_preserve_bind CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_preserve_bound_validate CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_preserve_build CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_preserve_validate CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh_gl_window.inc:depth_gl_arguments CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh_gl_window.inc:depth_gl_bind_construct CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh_gl_window.inc:sgx535_depth_window_mesh_gl_window_bind CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh_gl_window.inc:sgx535_depth_window_mesh_gl_window_bound_validate CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh_gl_window.inc:sgx535_depth_window_mesh_gl_window_build CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh_gl_window.inc:sgx535_depth_window_mesh_gl_window_validate CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh_single_sample.inc:depth_single_bind CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh_single_sample.inc:sgx535_depth_window_mesh_single_sample_bind CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh_single_sample.inc:sgx535_depth_window_mesh_single_sample_bound_validate CR1-M12 nothing reaches it; the product link drops it
+dead src/raster/sgx535_window_mesh.c:sgx535_window_mesh_storage_plan CR1-M12 nothing reaches it; the product link drops it
+dead kernel/engine/poulsback_engine.c:engine_free_memory R4-1 the teardown (R4 step 0), unwired until R4-1 calls it: nothing reaches it; the product link drops it
+dead kernel/engine/poulsback_engine.c:engine_teardown_state R4-1 the teardown (R4 step 0), unwired until R4-1 calls it: nothing reaches it; the product link drops it
+dead kernel/engine/poulsback_engine.c:engine_unpark R4-1 the teardown (R4 step 0), unwired until R4-1 calls it: nothing reaches it; the product link drops it
+dead kernel/engine/poulsback_engine.c:poulsback_engine_power_down R4-1 the teardown (R4 step 0), unwired until R4-1 calls it: nothing reaches it; the product link drops it
+dead kernel/engine/poulsback_engine.c:poulsback_engine_quiesce R4-1 the teardown (R4 step 0), unwired until R4-1 calls it: nothing reaches it; the product link drops it
+dead kernel/engine/poulsback_engine.c:poulsback_engine_release R4-1 the teardown (R4 step 0), unwired until R4-1 calls it: nothing reaches it; the product link drops it
+dead kernel/integration/sgx535_engine_irq.c:sgx535_engine_irq_unbind_executor_locked R4-1 the teardown (R4 step 0), unwired until R4-1 calls it: nothing reaches it; the product link drops it
+dead kernel/source/sgx535_source_epoch.c:sgx535_epoch_executor_release R4-1 the teardown (R4 step 0), unwired until R4-1 calls it: nothing reaches it; the product link drops it
+
+# QC-dead (d): functions only tests reach (make check-reach)
+test-reach kernel/engine/poulsback_teardown.c:poulsback_teardown_drained R4-1 the teardown (R4 step 0), unwired until R4-1 calls it: only tests reach it; the product link drops it
+test-reach kernel/engine/poulsback_teardown.c:poulsback_teardown_idle R4-1 the teardown (R4 step 0), unwired until R4-1 calls it: only tests reach it; the product link drops it
+test-reach kernel/engine/poulsback_teardown.c:poulsback_teardown_may_free R4-1 the teardown (R4 step 0), unwired until R4-1 calls it: only tests reach it; the product link drops it
+
+
+# QC-coverage: live functions no host suite or Dell suite executes (make coverage)
+# QC-dead (f): linked functions an LTO link drops (make check-reach)
+coverage kernel/debug/sgx535_debug.c:__SCT__tp_func_sgx535_cached_lifecycle T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/debug/sgx535_debug.c:first T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/debug/sgx535_debug.c:next T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/debug/sgx535_debug.c:stop T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/debug/sgx535_trace.h:trace_sgx535_cached_lifecycle T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:domain_reservations_step T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:enter_device T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:fence_driver T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:fence_release T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:fence_timeline T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:flip_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:hold_images T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:image_checked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:image_valid T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:poulsback_display_disable T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:poulsback_display_domain_init T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:poulsback_display_flip T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:poulsback_display_prepare T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:poulsback_display_retire T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:poulsback_display_switch_hold_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:poulsback_display_wait_writers T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:reservation_valid T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:reservations_valid T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:reserve_display T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:source_binding T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:source_valid T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:step T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:track_image T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:tracking_slot T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.c:untrack_commit T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display.h:poulsback_overlap T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:cache_mode T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:check T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:check_pages T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:compare_u64 T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:dispose_binding T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:hold T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:output_ok T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:owner T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:owner_local T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:physical T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:physical_cache T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:poulsback_display_gtt_dispose_withdrawn T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:poulsback_display_gtt_entry T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:poulsback_display_gtt_prepare T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:poulsback_display_gtt_publication_entry T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:poulsback_display_gtt_publication_hold T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:poulsback_display_gtt_publication_owned T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:poulsback_display_gtt_publication_validate T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:publication_check T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:same_layout T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:same_provider T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt.c:same_source T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt_reservation.inc:gtt_reservation_check_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt_reservation.inc:gtt_reservation_hold T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt_reservation.inc:gtt_reservation_same_source T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt_reservation.inc:gtt_reservation_snapshot T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt_reservation.inc:gtt_source_owner_check T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt_reservation.inc:gtt_source_owner_commit T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt_reservation.inc:gtt_source_owner_finalize T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt_reservation.inc:poulsback_display_gtt_reservation_check T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt_reservation.inc:poulsback_display_gtt_reservation_prepare T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt_reservation.inc:poulsback_display_gtt_reservation_source T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt_reservation.inc:poulsback_display_gtt_reservation_source_acquire T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_gtt_reservation.inc:poulsback_display_gtt_reservation_source_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:poulsback_display_debugfs_init T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:poulsback_display_info_ioctl T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:poulsback_display_psb_legacy_flip T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:poulsback_display_psb_page_flip T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:poulsback_display_psb_set_config T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:poulsback_display_psb_source_check T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:poulsback_display_psb_source_gtt_flush T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:poulsback_display_psb_source_gtt_insert T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:poulsback_display_psb_source_link_check T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:poulsback_display_psb_source_link_commit T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:poulsback_display_psb_source_prepare T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:poulsback_display_psb_source_retained T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:poulsback_display_psb_switch_check T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:poulsback_display_psb_vblank T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_base_binding T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_base_bootstrap T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_base_context_attach T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_base_context_bind T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_base_context_init T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_base_flip T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_base_frame T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_base_frames_after T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_base_identity T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_base_parent T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_base_previous_words T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_base_publish_cache T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_base_registers T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_base_slot T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_display_open T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_display_show T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_display_show_pipe T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_flip_arm T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_flip_pending T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_flip_pending_pipe T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_flip_refs T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_flip_release_work T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_flip_settle_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_flips_open T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_flips_record T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_flips_show T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_pipe_frame T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_pipe_position T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_position_open T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_position_show T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_claim_check T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_claim_commit T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_epoch T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_expected T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_gtt T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_identity T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_legacy T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_legacy_fb T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_member T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_neighbor_words T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_output T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_pin_acquire T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_pin_identity T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_pin_lock T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_read T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_registered T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_registers T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_root_identity T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_same_gtt T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_source_unselected T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_static_binding T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_static_flush T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_static_insert T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_static_owner_claim_check T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_static_owner_claim_commit T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_static_owner_identity T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_static_owner_output T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_static_owner_prepare T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_static_owner_start T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_static_pin T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_static_remove T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_static_request T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_static_retirement T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_switch_commit T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_switch_entry T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_switch_hold T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_switch_images T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_switch_release T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_switch_route T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_switch_source T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_switch_stage T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_switch_stage_ready T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_switch_tuple T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_display_psb_source.c:psb_switch_unstage T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:command_matches T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:framebuffer_create_handle T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:framebuffer_destroy T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:framebuffer_retire_work T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:free_owner T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:owner_valid T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:poulsback_framebuffer_base T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:poulsback_framebuffer_counts T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:poulsback_framebuffer_create T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:poulsback_framebuffer_display_owner T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:poulsback_framebuffer_flip T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:poulsback_framebuffer_from_base T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:poulsback_framebuffer_is_object T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:poulsback_framebuffer_legacy_check T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:poulsback_framebuffer_object_get T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:poulsback_framebuffer_pin T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:poulsback_framebuffer_prepare T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:poulsback_framebuffer_put T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:poulsback_framebuffer_status T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:retain_owner T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:retain_unregistered T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/display/poulsback_framebuffer.c:retire_display T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_context.c:context_destroy T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_context.c:poulsback_context_create_ioctl T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_context.c:poulsback_context_destroy_ioctl T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_context.c:poulsback_exec_context T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_context.c:poulsback_exec_file_create T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_context.c:poulsback_exec_file_destroy T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_context.c:poulsback_scene_put T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_context.c:scene_create T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_context.c:scene_release T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_actions T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_apply_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_bringup T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_clear_root T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_code_banks T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_done2d_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_done3d_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_fault_note T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_fence_name T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_free_job T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_hold_job_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_hold_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_invaldc T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_irq T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_lost_note T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_memory T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_oom_work T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_open T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_qos_busy T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_qos_idle T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_qos_relax T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_raster_work T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_route_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_run_job T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_show T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_start2d T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_start3d T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_start_work T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_timedout_job T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_twod_check_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_twod_work T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_wedge T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_wedge_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:engine_zls T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:poulsback_engine_account_submit T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:poulsback_engine_get T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:poulsback_engine_link_vm T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:poulsback_engine_retained T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:poulsback_engine_scheduler T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_engine.c:poulsback_job_release T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_file.c:poulsback_file_close T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_file.c:poulsback_file_exec T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_file.c:poulsback_file_open T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_file.c:poulsback_file_vm T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_submit.c:job_begin T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_submit.c:job_push T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_submit.c:job_resolve T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_submit.c:poulsback_submit_2d_ioctl T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_submit.c:poulsback_submit_ioctl T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/engine/poulsback_submit.c:submit_regs T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:bo_close T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:bo_dmabuf T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:bo_export T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:bo_fault T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:bo_fill T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:bo_free T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:bo_get_sg_table T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:bo_mapping T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:bo_mmap T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:bo_open T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:poulsback_bo_create_ioctl T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:poulsback_bo_display_check T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:poulsback_bo_display_pin T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:poulsback_bo_display_unpin T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:poulsback_bo_info_ioctl T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:poulsback_bo_is_object T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:poulsback_bo_is_scanout T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:poulsback_bo_resolve T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:poulsback_prime_fd_to_handle T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:poulsback_prime_handle_to_fd T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:poulsback_prime_import T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/gem/poulsback_bo.c:to_bo T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:cleanup_module T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:gma_crtc_set_config T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:init_module T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_display_object T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_display_pin_acquire_check T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_display_pin_acquire_commit T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_display_pin_current T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_display_pin_same T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_display_pin_tuple T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_framebuffer_is_legacy T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_gem_display_pin_acquire T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_gem_display_pin_lock T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_gem_display_pin_unlock T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_gem_display_reserved T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_intel_crtc_mode_fixup T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_mmu_driver_init_unguarded T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_mmu_driver_takedown_unguarded T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_mmu_free_pagedir_unguarded T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/linux.patch:psb_mmu_set_pd_context_unguarded T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/poulsback_gem_hold.inc:poulsback_gem_hold T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/poulsback_gem_hold.inc:poulsback_gem_hold_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/poulsback_gem_hold.inc:poulsback_gem_hold_record T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/poulsback_gem_hold.inc:psb_gem_retained T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/poulsback_sgx_root_boot.inc:poulsback_sgx_root_boot_admit T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/sgx535_engine_irq.c:sgx535_engine_irq_bind_executor_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/sgx535_engine_irq.c:sgx535_engine_irq_capture_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/sgx535_engine_irq.c:sgx535_engine_irq_route_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/sgx535_engine_irq_lock.c:sgx535_engine_irq_lock T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/integration/sgx535_engine_irq_lock.c:sgx535_engine_irq_unlock T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/memory/poulsback_vm.c:poulsback_vm_directory T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/memory/poulsback_vm.c:poulsback_vm_get T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/memory/poulsback_vm.c:poulsback_vm_link T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:diag_after T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:epoch_unbind T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:lost_locked T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:sgx535_epoch_bind T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:sgx535_epoch_busy T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:sgx535_epoch_close T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:sgx535_epoch_executor_claim T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:sgx535_epoch_external_active T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:sgx535_epoch_external_begin T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:sgx535_epoch_external_end T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:sgx535_epoch_external_finalize T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:sgx535_epoch_lost T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:sgx535_epoch_pm_begin T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:sgx535_epoch_quiesce T3 no host suite executes it; the Dell suites' records come with T3
+coverage kernel/source/sgx535_source_epoch.c:sgx535_epoch_snapshot T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/compiler/bool32_nir.c:bool_alu P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:canonical_source P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:diamond_block_contract P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:diamond_boolean_alu P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:diamond_dominating_source P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:diamond_has_predecessor P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:diamond_phi P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:diamond_shape P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:diamond_value P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:flt_const_contract P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:flt_constant_key P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:flt_variable_key P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:lower_checked_clone P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:lower_inverse_equality P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:lower_raw32_bcsel P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:lower_raw32_floor P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:lower_raw32_flt_const P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:lower_raw32_fneu P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:lower_word_ior P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:not_bool1_source P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:original_contract P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:original_diamond_contract P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:raw32_nan P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:sgx535_nir_fragment_floor_options_ir P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:sgx535_nir_fragment_pure_diamond_options_ir P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/bool32_nir.c:shape P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/compare_nir.c:lower_ige_const P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/compare_nir.c:sgx535_nir_ige_const_contract P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/compare_nir.c:sgx535_nir_lower_ige_const P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/compare_nir.c:signed_ge_constant P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_nir_adapter.c:append P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_nir_adapter.c:entry P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_nir_adapter.c:indices_equal P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_nir_adapter.c:lookup P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_nir_adapter.c:sgx535_fragment_dri_raw_mask_live_ir P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_nir_adapter.c:sgx535_nir_fragment_bool32_ieq_const_ushr_lowered_options_ir P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_nir_adapter.c:sgx535_nir_fragment_bool32_ieq_lowered_options_ir P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_nir_adapter.c:sgx535_nir_fragment_linear_block P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_nir_adapter.c:sgx535_nir_fragment_pure_original_options_contract P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_nir_adapter.c:width32 P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_raw_sign_normalized_nir.c:raw_normalized_arguments P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_raw_sign_normalized_nir.c:raw_normalized_extract P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_raw_sign_normalized_nir.c:raw_normalized_ir P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_raw_sign_normalized_nir.c:sgx535_nir_dri_color0_raw_mask_normalized_v1_ir P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_raw_sign_normalized_nir.c:sgx535_nir_dri_color0_raw_sign_normalized_ir P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/fragment_raw_sign_normalized_nir.c:sgx535_nir_fragment_raw_mask_no_uniform_v1_ir P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/vertex_nir_adapter.c:binary P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/vertex_nir_adapter.c:blend P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/vertex_nir_adapter.c:negated P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/vertex_nir_adapter.c:refuse P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/compiler/vertex_nir_adapter.c:sa P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_color0_task.c:capture_refused P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_color0_task.c:capture_source P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_color0_task.c:clip_space P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_color0_task.c:draw_check P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_color0_task.c:linked_fields P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_color0_task.c:poulsback_color0_draw_check P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_color0_task.c:source_policy P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_color0_task.c:span P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_color0_task.c:state_supported P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context.c:cpu_indices P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context.c:cpu_path P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context.c:element_bytes P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context.c:f32_dwords P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context.c:frame_sink P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context.c:packed P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context.c:refused P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context.c:sink P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:begin P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:canonical_graph P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:canonical_tail P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:clip_space_supported P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:collect_triangle P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:finite_word P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:flush P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:linked P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:owner P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:position_output P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:poulsback_draw_batch_residual_raster P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:poulsback_draw_stage_begin_clip_space P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:poulsback_draw_stage_end P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:producer_identity P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:reset_stipple P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:same_objects P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:same_producer P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:state_supported P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:triangle P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:unchanged P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:unsupported P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:vertex P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_draw.c:window_position_output P4b-6 the draw module P4b step 6 deletes
+coverage src/gallium/mesa/poulsback/poulsback_engine.c:copy_surface P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_engine.c:poulsback_engine_copy P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_engine.c:poulsback_engine_draw P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_engine.c:scratch_depth P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_engine.c:slot_wait P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_fence.c:create_fd P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_fence.c:get_fd P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_fence.c:now_ns P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_fence.c:sticky P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_frame.c:align P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_frame.c:bounded P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_frame.c:code_bank P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_frame.c:f32_bits P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_frame.c:finite P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_frame.c:get P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_frame.c:page_bytes P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_frame.c:poulsback_frame_abort P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_frame.c:poulsback_frame_draw P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_frame.c:put P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_frame.c:state_reset_templates P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_image.c:buffer_cleanup_error P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_image.c:copyable P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_image.c:engine_image P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_image.c:poulsback_ws_image_import P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_image.c:poulsback_ws_render_copy P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_image.c:poulsback_ws_render_draw P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_image.c:render_hold P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_nir.c:poulsback_nir_solid_fragment_ir P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_nir.c:poulsback_nir_specialize_fragment P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_nir.c:specialize_fragment P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_nir.c:uniform_address_value P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_refuse.h:poulsback_refused_at P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_resource.c:clear_buffer P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_resource.c:copy_region P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_resource.c:domain P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_resource.c:error P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_resource.c:find_resource P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_resource.c:image_format P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_resource.c:import_resource P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_resource.c:is_dmabuf_modifier_supported P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_resource.c:poulsback_resource_buffer_borrow P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_resource.c:poulsback_resource_buffer_snapshot_range P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_resource.c:poulsback_resource_domain_error P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_resource.c:same_storage P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_resource.c:texture_subdata P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_sampler.c:descriptor_valid P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_sampler.c:find_bank P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_sampler.c:find_state P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_sampler.c:find_view P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_sampler.c:poulsback_sampler_state_create P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_sampler.c:poulsback_sampler_state_delete P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_sampler.c:poulsback_sampler_view_create P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_sampler.c:poulsback_sampler_view_destroy P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_sampler.c:release_view P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_sampler.c:stage_supported P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_sampler.c:stage_valid P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_scene_color.h:poulsback_scene_color_format P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_screen.c:screen_fd P4c-9 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-9 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_slab.c:extent P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/raster/sgx535_depth_window_mesh.c:ordered_align P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/raster/sgx535_depth_window_mesh.c:ordered_alloc P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/raster/sgx535_depth_window_mesh.c:ordered_compact_role P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/raster/sgx535_depth_window_mesh.c:ordered_free P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/raster/sgx535_depth_window_mesh.c:ordered_group_io P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/raster/sgx535_depth_window_mesh.c:ordered_is_f32 P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/raster/sgx535_depth_window_mesh_single_sample.inc:depth_single_build P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/raster/sgx535_depth_window_mesh_single_sample.inc:sgx535_depth_window_mesh_single_sample_raw_mask_build_v1 P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/raster/sgx535_window_mesh_gl_window.inc:gl_background_bind_construct P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/raster/sgx535_window_mesh_gl_window.inc:sgx535_window_mesh_gl_window_background_bind P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/raster/sgx535_window_mesh_gl_window.inc:sgx535_window_mesh_gl_window_background_build P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/raster/sgx535_window_mesh_single_sample.inc:sgx535_window_mesh_single_sample_background_raw_mask_build_v1 P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+coverage src/xorg/poulsback_display.c:crtc_destroy T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_display.c:crtc_hide_cursor T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_display.c:crtc_load_cursor_argb_check T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_display.c:crtc_set_cursor_position T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_display.c:crtc_show_cursor_check T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_display.c:output_destroy T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_display.c:set_cursor T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_drv.c:AvailableOptions T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_drv.c:EnterVT T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_drv.c:FreeScreen T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_drv.c:LeaveVT T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_drv.c:dri3_fd_from_pixmap T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_drv.c:dri3_fds_from_pixmap T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_drv.c:dri3_pixmap_from_fd T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_drv.h:pb_of T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_exa.c:PolyPoint T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_exa.c:PolySegment T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_exa.c:draw_on_cpu T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_exa.c:drawable_pixmap T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_exa.c:lose T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_exa.c:repaint T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_exa.c:row T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_exa.c:write_combined T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_present.c:abort_vblank T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_present.c:crtc_bits T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_present.c:refused T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/xorg/poulsback_present.c:ust_of T3 no host suite executes it; the Dell suites' records come with T3
+coverage src/gallium/mesa/poulsback/poulsback_context_private.h:ctx P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context_state.c:barrier P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context_state.c:blit P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context_state.c:box_inside P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context_state.c:clip P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context_state.c:constant_snapshot P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context_state.c:create_sampler P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context_state.c:create_sampler_view P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context_state.c:delete_sampler P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context_state.c:destroy_sampler_view P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context_state.c:fence_server_sync P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context_state.c:find P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context_state.c:image_copy P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context_state.c:scissor P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_context_state.c:texture_subdata P4c-6 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-6 writes its host test or deletes it
+coverage src/gallium/mesa/poulsback/poulsback_fence.c:fence_import P4c-7 neither a host suite nor the Dell smoke under gcov (run-088) runs it; P4c-7 writes its host test or deletes it
+dead src/compiler/fragment_nir_adapter.c:sgx535_nir_fragment_const_ushr_options_ir P4c-6 CR1-M15 remainder, a legacy compiler path only deleted code or tests reached, for P4c to delete: nothing reaches it; the product link drops it
+dead src/compiler/fragment_nir_adapter.c:sgx535_nir_fragment_sampled_ir P4c-6 CR1-M15 remainder, a legacy compiler path only deleted code or tests reached, for P4c to delete: nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh_gl_window.inc:depth_gl_same P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh_single_sample.inc:depth_single_same P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh_single_sample.inc:depth_single_validate P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh_single_sample.inc:sgx535_depth_window_mesh_single_sample_raw_mask_validate_v1 P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: nothing reaches it; the product link drops it
+dead src/raster/sgx535_depth_window_mesh_single_sample.inc:sgx535_depth_window_mesh_single_sample_validate P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: nothing reaches it; the product link drops it
+dead src/raster/sgx535_window_mesh_gl_window.inc:sgx535_window_mesh_gl_window_background_bound_validate P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: nothing reaches it; the product link drops it
+dead src/raster/sgx535_window_mesh_gl_window.inc:sgx535_window_mesh_gl_window_background_validate P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: nothing reaches it; the product link drops it
+dead src/raster/sgx535_window_mesh_gl_window.inc:sgx535_window_mesh_gl_window_bind P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: nothing reaches it; the product link drops it
+dead src/raster/sgx535_window_mesh_gl_window.inc:sgx535_window_mesh_gl_window_bound_validate P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: nothing reaches it; the product link drops it
+dead src/raster/sgx535_window_mesh_gl_window.inc:sgx535_window_mesh_gl_window_validate P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: nothing reaches it; the product link drops it
+never-runs src/compiler/fragment_nir_adapter.c:sgx535_nir_fragment_bool32_lowered_ir P4c-6 CR1-M15 remainder, a legacy compiler path only deleted code or tests reached, for P4c to delete: linked, but the LTO link from the roots drops it: it can never run
+never-runs src/compiler/fragment_normalized.c:sgx535_fragment_compile_generic_f32_secondary_candidate CR1-M12 linked, but the LTO link from the roots drops it: it can never run
+never-runs src/raster/sgx535_task_packet.c:sgx535_task_packet_build CR1-M12 linked, but the LTO link from the roots drops it: it can never run
+never-runs src/raster/sgx535_window_mesh_single_sample.inc:sgx535_window_mesh_single_sample_background_bind CR1-M12 linked, but the LTO link from the roots drops it: it can never run
+never-runs src/raster/sgx535_window_mesh_single_sample.inc:single_uniform_arguments CR1-M12 linked, but the LTO link from the roots drops it: it can never run
+never-runs src/raster/sgx535_window_mesh_single_sample.inc:single_uniform_copy CR1-M12 linked, but the LTO link from the roots drops it: it can never run
+never-runs src/raster/sgx535_texture_layout.c:pot P4c-6 wiring debt, the twiddled layout of power-of-two textures before resources store them in it (every texture is a stride surface): linked, but the LTO link from the roots drops it: it can never run
+sources src/compiler/nir_adapter.c P4c-6 CR1-M15 remainder, a legacy compiler path only deleted code or tests reached, for P4c to delete: no build list names it and no built file includes it
+static src/compiler/bool32_nir.c:sgx535_nir_fragment_flt_const_options_ir P4c-6 CR1-M15 remainder, a legacy compiler path only deleted code or tests reached, for P4c to delete: global named by no other translation unit: make it static
+static src/compiler/fragment_nir_adapter.c:sgx535_nir_dri_color0_ir P4c-6 CR1-M15 remainder, a legacy compiler path only deleted code or tests reached, for P4c to delete: global named by no other translation unit: make it static
+static src/compiler/fragment_nir_adapter.c:sgx535_nir_fragment_sampled_ir P4c-6 CR1-M15 remainder, a legacy compiler path only deleted code or tests reached, for P4c to delete: global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_f32_ordered_validate P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_ordered_validate P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh_single_sample.inc:sgx535_depth_window_mesh_single_sample_build P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh_single_sample.inc:sgx535_depth_window_mesh_single_sample_raw_mask_build_v1 P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh_single_sample.inc:sgx535_depth_window_mesh_single_sample_raw_mask_validate_v1 P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: global named by no other translation unit: make it static
+static src/raster/sgx535_depth_window_mesh_single_sample.inc:sgx535_depth_window_mesh_single_sample_validate P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: global named by no other translation unit: make it static
+test-reach kernel/integration/linux.patch:psb_mmu_flush_unguarded Q1 only tests reach it; the product link drops it
+test-reach kernel/integration/poulsback_foreign_mmu.inc:psb_mmu_flush Q1 only tests reach it; the product link drops it
+test-reach src/compiler/bitwise.c:sgx535_bitwise_decode CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/bitwise.c:sgx535_f32_less_candidate_encode CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/bool32_nir.c:bool32_ir P4c-6 CR1-M15 remainder, a legacy compiler path only deleted code or tests reached, for P4c to delete: only tests reach it, through sgx535_nir_fragment_bool32_bcsel_ir; the product link drops it
+test-reach src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_bcsel_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_compare_options_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it, through sgx535_nir_fragment_compare_options_ir; the product link drops it
+test-reach src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_fneu_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_iand_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_ieq_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_inot_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_ior_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/bool32_nir.c:sgx535_nir_fragment_bool32_options_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/bool32_nir.c:sgx535_nir_fragment_flt_const_options_ir P4c-6 CR1-M15 remainder, a legacy compiler path only deleted code or tests reached, for P4c to delete: only tests reach it; the product link drops it
+test-reach src/compiler/compare_nir.c:sgx535_nir_fragment_compare_options_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/fragment.c:sgx535_fragment_compile_dri_color0_raw_sign_candidate P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/fragment.c:sgx535_fragment_compile_sampled_candidate P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/fragment.c:sgx535_fragment_dri_color0_native_admission P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/fragment.c:sgx535_fragment_native_admission P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/fragment.c:sgx535_fragment_sampled_validate P4c-6 CR1-M15 remainder, a legacy compiler path only deleted code or tests reached, for P4c to delete: only tests reach it, through sgx535_fragment_compile_sampled_candidate; the product link drops it
+test-reach src/compiler/fragment_nir_adapter.c:dri_nir_extract P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it, through sgx535_nir_dri_color0_ir; the product link drops it
+test-reach src/compiler/fragment_nir_adapter.c:sgx535_nir_dri_color0_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/fragment_nir_adapter.c:sgx535_nir_fragment_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/fragment_nir_adapter.c:sgx535_nir_fragment_raw_sign_ir P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/fragment_nir_adapter.c:sgx535_nir_project_dri_color0 P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/fragment_nir_adapter.c:sgx535_nir_project_fragment P4c-6 CR1-M15 remainder, an admission level of a legacy family P4c-6 deletes: only tests reach it; the product link drops it
+test-reach src/compiler/fragment_normalized.c:sgx535_fragment_normalized_native_admission CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/fragment_raw_sign_normalized_nir.c:sgx535_nir_project_dri_color0_raw_sign_normalized_candidate CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/iterator.c:sgx535_iterator_f32_decode CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/pack.c:sgx535_pack_f32_u8_channel_decode CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/pack.c:sgx535_pack_f32_u8_decode CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/pack.c:sgx535_unpack_u8_f32_component_decode CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/pack.c:sgx535_unpack_u8_f32_component_encode CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/pds.c:sgx535_pds_linear_decode CR1-M03 only tests reach it; the product link drops it
+test-reach src/compiler/pds.c:sgx535_pds_linear_encode CR1-M03 only tests reach it; the product link drops it
+test-reach src/compiler/pds_fragment.c:pds_constant_memory_word CR1-M03 only tests reach it, through sgx535_pds_fragment_decode; the product link drops it
+test-reach src/compiler/pds_fragment.c:pds_constant_operand CR1-M03 only tests reach it, through sgx535_pds_fragment_decode; the product link drops it
+test-reach src/compiler/pds_fragment.c:pds_movs_constants CR1-M03 only tests reach it, through sgx535_pds_fragment_encode; the product link drops it
+test-reach src/compiler/pds_fragment.c:sgx535_pds_fragment_decode CR1-M03 only tests reach it; the product link drops it
+test-reach src/compiler/pds_fragment.c:sgx535_pds_fragment_encode CR1-M03 only tests reach it; the product link drops it
+test-reach src/compiler/pds_fragment.c:sgx535_pds_fragment_sample_encode CR1-M03 only tests reach it; the product link drops it
+test-reach src/compiler/pds_fragment.c:sgx535_pds_fragment_sample_task_project CR1-M03 only tests reach it; the product link drops it
+test-reach src/compiler/pds_secondary.c:dma_factor CR1-M03 only tests reach it, through sgx535_pds_secondary_encode; the product link drops it
+test-reach src/compiler/pds_secondary.c:sgx535_pds_secondary_decode CR1-M03 only tests reach it; the product link drops it
+test-reach src/compiler/pds_secondary.c:sgx535_pds_secondary_encode CR1-M03 only tests reach it; the product link drops it
+test-reach src/compiler/pds_secondary.c:validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/compiler/sgx535_limm_fields.h:sgx535_limm_data_decode CR1-M12 only tests reach it, through sgx535_limm_decode; the product link drops it
+test-reach src/compiler/texture2d.c:sgx535_texture2d_nearest_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/compiler/texture2d.c:sgx535_texture2d_nearest_descriptor CR1-M03 only tests reach it; the product link drops it
+test-reach src/compiler/texture2d.c:sgx535_texture2d_primary_unpack_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/compiler/texture2d.c:sgx535_texture2d_unpack_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/compiler/usse.c:identical CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/usse.c:sgx535_f32_decode CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/usse.c:sgx535_limm_decode CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/usse.c:sgx535_mov_decode CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/usse.c:sgx535_shader_decode_argb CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/usse.c:sgx535_shader_encode_argb CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/usse.c:sgx535_shader_pack_le CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/usse.c:sgx535_shader_unpack_le CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/usse.c:sgx535_store_decode CR1-M12 only tests reach it; the product link drops it
+test-reach src/compiler/usse.c:sgx535_store_encode CR1-M12 only tests reach it; the product link drops it
+test-reach src/gallium/mesa/poulsback/poulsback_program.c:overlap CR1-M01 only tests reach it; the product link drops it
+test-reach src/gallium/mesa/poulsback/poulsback_program.c:poulsback_fragment_uniform_snapshot CR1-M01 only tests reach it; the product link drops it
+test-reach src/gallium/mesa/poulsback/poulsback_sampler.c:poulsback_sampler_state_snapshot CR1-M01 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_background_object.c:arguments_valid CR1-M12 only tests reach it, through sgx535_background_bind; the product link drops it
+test-reach src/raster/sgx535_background_object.c:overlap CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_background_object.c:sgx535_background_bind CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_background_object.c:sgx535_background_bound_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_background_object.c:sgx535_background_build CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_background_object.c:sgx535_background_normalized_tile16_bind_seed CR1-M12 only tests reach it, through sgx535_normalized_color0_background_bind; the product link drops it
+test-reach src/raster/sgx535_background_object.c:sgx535_background_normalized_tile16_seed CR1-M12 only tests reach it, through sgx535_normalized_color0_background_build; the product link drops it
+test-reach src/raster/sgx535_background_object.c:sgx535_background_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_background_object.c:sgx535_background_window_mesh_bind_full_owner_seed CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_background_object.c:sgx535_background_window_mesh_bind_seed CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_background_pair.c:arguments CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_background_pair.c:overlaps CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_background_pair.c:pair_construct CR1-M03 only tests reach it, through sgx535_background_pair_build; the product link drops it
+test-reach src/raster/sgx535_background_pair.c:sgx535_background_pair_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_background_pair.c:sgx535_background_pair_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_compiled_color0_packet.c:arguments CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_compiled_color0_packet.c:construct CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_compiled_color0_packet.c:construct_program CR1-M03 only tests reach it, through construct; the product link drops it
+test-reach src/raster/sgx535_compiled_color0_packet.c:overlap CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_compiled_color0_packet.c:put CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_compiled_color0_packet.c:sgx535_compiled_color0_packet_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_compiled_color0_packet.c:sgx535_compiled_color0_packet_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_compiled_color0_packet.c:sgx535_window_color0_packet_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_compiled_color0_packet.c:sgx535_window_color0_packet_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_compiled_color0_packet.c:span CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_compiled_color0_packet.c:window_arguments CR1-M03 only tests reach it, through sgx535_window_color0_packet_build; the product link drops it
+test-reach src/raster/sgx535_compiled_color0_packet.c:window_construct CR1-M03 only tests reach it, through sgx535_window_color0_packet_build; the product link drops it
+test-reach src/raster/sgx535_depth_clear.c:sgx535_depth_clear_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:bind_construct CR1-M12 only tests reach it, through sgx535_depth_window_mesh_bind; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:ordered_bound_validate_io CR1-M12 only tests reach it, through sgx535_depth_window_mesh_f32_ordered_bound_validate; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:ordered_equal CR1-M12 only tests reach it, through sgx535_depth_window_mesh_f32_ordered_bound_validate; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:ordered_validate_io P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: only tests reach it, through sgx535_depth_window_mesh_f32_ordered_validate; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_bind CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_bound_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_build CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_f32_ordered_bound_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_f32_ordered_validate P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_native_admission CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_ordered_bound_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_ordered_validate P4c-5 a legacy raster validator only deleted code or tests reached, for P4c step 5 (the raster state words) to delete: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_state_bind CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_state_bound_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_state_build CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_state_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:sgx535_depth_window_mesh_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:state_bind_construct CR1-M12 only tests reach it, through sgx535_depth_window_mesh_state_bind; the product link drops it
+test-reach src/raster/sgx535_depth_window_mesh.c:state_policy CR1-M12 only tests reach it, through sgx535_depth_window_mesh_state_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_background.inc:color0_background_arguments CR1-M03 only tests reach it, through sgx535_normalized_color0_background_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_background.inc:color0_background_bind_arguments CR1-M03 only tests reach it, through sgx535_normalized_color0_background_bind; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_background.inc:color0_background_bind_construct CR1-M03 only tests reach it, through sgx535_normalized_color0_background_bind; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_background.inc:color0_background_binding_matches CR1-M03 only tests reach it, through sgx535_normalized_color0_background_bind; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_background.inc:color0_background_construct CR1-M03 only tests reach it, through sgx535_normalized_color0_background_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_background.inc:color0_background_request CR1-M03 only tests reach it, through sgx535_normalized_color0_background_bind; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_background.inc:sgx535_normalized_color0_background_bind CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_background.inc:sgx535_normalized_color0_background_bound_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_background.inc:sgx535_normalized_color0_background_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_background.inc:sgx535_normalized_color0_background_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_background.inc:sgx535_normalized_color0_mask_background_bind CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_background.inc:sgx535_normalized_color0_mask_background_bound_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_background.inc:sgx535_normalized_color0_mask_background_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_background.inc:sgx535_normalized_color0_mask_background_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:normalized_launch_arguments CR1-M03 only tests reach it, through sgx535_normalized_color0_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:normalized_launch_construct CR1-M03 only tests reach it, through sgx535_normalized_color0_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:normalized_launch_project CR1-M03 only tests reach it, through sgx535_normalized_color0_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:normalized_mask_tile16_launch_construct CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_tile16_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:normalized_tile16_launch_arguments CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_tile16_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:normalized_tile16_launch_construct CR1-M03 only tests reach it, through sgx535_normalized_color0_tile16_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:normalized_tile16_span CR1-M03 only tests reach it, through sgx535_normalized_color0_background_bind; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:pa0_launch_arguments CR1-M03 only tests reach it, through sgx535_normalized_pa0_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:pa0_launch_construct CR1-M03 only tests reach it, through sgx535_normalized_pa0_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:sgx535_normalized_color0_launch_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:sgx535_normalized_color0_launch_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:sgx535_normalized_color0_mask_tile16_launch_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:sgx535_normalized_color0_mask_tile16_launch_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:sgx535_normalized_color0_tile16_launch_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:sgx535_normalized_color0_tile16_launch_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:sgx535_normalized_pa0_launch_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_launch.inc:sgx535_normalized_pa0_launch_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_list_internal.h:normalized_color0_list_repack CR1-M12 only tests reach it, through construct; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask.inc:color0_mask_construct CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_tile16_task_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask.inc:sgx535_normalized_color0_mask_tile16_task_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask.inc:sgx535_normalized_color0_mask_tile16_task_validate CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_tile16_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:arguments CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:construct CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:overlap CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:put CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:put_index CR1-M03 only tests reach it, through construct; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:same_request CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_list_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:sgx535_normalized_color0_mask_list_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:sgx535_normalized_color0_mask_list_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:sgx535_normalized_color0_window_list_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:sgx535_normalized_color0_window_list_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:span CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:window_list_arguments CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:window_list_construct CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:window_list_same_request CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list.c:window_list_xy CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:mask_list_arguments CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_list_background_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:mask_list_background_arguments CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_list_background_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:mask_list_background_bind_arguments CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_list_background_bind; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:mask_list_background_bind_construct CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_list_background_bind; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:mask_list_background_construct CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_list_background_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:mask_list_background_request CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_list_background_bind; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:mask_list_background_same CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_list_background_bind; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:mask_list_extra CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_list_background_bind; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:mask_list_launch_arguments CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_list_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:mask_list_launch_construct CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_list_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:mask_list_same_request CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_list_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:normalized_list_background_disjoint CR1-M03 only tests reach it, through sgx535_normalized_color0_mask_list_background_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:sgx535_normalized_color0_mask_list_background_bind CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:sgx535_normalized_color0_mask_list_background_bound_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:sgx535_normalized_color0_mask_list_background_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:sgx535_normalized_color0_mask_list_background_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:sgx535_normalized_color0_mask_list_launch_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_mask_list_launch.inc:sgx535_normalized_color0_mask_list_launch_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_task.c:arguments CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_task.c:compose_program CR1-M12 only tests reach it, through construct; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_task.c:construct CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_task.c:sgx535_normalized_color0_task_build CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_task.c:sgx535_normalized_color0_task_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_task.c:sgx535_normalized_color0_tile16_task_build CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_task.c:sgx535_normalized_color0_tile16_task_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_task.c:sgx535_normalized_pa0_task_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_task.c:tile16_arguments CR1-M12 only tests reach it, through sgx535_normalized_color0_mask_tile16_task_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_task.c:tile16_construct CR1-M12 only tests reach it, through sgx535_normalized_color0_tile16_task_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:sgx535_normalized_color0_window_list_background_bind CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:sgx535_normalized_color0_window_list_background_bound_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:sgx535_normalized_color0_window_list_background_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:sgx535_normalized_color0_window_list_background_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:sgx535_normalized_color0_window_list_launch_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:sgx535_normalized_color0_window_list_launch_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:window_list_arguments CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_background_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:window_list_background_arguments CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_background_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:window_list_background_bind_arguments CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_background_bind; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:window_list_background_bind_construct CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_background_bind; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:window_list_background_construct CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_background_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:window_list_background_request CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_background_bind; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:window_list_background_same CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_background_bind; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:window_list_copied_equal CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:window_list_launch_arguments CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:window_list_launch_construct CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_launch_build; the product link drops it
+test-reach src/raster/sgx535_normalized_color0_window_list_launch.inc:window_list_same_request CR1-M03 only tests reach it, through sgx535_normalized_color0_window_list_launch_build; the product link drops it
+test-reach src/raster/sgx535_mte_state.c:sgx535_mte_changed P4c-6 wiring debt, the TA state record before step 6a's writer emits it: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_mte_state.c:sgx535_mte_group_size P4c-6 wiring debt, the TA state record before step 6a's writer emits it: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_mte_state.c:sgx535_mte_parse P4c-6 wiring debt, the TA state record before step 6a's writer emits it: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm.c:add P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm.c:dummy_valid P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it, through sgx535_spm_render_build; the product link drops it
+test-reach src/raster/sgx535_spm.c:kept P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm.c:sgx535_spm_abort_build P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm.c:sgx535_spm_end_build P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm.c:sgx535_spm_handoff_build P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm.c:sgx535_spm_render_build P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm.c:sgx535_spm_ta_end_build P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm.c:sgx535_spm_te_step_build P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm.c:wait_ack P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it, through sgx535_spm_abort_build; the product link drops it
+test-reach src/raster/sgx535_spm_state.c:finished P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm_state.c:hold P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm_state.c:render P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm_state.c:running P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm_state.c:sgx535_spm_init P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm_state.c:sgx535_spm_oom P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm_state.c:sgx535_spm_raster_end P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm_state.c:sgx535_spm_raster_start P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm_state.c:sgx535_spm_render_event P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm_state.c:sgx535_spm_ta_finished P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm_state.c:sgx535_spm_ta_start P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_spm_state.c:sgx535_spm_terminated P4d-3 wiring debt, P4d's register programs and SPM state before step 3 wires them: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_image.c:put_word CR1-M03 only tests reach it, through sgx535_task_image_build; the product link drops it
+test-reach src/raster/sgx535_task_image.c:sgx535_task_image_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_image.c:sgx535_task_image_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:arguments CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:bindings CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:compiled_arguments CR1-M03 only tests reach it, through sgx535_compiled_color0_launch_build; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:compiled_construct CR1-M03 only tests reach it, through sgx535_compiled_color0_launch_build; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:construct CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:construct_validated_packet CR1-M03 only tests reach it, through construct; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:construct_validated_packet_policy CR1-M03 only tests reach it, through sgx535_normalized_color0_background_bind; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:heap_role CR1-M03 only tests reach it, through bindings; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:launch_stages CR1-M03 only tests reach it, through sgx535_normalized_color0_background_bind; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:load_word CR1-M03 only tests reach it, through sgx535_normalized_color0_background_bind; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:matched_dri CR1-M03 only tests reach it, through sgx535_normalized_color0_background_bind; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:overlap CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:pair_launch_arguments CR1-M03 only tests reach it, through sgx535_task_pair_launch_build; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:pair_launch_construct CR1-M03 only tests reach it, through sgx535_task_pair_launch_build; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:project CR1-M03 only tests reach it, through sgx535_normalized_color0_background_bind; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:sgx535_compiled_color0_launch_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:sgx535_compiled_color0_launch_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:sgx535_launch_prefix_write CR1-M03 only tests reach it, through write_action; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:sgx535_task_launch_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:sgx535_task_launch_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:sgx535_task_pair_launch_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:sgx535_task_pair_launch_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:sgx535_window_color0_launch_build CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:sgx535_window_color0_launch_validate CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:store_word CR1-M03 only tests reach it, through sgx535_normalized_color0_background_bind; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:window_arguments CR1-M03 only tests reach it, through sgx535_window_color0_launch_build; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:window_construct CR1-M03 only tests reach it, through sgx535_window_color0_launch_build; the product link drops it
+test-reach src/raster/sgx535_task_launch.c:write_action CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_launch_prefix_internal.h:sgx535_launch_prefix_build CR1-M12 only tests reach it, through sgx535_normalized_color0_background_bind; the product link drops it
+test-reach src/raster/sgx535_task_packet.c:pair_build CR1-M12 only tests reach it, through sgx535_task_pair_mask_set_packet_build; the product link drops it
+test-reach src/raster/sgx535_task_packet.c:pair_validate CR1-M12 only tests reach it, through sgx535_task_pair_packet_validate; the product link drops it
+test-reach src/raster/sgx535_task_packet.c:sgx535_task_packet_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_packet.c:sgx535_task_packet_window_seed CR1-M12 only tests reach it, through construct; the product link drops it
+test-reach src/raster/sgx535_task_packet.c:sgx535_task_pair_mask_set_packet_build CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_packet.c:sgx535_task_pair_mask_set_packet_validate CR1-M12 only tests reach it, through sgx535_task_pair_packet_validate; the product link drops it
+test-reach src/raster/sgx535_task_packet.c:sgx535_task_pair_packet_build CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_task_packet.c:sgx535_task_pair_packet_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:expansion P4c-6 wiring debt, P4c step 3's texture layout before step 6 wires it: only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:f32_z24 CR1-M12 only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:from1555 CR1-M12 only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:from4444 CR1-M12 only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:from565 CR1-M12 only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:get_row CR1-M12 only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:ld16 CR1-M12 only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:ld32 CR1-M12 only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:linear CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:put_row CR1-M12 only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:region CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:rgba8 CR1-M12 only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:scatter CR1-M12 only tests reach it, through region; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:sgx535_texture_readback CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:sgx535_texture_upload CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:st16 CR1-M12 only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:st32 CR1-M12 only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:swap_rb CR1-M12 only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:transfer CR1-M12 only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:z24_f32 CR1-M12 only tests reach it, through sgx535_texture_readback; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:sgx535_texture_border_fill P4c-6 wiring debt, the texture layout before step 6 wires it: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_texture_layout.c:sgx535_texture_layout_border P4c-6 wiring debt, the texture layout before step 6 wires it: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_varying_packet.c:arguments CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_varying_packet.c:overlaps CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_varying_packet.c:sgx535_varying_packet_build CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_varying_packet.c:sgx535_varying_packet_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_varying_packet.c:sgx535_varying_window_seed CR1-M12 only tests reach it, through construct; the product link drops it
+test-reach src/raster/sgx535_window_mesh.c:bind_arguments CR1-M12 only tests reach it, through sgx535_window_mesh_bind; the product link drops it
+test-reach src/raster/sgx535_window_mesh.c:bind_construct CR1-M12 only tests reach it, through sgx535_window_mesh_bind; the product link drops it
+test-reach src/raster/sgx535_window_mesh.c:regenerate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_window_mesh.c:sgx535_window_mesh_background_bound_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_window_mesh.c:sgx535_window_mesh_background_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_window_mesh.c:sgx535_window_mesh_bind CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_window_mesh.c:sgx535_window_mesh_bound_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_window_mesh.c:sgx535_window_mesh_build CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_window_mesh.c:sgx535_window_mesh_uv2_build CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_window_mesh.c:sgx535_window_mesh_uv2_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_window_mesh.c:sgx535_window_mesh_validate CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_window_mesh.c:window_uv2_arguments CR1-M12 only tests reach it, through sgx535_window_mesh_uv2_build; the product link drops it
+test-reach src/raster/sgx535_window_mesh.c:window_uv2_layout CR1-M12 only tests reach it, through sgx535_window_mesh_uv2_build; the product link drops it
+test-reach src/raster/sgx535_window_mesh_gl_window.inc:sgx535_window_mesh_gl_window_build CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_window_mesh_single_sample.inc:sgx535_window_mesh_single_sample_background_secondary_bind CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_window_mesh_single_sample.inc:sgx535_window_mesh_single_sample_background_secondary_build CR1-M12 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_window_vertex.c:sgx535_window_color0_encode CR1-M03 only tests reach it; the product link drops it
+test-reach src/raster/sgx535_window_vertex.c:window_component CR1-M03 only tests reach it, through sgx535_window_color0_encode; the product link drops it
+test-reach src/raster/sgx535_region_clip.c:sgx535_region_clip P4c-6 wiring debt, the P4c region clip before step 6 wires it: only tests reach it; the product link drops it
+test-reach src/raster/sgx535_region_clip.c:tile_of P4c-6 wiring debt, the P4c region clip before step 6 wires it: only tests reach it, through sgx535_region_clip; the product link drops it
+test-reach src/raster/sgx535_draw_mask.c:sgx535_scissor_rect P4c-6 wiring debt, the P4c draw mask before step 6 wires it: only tests reach it; the product link drops it
+clones src/gallium/mesa/poulsback/poulsback_context_state.c=7 Q1 7 cloned regions of >= 50 tokens; with src/gallium/mesa/poulsback/poulsback_draw.c, src/raster/sgx535_depth_window_mesh.c
+tools tests/unit/msvdx_video_vectors.h video-decode serves only the video tests, themselves video-decode debts

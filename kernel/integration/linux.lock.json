@@ -1,0 +1,274 @@
+{
+  "kernel_release": "6.1.0-54-686-pae",
+  "debian_package_version": "6.1.190-1",
+  "linux_version": "6.1.190",
+  "source_package": {
+    "filename": "linux-source-6.1_6.1.190-1_all.deb",
+    "sha256": "cfbe4d7a7e4cb65190c96db90794b3a10eec608522339c2371103f844cc53536",
+    "bytes": 139374464,
+    "url": "https://security.debian.org/debian-security/pool/updates/main/l/linux/linux-source-6.1_6.1.190-1_all.deb"
+  },
+  "linux_source_files": {
+    "COPYING": {
+      "bytes": 496,
+      "sha256": "fb5a425bd3b3cd6071a3a9aff9909a859e7c1158d54d32e07658398cd67eb6a0"
+    },
+    "LICENSES/preferred/GPL-2.0": {
+      "bytes": 18729,
+      "sha256": "f6b78c087c3ebdf0f3c13415070dd480a3f35d8fc76f3d02180a407c1c812f79"
+    },
+    "Makefile": {
+      "bytes": 73168,
+      "sha256": "18b4b462b5412dbfb4507989ef4c8326a8e1bbcf421a4a96f7f3d5b5f7ad2be1"
+    },
+    "drivers/gpu/drm/gma500/Kconfig": {
+      "bytes": 567,
+      "sha256": "22fe7b395a82c84ce5851d88e4c12aaf4e863a42fcd3c943a7d8a06497fe2e8c"
+    },
+    "drivers/gpu/drm/gma500/Makefile": {
+      "bytes": 776,
+      "sha256": "a5fab8607f8775a9629277b1bec5f08959949f03116f5fc343303af1161e00d5"
+    },
+    "drivers/gpu/drm/gma500/backlight.c": {
+      "bytes": 2806,
+      "sha256": "1adfc79c984b193ef934d4aa8abc4bb55c0df1d735ce82ebacfcdb436126b8e7"
+    },
+    "drivers/gpu/drm/gma500/cdv_device.c": {
+      "bytes": 15767,
+      "sha256": "ace6739e76f0ef8b336961b2fe9c9ab66c1e38c3d8eee620071205d3ae7f4d87"
+    },
+    "drivers/gpu/drm/gma500/cdv_device.h": {
+      "bytes": 819,
+      "sha256": "65c58ab2ad781214f6bb761e501a6f92a60387b56adf3e8075f13fd1dfc0a090"
+    },
+    "drivers/gpu/drm/gma500/cdv_intel_crt.c": {
+      "bytes": 8084,
+      "sha256": "27d0d354a6542ad6b02879b39c752ec638b68a55a9d539208af8387c9725c48a"
+    },
+    "drivers/gpu/drm/gma500/cdv_intel_display.c": {
+      "bytes": 25620,
+      "sha256": "7730107422cab48a83ad1e5f5bdec6072844e617c8dda14fa354038eae056a96"
+    },
+    "drivers/gpu/drm/gma500/cdv_intel_dp.c": {
+      "bytes": 56844,
+      "sha256": "154974a7fa9e3b0329c373cdf74fcb2f15d5ad4225cb0ea91756a451dff2214f"
+    },
+    "drivers/gpu/drm/gma500/cdv_intel_hdmi.c": {
+      "bytes": 10106,
+      "sha256": "cf7d36af383ade21d30010234b119b543339ababffcdaf14f5e4f2b3ee801391"
+    },
+    "drivers/gpu/drm/gma500/cdv_intel_lvds.c": {
+      "bytes": 18084,
+      "sha256": "8ef06509bf5c14c42cf56240f2fcabb5f7185cc27459bda5b960bc958f2865c1"
+    },
+    "drivers/gpu/drm/gma500/framebuffer.c": {
+      "bytes": 13012,
+      "sha256": "63d51b5fa468cd92c12ab35438847d5373312eb4f4c4353fb4e7ed2e55e17ea1"
+    },
+    "drivers/gpu/drm/gma500/framebuffer.h": {
+      "bytes": 303,
+      "sha256": "7518d4e7e8477ea4d112ee0693753ccb52069acfbd241dd0c32e46627424bd80"
+    },
+    "drivers/gpu/drm/gma500/gem.c": {
+      "bytes": 10476,
+      "sha256": "97eaef39d68d2d6a2a7b90ce561b4b0525e8a2fc9fdc26de7ec0fba40d5bd079"
+    },
+    "drivers/gpu/drm/gma500/gem.h": {
+      "bytes": 1284,
+      "sha256": "2a632aece3a32088ab394a7b38090d97798efbd2b0441f0fbd18619c60218361"
+    },
+    "drivers/gpu/drm/gma500/gma_device.c": {
+      "bytes": 1192,
+      "sha256": "d970a14700c7c5ccddd2d87b3f5c4787da1bb164b1853252b61ba297a60939c8"
+    },
+    "drivers/gpu/drm/gma500/gma_device.h": {
+      "bytes": 394,
+      "sha256": "5d6bc147e1fcc15a7e72d4d6d25b4d9555db1336fc29347bdb8773c721dec085"
+    },
+    "drivers/gpu/drm/gma500/gma_display.c": {
+      "bytes": 21555,
+      "sha256": "d36fe7ae95565ae3ae778758bcc298319e53aba55f1f3a000adc3fbced423746"
+    },
+    "drivers/gpu/drm/gma500/gma_display.h": {
+      "bytes": 2716,
+      "sha256": "9c9cc823dc0a437a8da6317ebca1497f4f739118ca3a056fbccb167cd6a98527"
+    },
+    "drivers/gpu/drm/gma500/gtt.c": {
+      "bytes": 8102,
+      "sha256": "6ee3c406c02f9d34328f566743899272e596d37924edad1da7e204fe225a8166"
+    },
+    "drivers/gpu/drm/gma500/gtt.h": {
+      "bytes": 1262,
+      "sha256": "5575356c9f330f48e71d343c397a27f3e24f7d230ec89020215fedff41fd82b8"
+    },
+    "drivers/gpu/drm/gma500/intel_bios.c": {
+      "bytes": 16188,
+      "sha256": "745fde30e4deb5550de3f00975943f0d6b77a0ffbafa5c042837b4d5419e5698"
+    },
+    "drivers/gpu/drm/gma500/intel_bios.h": {
+      "bytes": 15975,
+      "sha256": "d3259ed7618d6c994323a07fbbbbb7cfc83d19412f3047d75c71117308c89520"
+    },
+    "drivers/gpu/drm/gma500/intel_gmbus.c": {
+      "bytes": 12817,
+      "sha256": "2b2308569845a42453256915ea9d76c52ea5ed428ccdb5b4b6d06116272ec635"
+    },
+    "drivers/gpu/drm/gma500/intel_i2c.c": {
+      "bytes": 3647,
+      "sha256": "0618fa7dcdd4811dc59bb9881a9d71cb8e3c2789436dc37082a44d748c68350f"
+    },
+    "drivers/gpu/drm/gma500/mid_bios.c": {
+      "bytes": 8358,
+      "sha256": "297e2b99b91256f26088f0fbe218858008b6847534848e78f05cbce58875e4ee"
+    },
+    "drivers/gpu/drm/gma500/mid_bios.h": {
+      "bytes": 338,
+      "sha256": "6c3086d48b8fc131822e4d51cb8b6c1dece5e9237390c20e9d7d2b191a54f697"
+    },
+    "drivers/gpu/drm/gma500/mmu.c": {
+      "bytes": 17535,
+      "sha256": "933306796b476c32fb3cc4f73a678575b8e9bfa324014ea8cffd60138e5e83ca"
+    },
+    "drivers/gpu/drm/gma500/mmu.h": {
+      "bytes": 2550,
+      "sha256": "8855805afae1571590808ae8008a1933288381ee4f301c722c96eda2ccbd412b"
+    },
+    "drivers/gpu/drm/gma500/oaktrail.h": {
+      "bytes": 7616,
+      "sha256": "19d8c7ddc224958b63529ff4246ae33f5ffa4b3d1cef5c74758e7917de259891"
+    },
+    "drivers/gpu/drm/gma500/oaktrail_crtc.c": {
+      "bytes": 18563,
+      "sha256": "17a44fe84e1e9807c39beddbd56fc4121e3655cc3608dd7e0c0f4b8e4571142b"
+    },
+    "drivers/gpu/drm/gma500/oaktrail_device.c": {
+      "bytes": 13691,
+      "sha256": "afe6b9c817ab8598352c45950d496ba2b2807b9e14a7ed850db9e55ca5792752"
+    },
+    "drivers/gpu/drm/gma500/oaktrail_hdmi.c": {
+      "bytes": 24402,
+      "sha256": "5161443a1c8cc110a75b1e13e75cb6b7fd0b6ff944f7a520cf4e85a330a2bb43"
+    },
+    "drivers/gpu/drm/gma500/oaktrail_hdmi_i2c.c": {
+      "bytes": 8542,
+      "sha256": "db5736010190d4611dcac755ca0f043bd68c2604466f53ddcf19ed81b5003007"
+    },
+    "drivers/gpu/drm/gma500/oaktrail_lvds.c": {
+      "bytes": 12947,
+      "sha256": "8486bada6a8d32c7426a7241b88947fcbd9cfdd1639161a1deabf6f9887a1a64"
+    },
+    "drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c": {
+      "bytes": 4510,
+      "sha256": "472763b52337417f3f87f874e3d9a9a1a1eee8bb174f4d4e9f6b4922ab1f7bec"
+    },
+    "drivers/gpu/drm/gma500/opregion.c": {
+      "bytes": 10194,
+      "sha256": "b998c123edb4f84df8433597a6436a3333e7ee18868edd82d9ed6c39424e846c"
+    },
+    "drivers/gpu/drm/gma500/opregion.h": {
+      "bytes": 1896,
+      "sha256": "6261ac8ebc13bdf48deaac006132df2f68bf728276c651165b95adc345a304ed"
+    },
+    "drivers/gpu/drm/gma500/power.c": {
+      "bytes": 6594,
+      "sha256": "ed871429e827f8098f387effa3a772aa80aa64206b89fb8e5a6cd7c7cfa262fe"
+    },
+    "drivers/gpu/drm/gma500/power.h": {
+      "bytes": 2054,
+      "sha256": "9d57d40eeeccc41f36ca66bc7de97f61de21d1d19b8d7e7b835755556b2080d4"
+    },
+    "drivers/gpu/drm/gma500/psb_device.c": {
+      "bytes": 7705,
+      "sha256": "161115299fde4654d25a8db383f6863cb3b3d39dd493c721ccb66692e3c3a84b"
+    },
+    "drivers/gpu/drm/gma500/psb_device.h": {
+      "bytes": 237,
+      "sha256": "b549d59a0a9195f6ede0d96634c5fa49d3ae2d48bbcdf24e75aa34c1a331e06a"
+    },
+    "drivers/gpu/drm/gma500/psb_drv.c": {
+      "bytes": 14592,
+      "sha256": "70b715c3851ba88b8e49dc1a512e00230296250824c5fae1f54c0dfc96dd594b"
+    },
+    "drivers/gpu/drm/gma500/psb_drv.h": {
+      "bytes": 18997,
+      "sha256": "a2715667dc2625a9ca70cc6f81dbc8cae02baee23beb8e9743a24b9a844802ce"
+    },
+    "drivers/gpu/drm/gma500/psb_intel_display.c": {
+      "bytes": 15112,
+      "sha256": "44dc3b00c0721dcadfeaa1a2386b04a38b0592634343fe06392807b41a78e6eb"
+    },
+    "drivers/gpu/drm/gma500/psb_intel_drv.h": {
+      "bytes": 8099,
+      "sha256": "109a2cbe0fe6ff9bbae9f67128cf7e89d22248944fd7dfa2582926d7a3bfe0c4"
+    },
+    "drivers/gpu/drm/gma500/psb_intel_lvds.c": {
+      "bytes": 22553,
+      "sha256": "b75cbdc4cc54fd9c3467c1a96fed959e702542946b60e3c41f0b3d9f08116db6"
+    },
+    "drivers/gpu/drm/gma500/psb_intel_modes.c": {
+      "bytes": 1202,
+      "sha256": "68c6efeba0ebd0bc67b594b4ee971eb341b5bf1e5cd0872014e9bc88a952d4f9"
+    },
+    "drivers/gpu/drm/gma500/psb_intel_reg.h": {
+      "bytes": 49461,
+      "sha256": "fd218b3aa34c681be95b71edd8e92605857ab4a3b35ecb08eaed99c95d4a85ff"
+    },
+    "drivers/gpu/drm/gma500/psb_intel_sdvo.c": {
+      "bytes": 80373,
+      "sha256": "f5b78bebee4f6e9b49aaf32b80514a62d70308f37135987cc66f18bba13654e4"
+    },
+    "drivers/gpu/drm/gma500/psb_intel_sdvo_regs.h": {
+      "bytes": 24416,
+      "sha256": "4e02101a042d248f34fb910534d74b704cde5a721e3a1993b5359d1085d341be"
+    },
+    "drivers/gpu/drm/gma500/psb_irq.c": {
+      "bytes": 13231,
+      "sha256": "0ab68081fe11a2501ae5eda558983b4b2e11d6b69fac3ce3e3a53b219868a990"
+    },
+    "drivers/gpu/drm/gma500/psb_irq.h": {
+      "bytes": 1022,
+      "sha256": "08a1ef596eb1ac76342266802e2f9ccccb0f28d92681cc08b55699dddb537942"
+    },
+    "drivers/gpu/drm/gma500/psb_lid.c": {
+      "bytes": 2283,
+      "sha256": "5e6e604769fcb84e485b746c834d76637757e63c16807017223bb801482dbc58"
+    },
+    "drivers/gpu/drm/gma500/psb_reg.h": {
+      "bytes": 17335,
+      "sha256": "124e8e80602a25d0bbe7a1019e95f6d780abcad5798b7d11f26496b7f3ead3d3"
+    },
+    "kernel/fork.c": {
+      "bytes": 86038,
+      "sha256": "9788b248342f720b1aece59132813181b0db821a9d02b3e2fee9ca9138afa5d2"
+    }
+  },
+  "abi_inputs": {
+    ".config": {
+      "bytes": 257155,
+      "sha256": "d6c8d07967e514cde2c70b0f16ae861472b1d7afb3647fbe070d27c63a4c9612"
+    },
+    "Module.symvers": {
+      "bytes": 1690504,
+      "sha256": "6dffbe7809923943f33cda48e028b2989dff5a866330e33dccec6b92ce370b27"
+    },
+    "include/generated/utsrelease.h": {
+      "bytes": 39,
+      "sha256": "118ce799364c532aee4fbe9d0cb04c450182cdad6c8511c9266cb1f63f4a3b0c"
+    }
+  },
+  "schema": "poulsback-debian-kernel-lock-v1",
+  "source_archive": {
+    "filename": "linux-source-6.1.tar.xz",
+    "bytes": 138099768,
+    "sha256": "f968176b175c6b8e493dac985b484ab9c0fabd3fb2d8411651ddec658ee7f37b",
+    "root": "linux-source-6.1"
+  },
+  "stack_policy": {
+    "schema": "poulsback-kernel-stack-policy-v1",
+    "architecture": "x86_32",
+    "thread_size_bytes": 8192,
+    "config_frame_warn_bytes": 1024,
+    "fatal_frame_bytes": 4096,
+    "basis": "Linux 6.1 x86 PAGE_SHIFT=12, THREAD_SIZE_ORDER=1; half-stack ceiling"
+  }
+}

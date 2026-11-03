@@ -1,0 +1,550 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-native.overlap-directions",
+ "source": "eng/lab/bo/bo-2d-fixtures.c --list at workspace 569c3f6; case = job name with the fixture prefix removed; result line from out/bo-2d-fixtures.jsonl (status pass)",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "wc/argb/copy/d-1+0"
+  },
+  {
+   "id": "wc/argb/copy/d+1+0"
+  },
+  {
+   "id": "wc/argb/copy/d-17+0"
+  },
+  {
+   "id": "wc/argb/copy/d+17+0"
+  },
+  {
+   "id": "wc/argb/copy/d+0-1"
+  },
+  {
+   "id": "wc/argb/copy/d+0+1"
+  },
+  {
+   "id": "wc/argb/copy/d+0-11"
+  },
+  {
+   "id": "wc/argb/copy/d+0+11"
+  },
+  {
+   "id": "wc/argb/copy/d-3-5"
+  },
+  {
+   "id": "wc/argb/copy/d+3-5"
+  },
+  {
+   "id": "wc/argb/copy/d-3+5"
+  },
+  {
+   "id": "wc/argb/copy/d+3+5"
+  },
+  {
+   "id": "wc/argb/copy/d+0+0"
+  },
+  {
+   "id": "wc/argb/copy/disjoint"
+  },
+  {
+   "id": "wc/argb/copy/two-entries"
+  },
+  {
+   "id": "wc/argb/xor/d-1+0"
+  },
+  {
+   "id": "wc/argb/xor/d+1+0"
+  },
+  {
+   "id": "wc/argb/xor/d-17+0"
+  },
+  {
+   "id": "wc/argb/xor/d+17+0"
+  },
+  {
+   "id": "wc/argb/xor/d+0-1"
+  },
+  {
+   "id": "wc/argb/xor/d+0+1"
+  },
+  {
+   "id": "wc/argb/xor/d+0-11"
+  },
+  {
+   "id": "wc/argb/xor/d+0+11"
+  },
+  {
+   "id": "wc/argb/xor/d-3-5"
+  },
+  {
+   "id": "wc/argb/xor/d+3-5"
+  },
+  {
+   "id": "wc/argb/xor/d-3+5"
+  },
+  {
+   "id": "wc/argb/xor/d+3+5"
+  },
+  {
+   "id": "wc/argb/xor/d+0+0"
+  },
+  {
+   "id": "wc/argb/xor/disjoint"
+  },
+  {
+   "id": "wc/argb/xor/two-entries"
+  },
+  {
+   "id": "wc/xrgb/copy/d-1+0"
+  },
+  {
+   "id": "wc/xrgb/copy/d+1+0"
+  },
+  {
+   "id": "wc/xrgb/copy/d-17+0"
+  },
+  {
+   "id": "wc/xrgb/copy/d+17+0"
+  },
+  {
+   "id": "wc/xrgb/copy/d+0-1"
+  },
+  {
+   "id": "wc/xrgb/copy/d+0+1"
+  },
+  {
+   "id": "wc/xrgb/copy/d+0-11"
+  },
+  {
+   "id": "wc/xrgb/copy/d+0+11"
+  },
+  {
+   "id": "wc/xrgb/copy/d-3-5"
+  },
+  {
+   "id": "wc/xrgb/copy/d+3-5"
+  },
+  {
+   "id": "wc/xrgb/copy/d-3+5"
+  },
+  {
+   "id": "wc/xrgb/copy/d+3+5"
+  },
+  {
+   "id": "wc/xrgb/copy/d+0+0"
+  },
+  {
+   "id": "wc/xrgb/copy/disjoint"
+  },
+  {
+   "id": "wc/xrgb/copy/two-entries"
+  },
+  {
+   "id": "wc/xrgb/xor/d-1+0"
+  },
+  {
+   "id": "wc/xrgb/xor/d+1+0"
+  },
+  {
+   "id": "wc/xrgb/xor/d-17+0"
+  },
+  {
+   "id": "wc/xrgb/xor/d+17+0"
+  },
+  {
+   "id": "wc/xrgb/xor/d+0-1"
+  },
+  {
+   "id": "wc/xrgb/xor/d+0+1"
+  },
+  {
+   "id": "wc/xrgb/xor/d+0-11"
+  },
+  {
+   "id": "wc/xrgb/xor/d+0+11"
+  },
+  {
+   "id": "wc/xrgb/xor/d-3-5"
+  },
+  {
+   "id": "wc/xrgb/xor/d+3-5"
+  },
+  {
+   "id": "wc/xrgb/xor/d-3+5"
+  },
+  {
+   "id": "wc/xrgb/xor/d+3+5"
+  },
+  {
+   "id": "wc/xrgb/xor/d+0+0"
+  },
+  {
+   "id": "wc/xrgb/xor/disjoint"
+  },
+  {
+   "id": "wc/xrgb/xor/two-entries"
+  },
+  {
+   "id": "wc/rgb565/copy/d-1+0"
+  },
+  {
+   "id": "wc/rgb565/copy/d+1+0"
+  },
+  {
+   "id": "wc/rgb565/copy/d-17+0"
+  },
+  {
+   "id": "wc/rgb565/copy/d+17+0"
+  },
+  {
+   "id": "wc/rgb565/copy/d+0-1"
+  },
+  {
+   "id": "wc/rgb565/copy/d+0+1"
+  },
+  {
+   "id": "wc/rgb565/copy/d+0-11"
+  },
+  {
+   "id": "wc/rgb565/copy/d+0+11"
+  },
+  {
+   "id": "wc/rgb565/copy/d-3-5"
+  },
+  {
+   "id": "wc/rgb565/copy/d+3-5"
+  },
+  {
+   "id": "wc/rgb565/copy/d-3+5"
+  },
+  {
+   "id": "wc/rgb565/copy/d+3+5"
+  },
+  {
+   "id": "wc/rgb565/copy/d+0+0"
+  },
+  {
+   "id": "wc/rgb565/copy/disjoint"
+  },
+  {
+   "id": "wc/rgb565/copy/two-entries"
+  },
+  {
+   "id": "wc/rgb565/xor/d-1+0"
+  },
+  {
+   "id": "wc/rgb565/xor/d+1+0"
+  },
+  {
+   "id": "wc/rgb565/xor/d-17+0"
+  },
+  {
+   "id": "wc/rgb565/xor/d+17+0"
+  },
+  {
+   "id": "wc/rgb565/xor/d+0-1"
+  },
+  {
+   "id": "wc/rgb565/xor/d+0+1"
+  },
+  {
+   "id": "wc/rgb565/xor/d+0-11"
+  },
+  {
+   "id": "wc/rgb565/xor/d+0+11"
+  },
+  {
+   "id": "wc/rgb565/xor/d-3-5"
+  },
+  {
+   "id": "wc/rgb565/xor/d+3-5"
+  },
+  {
+   "id": "wc/rgb565/xor/d-3+5"
+  },
+  {
+   "id": "wc/rgb565/xor/d+3+5"
+  },
+  {
+   "id": "wc/rgb565/xor/d+0+0"
+  },
+  {
+   "id": "wc/rgb565/xor/disjoint"
+  },
+  {
+   "id": "wc/rgb565/xor/two-entries"
+  },
+  {
+   "id": "wb/argb/copy/d-1+0"
+  },
+  {
+   "id": "wb/argb/copy/d+1+0"
+  },
+  {
+   "id": "wb/argb/copy/d-17+0"
+  },
+  {
+   "id": "wb/argb/copy/d+17+0"
+  },
+  {
+   "id": "wb/argb/copy/d+0-1"
+  },
+  {
+   "id": "wb/argb/copy/d+0+1"
+  },
+  {
+   "id": "wb/argb/copy/d+0-11"
+  },
+  {
+   "id": "wb/argb/copy/d+0+11"
+  },
+  {
+   "id": "wb/argb/copy/d-3-5"
+  },
+  {
+   "id": "wb/argb/copy/d+3-5"
+  },
+  {
+   "id": "wb/argb/copy/d-3+5"
+  },
+  {
+   "id": "wb/argb/copy/d+3+5"
+  },
+  {
+   "id": "wb/argb/copy/d+0+0"
+  },
+  {
+   "id": "wb/argb/copy/disjoint"
+  },
+  {
+   "id": "wb/argb/copy/two-entries"
+  },
+  {
+   "id": "wb/argb/xor/d-1+0"
+  },
+  {
+   "id": "wb/argb/xor/d+1+0"
+  },
+  {
+   "id": "wb/argb/xor/d-17+0"
+  },
+  {
+   "id": "wb/argb/xor/d+17+0"
+  },
+  {
+   "id": "wb/argb/xor/d+0-1"
+  },
+  {
+   "id": "wb/argb/xor/d+0+1"
+  },
+  {
+   "id": "wb/argb/xor/d+0-11"
+  },
+  {
+   "id": "wb/argb/xor/d+0+11"
+  },
+  {
+   "id": "wb/argb/xor/d-3-5"
+  },
+  {
+   "id": "wb/argb/xor/d+3-5"
+  },
+  {
+   "id": "wb/argb/xor/d-3+5"
+  },
+  {
+   "id": "wb/argb/xor/d+3+5"
+  },
+  {
+   "id": "wb/argb/xor/d+0+0"
+  },
+  {
+   "id": "wb/argb/xor/disjoint"
+  },
+  {
+   "id": "wb/argb/xor/two-entries"
+  },
+  {
+   "id": "wb/xrgb/copy/d-1+0"
+  },
+  {
+   "id": "wb/xrgb/copy/d+1+0"
+  },
+  {
+   "id": "wb/xrgb/copy/d-17+0"
+  },
+  {
+   "id": "wb/xrgb/copy/d+17+0"
+  },
+  {
+   "id": "wb/xrgb/copy/d+0-1"
+  },
+  {
+   "id": "wb/xrgb/copy/d+0+1"
+  },
+  {
+   "id": "wb/xrgb/copy/d+0-11"
+  },
+  {
+   "id": "wb/xrgb/copy/d+0+11"
+  },
+  {
+   "id": "wb/xrgb/copy/d-3-5"
+  },
+  {
+   "id": "wb/xrgb/copy/d+3-5"
+  },
+  {
+   "id": "wb/xrgb/copy/d-3+5"
+  },
+  {
+   "id": "wb/xrgb/copy/d+3+5"
+  },
+  {
+   "id": "wb/xrgb/copy/d+0+0"
+  },
+  {
+   "id": "wb/xrgb/copy/disjoint"
+  },
+  {
+   "id": "wb/xrgb/copy/two-entries"
+  },
+  {
+   "id": "wb/xrgb/xor/d-1+0"
+  },
+  {
+   "id": "wb/xrgb/xor/d+1+0"
+  },
+  {
+   "id": "wb/xrgb/xor/d-17+0"
+  },
+  {
+   "id": "wb/xrgb/xor/d+17+0"
+  },
+  {
+   "id": "wb/xrgb/xor/d+0-1"
+  },
+  {
+   "id": "wb/xrgb/xor/d+0+1"
+  },
+  {
+   "id": "wb/xrgb/xor/d+0-11"
+  },
+  {
+   "id": "wb/xrgb/xor/d+0+11"
+  },
+  {
+   "id": "wb/xrgb/xor/d-3-5"
+  },
+  {
+   "id": "wb/xrgb/xor/d+3-5"
+  },
+  {
+   "id": "wb/xrgb/xor/d-3+5"
+  },
+  {
+   "id": "wb/xrgb/xor/d+3+5"
+  },
+  {
+   "id": "wb/xrgb/xor/d+0+0"
+  },
+  {
+   "id": "wb/xrgb/xor/disjoint"
+  },
+  {
+   "id": "wb/xrgb/xor/two-entries"
+  },
+  {
+   "id": "wb/rgb565/copy/d-1+0"
+  },
+  {
+   "id": "wb/rgb565/copy/d+1+0"
+  },
+  {
+   "id": "wb/rgb565/copy/d-17+0"
+  },
+  {
+   "id": "wb/rgb565/copy/d+17+0"
+  },
+  {
+   "id": "wb/rgb565/copy/d+0-1"
+  },
+  {
+   "id": "wb/rgb565/copy/d+0+1"
+  },
+  {
+   "id": "wb/rgb565/copy/d+0-11"
+  },
+  {
+   "id": "wb/rgb565/copy/d+0+11"
+  },
+  {
+   "id": "wb/rgb565/copy/d-3-5"
+  },
+  {
+   "id": "wb/rgb565/copy/d+3-5"
+  },
+  {
+   "id": "wb/rgb565/copy/d-3+5"
+  },
+  {
+   "id": "wb/rgb565/copy/d+3+5"
+  },
+  {
+   "id": "wb/rgb565/copy/d+0+0"
+  },
+  {
+   "id": "wb/rgb565/copy/disjoint"
+  },
+  {
+   "id": "wb/rgb565/copy/two-entries"
+  },
+  {
+   "id": "wb/rgb565/xor/d-1+0"
+  },
+  {
+   "id": "wb/rgb565/xor/d+1+0"
+  },
+  {
+   "id": "wb/rgb565/xor/d-17+0"
+  },
+  {
+   "id": "wb/rgb565/xor/d+17+0"
+  },
+  {
+   "id": "wb/rgb565/xor/d+0-1"
+  },
+  {
+   "id": "wb/rgb565/xor/d+0+1"
+  },
+  {
+   "id": "wb/rgb565/xor/d+0-11"
+  },
+  {
+   "id": "wb/rgb565/xor/d+0+11"
+  },
+  {
+   "id": "wb/rgb565/xor/d-3-5"
+  },
+  {
+   "id": "wb/rgb565/xor/d+3-5"
+  },
+  {
+   "id": "wb/rgb565/xor/d-3+5"
+  },
+  {
+   "id": "wb/rgb565/xor/d+3+5"
+  },
+  {
+   "id": "wb/rgb565/xor/d+0+0"
+  },
+  {
+   "id": "wb/rgb565/xor/disjoint"
+  },
+  {
+   "id": "wb/rgb565/xor/two-entries"
+  }
+ ]
+}

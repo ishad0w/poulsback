@@ -1,0 +1,3372 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gles2.gallium-context-hooks",
+ "source": "Mesa 26.2.4 headers (the prepared root's Mesa SDK) and the driver at HEAD, survey 2026-11-03: 146 function pointers in struct pipe_context plus draw_vbo (pipe_draw_func)",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "destroy",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_context.c:368 (st_destroy_context_priv)",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "Context teardown. cso_unbind_context (gallium/auxiliary/cso_cache/cso_context.c:345-457) runs just before and calls bind_*(NULL)/set_*(empty) unconditionally."
+   }
+  },
+  {
+   "id": "draw_vertex_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/vbo/vbo_save_draw.c:297,311,318; gallium/auxiliary/indices/u_primconvert.c:345 (driver-side helper, unused)",
+    "gate": "caps.draw_vertex_state=0 -> ctx->Const.HasDrawVertexState=false (state_tracker/st_extensions.c:636) -> mesa/vbo/vbo_save_api.c:959 never builds a pipe_vertex_state for display lists",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Test: caps.draw_vertex_state==0; glNewList/glCallList still draws through draw_vbo."
+   }
+  },
+  {
+   "id": "render_condition",
+   "criteria": "NULL but reachable from GL 2.1 or GLES 2.0 (see note): fails until the hook is implemented or stubbed and the repro passes",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-GAP",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:952 (cso_set_render_condition); mesa/main/condrender.c:88; mesa/state_tracker/st_cb_readpixels.c:147",
+    "gate": "NOT NULL-checked: cso_context.c:949 calls it whenever (query,cond,mode) differs from the cached (NULL,false,0). On-spec gate caps.conditional_render=0 -> NV_conditional_render off (st_extensions.c:1148). But glBeginConditionalRender (GL3x.xml:249, installed for every desktop context) and glBeginConditionalRenderNV (es2=2.0 alias) never check the extension (main/condrender.c:103-163)",
+    "gl21": "conditional",
+    "gles2": "unreached",
+    "note": "OFF-SPEC GL 2.x crash: glBeginQuery/glEndQuery(GL_SAMPLES_PASSED,id) (legal, dummy, q->pq=NULL) then glBeginConditionalRender(id, GL_QUERY_NO_WAIT) via GetProcAddress -> mode PIPE_RENDER_COND_NO_WAIT != cached 0 -> NULL call (GL_QUERY_WAIT=0 does not trigger). GLES2: no query object can get target SAMPLES_PASSED/ANY_SAMPLES_PASSED, so begin_conditional_render errors first. Readpixels :147 passes (NULL,false,0) = cached -> no call. Fix: no-op stub."
+   }
+  },
+  {
+   "id": "render_condition_mem",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "none in GL frontends/helpers",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "No caller outside drivers and u_threaded_context."
+   }
+  },
+  {
+   "id": "create_query",
+   "criteria": "NULL but reachable from GL 2.1 or GLES 2.0 (see note): fails until the hook is implemented or stubbed and the repro passes",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-GAP",
+    "callers": "mesa/main/queryobj.c:269 (end_query, GL_TIMESTAMP); queryobj.c:235 (begin_query); queryobj.c:223",
+    "gate": "NOT NULL-checked. On-spec: caps.occlusion_query=0 (makes GL_SAMPLES_PASSED a dummy query, main/queryobj.c:141); caps.query_timestamp=0 and caps.query_time_elapsed=0 (ARB_timer_query/EXT_disjoint_timer_query/EXT_timer_query off, state_tracker/st_extensions.c:1095,1104,1534); caps.query_pipeline_statistics(_single)=0; caps.max_stream_output_buffers=0; caps.query_so_overflow=0. Off-spec: _mesa_QueryCounter (main/queryobj.c:890-950) never checks ARB_timer_query/EXT_disjoint_timer_query; glQueryCounter is installed for desktop GL and glQueryCounterEXT for ES2 (glapi/gen/es_EXT.xml:909 es2=2.0); it calls end_query -> queryobj.c:269",
+    "gl21": "conditional",
+    "gles2": "conditional",
+    "note": "OFF-SPEC crash in both APIs: glQueryCounter(1, GL_TIMESTAMP) / glQueryCounterEXT(1, GL_TIMESTAMP_EXT). Fix: stub returning NULL (end_query then raises GL_OUT_OF_MEMORY) or implement TIMESTAMP. GALLIUM_HUD driver queries need screen->get_driver_query_info (NULL) so HUD creates none."
+   }
+  },
+  {
+   "id": "create_batch_query",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/performance_monitor.c:135; gallium/auxiliary/hud/hud_driver_query.c:103",
+    "gate": "caps.performance_monitor=false (computed, gallium/auxiliary/util/u_screen.c:186-188: get_driver_query_info NULL) -> AMD_performance_monitor off (st_extensions.c:1138); needs perf-monitor counters with batch flag, which come from screen->get_driver_query_info",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Shadowed: the off-spec AMD entry points crash earlier in screen->get_driver_query_info (performance_monitor.c:362), see screen NULL-GAP."
+   }
+  },
+  {
+   "id": "destroy_query",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/queryobj.c:64,69 (free_queries); mesa/main/performance_monitor.c:159",
+    "gate": "queryobj.c:63/68 test q->pq/q->pq_begin, filled only by create_query; caps.occlusion_query=0 (makes GL_SAMPLES_PASSED a dummy query, main/queryobj.c:141); caps.query_timestamp=0 and caps.query_time_elapsed=0 (ARB_timer_query/EXT_disjoint_timer_query/EXT_timer_query off, state_tracker/st_extensions.c:1095,1104,1534); caps.query_pipeline_statistics(_single)=0; caps.max_stream_output_buffers=0; caps.query_so_overflow=0",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Only reachable after create_query; the off-spec glQueryCounter path crashes in create_query first."
+   }
+  },
+  {
+   "id": "begin_query",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/queryobj.c:239; mesa/main/performance_monitor.c:198",
+    "gate": "queryobj.c:238 `if (q->pq)`; dummy queries skip (queryobj.c:229); caps.occlusion_query=0 (makes GL_SAMPLES_PASSED a dummy query, main/queryobj.c:141); caps.query_timestamp=0 and caps.query_time_elapsed=0 (ARB_timer_query/EXT_disjoint_timer_query/EXT_timer_query off, state_tracker/st_extensions.c:1095,1104,1534); caps.query_pipeline_statistics(_single)=0; caps.max_stream_output_buffers=0; caps.query_so_overflow=0",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "As destroy_query."
+   }
+  },
+  {
+   "id": "end_query",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/queryobj.c:277, 227",
+    "gate": "queryobj.c:276/226 `if (q->pq)` / `if (q->pq_begin)`; dummy queries return true (queryobj.c:273); caps.occlusion_query=0 (makes GL_SAMPLES_PASSED a dummy query, main/queryobj.c:141); caps.query_timestamp=0 and caps.query_time_elapsed=0 (ARB_timer_query/EXT_disjoint_timer_query/EXT_timer_query off, state_tracker/st_extensions.c:1095,1104,1534); caps.query_pipeline_statistics(_single)=0; caps.max_stream_output_buffers=0; caps.query_so_overflow=0",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "As destroy_query."
+   }
+  },
+  {
+   "id": "get_query_result",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/queryobj.c:305, 372",
+    "gate": "queryobj.c:298 returns true when !q->pq; caps.occlusion_query=0 (makes GL_SAMPLES_PASSED a dummy query, main/queryobj.c:141); caps.query_timestamp=0 and caps.query_time_elapsed=0 (ARB_timer_query/EXT_disjoint_timer_query/EXT_timer_query off, state_tracker/st_extensions.c:1095,1104,1534); caps.query_pipeline_statistics(_single)=0; caps.max_stream_output_buffers=0; caps.query_so_overflow=0",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "glGetQueryObject*(GL_SAMPLES_PASSED query) returns 0 (dummy). Correctness gap for GL 1.5 occlusion queries, not a crash."
+   }
+  },
+  {
+   "id": "get_query_result_resource",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/queryobj.c:481",
+    "gate": "caps.query_buffer_object=0 -> ARB_query_buffer_object off (st_extensions.c:1066; checked at queryobj.c:1141,1174) and `if (q->pq)` at queryobj.c:480",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "set_active_query_state",
+   "criteria": "NULL but reachable from GL 2.1 or GLES 2.0 (see note): fails until the hook is implemented or stubbed and the repro passes",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-GAP",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:1772 (cso_save_state), :1838 (cso_restore_state); mesa/state_tracker/st_cb_clear.c:220-221",
+    "gate": "NOT NULL-checked. st sets CSO_BIT_PAUSE_QUERIES whenever st->active_queries>0, and begin_query increments active_queries even for dummy queries (main/queryobj.c:250-251). ARB_occlusion_query is always on for compat (main/extensions.c:279), so GL_SAMPLES_PASSED is legal in GL 2.x; caps.occlusion_query=0 makes it a dummy but it is still counted. clear_with_quad is taken for scissored or colour-masked clears because caps.clear_scissored=0 and caps.clear_masked=0 (st_cb_clear.c:439-442)",
+    "gl21": "reached",
+    "gles2": "unreached",
+    "note": "ON-SPEC GL 2.x crash: glBeginQuery(GL_SAMPLES_PASSED,q); glEnable(GL_SCISSOR_TEST); glScissor(partial rect); glClear(GL_COLOR_BUFFER_BIT) -> cso_save_state -> NULL call (same with glColorMask(1,1,1,0)). The other PAUSE_QUERIES users (st_cb_texture.c:1752,2021, st_cb_readpixels.c:142) sit in PBO paths that are off (st->pbo.upload_enabled=false). GLES2 cannot begin any non-timestamp query. u_blitter callers are not used by poulsback. Fix: no-op hook."
+   }
+  },
+  {
+   "id": "init_intel_perf_query_info",
+   "criteria": "NULL but reachable from GL 2.1 or GLES 2.0 (see note): fails until the hook is implemented or stubbed and the repro passes",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-GAP",
+    "callers": "mesa/main/performance_query.c:80 (init_performance_query_info, from glGetFirstPerfQueryIdINTEL :151, glGetPerfQueryInfoINTEL :264, glCreatePerfQueryINTEL :467); mesa/state_tracker/st_context.c:437",
+    "gate": "NOT NULL-checked at performance_query.c:80. st_have_perfquery() (st_context.c:434-443) needs all 10 INTEL hooks, so INTEL_performance_query is not advertised, but its entry points (glapi/gen/INTEL_performance_query.xml:8, es2=2.0, installed for desktop and ES2) never check the extension",
+    "gl21": "conditional",
+    "gles2": "conditional",
+    "note": "OFF-SPEC crash in both APIs: glGetFirstPerfQueryIdINTEL(&id) (also GetNext/GetPerfQueryIdByName/GetPerfQueryInfo/GetPerfCounterInfo/CreatePerfQuery). Fix: stub returning 0 -> Mesa raises INVALID_OPERATION and the other 9 INTEL hooks stay unreachable."
+   }
+  },
+  {
+   "id": "get_intel_perf_query_info",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/main/performance_query.c:241, 282, 401; mesa/state_tracker/st_context.c:437-442",
+    "gate": "reached only after init_intel_perf_query_info() returned numQueries>0 (queryid_valid) or for a perf object created by new_intel_perf_query_obj (lookup_object returns NULL otherwise); st_have_perfquery() NULL-checks all 10 hooks to keep INTEL_performance_query off",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Not independently reachable; shadowed by the init_intel_perf_query_info NULL-GAP."
+   }
+  },
+  {
+   "id": "get_intel_perf_query_counter_info",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/main/performance_query.c:356; mesa/state_tracker/st_context.c:437-442",
+    "gate": "reached only after init_intel_perf_query_info() returned numQueries>0 (queryid_valid) or for a perf object created by new_intel_perf_query_obj (lookup_object returns NULL otherwise); st_have_perfquery() NULL-checks all 10 hooks to keep INTEL_performance_query off",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Not independently reachable; shadowed by the init_intel_perf_query_info NULL-GAP."
+   }
+  },
+  {
+   "id": "new_intel_perf_query_obj",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/main/performance_query.c:504; mesa/state_tracker/st_context.c:437-442",
+    "gate": "reached only after init_intel_perf_query_info() returned numQueries>0 (queryid_valid) or for a perf object created by new_intel_perf_query_obj (lookup_object returns NULL otherwise); st_have_perfquery() NULL-checks all 10 hooks to keep INTEL_performance_query off",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Not independently reachable; shadowed by the init_intel_perf_query_info NULL-GAP."
+   }
+  },
+  {
+   "id": "begin_intel_perf_query",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/main/performance_query.c:597; mesa/state_tracker/st_context.c:437-442",
+    "gate": "reached only after init_intel_perf_query_info() returned numQueries>0 (queryid_valid) or for a perf object created by new_intel_perf_query_obj (lookup_object returns NULL otherwise); st_have_perfquery() NULL-checks all 10 hooks to keep INTEL_performance_query off",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Not independently reachable; shadowed by the init_intel_perf_query_info NULL-GAP."
+   }
+  },
+  {
+   "id": "end_intel_perf_query",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/main/performance_query.c:633; mesa/state_tracker/st_context.c:437-442",
+    "gate": "reached only after init_intel_perf_query_info() returned numQueries>0 (queryid_valid) or for a perf object created by new_intel_perf_query_obj (lookup_object returns NULL otherwise); st_have_perfquery() NULL-checks all 10 hooks to keep INTEL_performance_query off",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Not independently reachable; shadowed by the init_intel_perf_query_info NULL-GAP."
+   }
+  },
+  {
+   "id": "delete_intel_perf_query",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/main/performance_query.c:62, 551; mesa/state_tracker/st_context.c:437-442",
+    "gate": "reached only after init_intel_perf_query_info() returned numQueries>0 (queryid_valid) or for a perf object created by new_intel_perf_query_obj (lookup_object returns NULL otherwise); st_have_perfquery() NULL-checks all 10 hooks to keep INTEL_performance_query off",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Not independently reachable; shadowed by the init_intel_perf_query_info NULL-GAP."
+   }
+  },
+  {
+   "id": "wait_intel_perf_query",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/main/performance_query.c:546, 593, 698; mesa/state_tracker/st_context.c:437-442",
+    "gate": "reached only after init_intel_perf_query_info() returned numQueries>0 (queryid_valid) or for a perf object created by new_intel_perf_query_obj (lookup_object returns NULL otherwise); st_have_perfquery() NULL-checks all 10 hooks to keep INTEL_performance_query off",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Not independently reachable; shadowed by the init_intel_perf_query_info NULL-GAP."
+   }
+  },
+  {
+   "id": "is_intel_perf_query_ready",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/main/performance_query.c:691; mesa/state_tracker/st_context.c:437-442",
+    "gate": "reached only after init_intel_perf_query_info() returned numQueries>0 (queryid_valid) or for a perf object created by new_intel_perf_query_obj (lookup_object returns NULL otherwise); st_have_perfquery() NULL-checks all 10 hooks to keep INTEL_performance_query off",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Not independently reachable; shadowed by the init_intel_perf_query_info NULL-GAP."
+   }
+  },
+  {
+   "id": "get_intel_perf_query_data",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/main/performance_query.c:704; mesa/state_tracker/st_context.c:437-442",
+    "gate": "reached only after init_intel_perf_query_info() returned numQueries>0 (queryid_valid) or for a perf object created by new_intel_perf_query_obj (lookup_object returns NULL otherwise); st_have_perfquery() NULL-checks all 10 hooks to keep INTEL_performance_query off",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Not independently reachable; shadowed by the init_intel_perf_query_info NULL-GAP."
+   }
+  },
+  {
+   "id": "link_shader",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/state_tracker/st_glsl_to_nir.cpp:656,671",
+    "gate": "NULL-checked (`if (pctx->link_shader)`)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Optional link-time hint."
+   }
+  },
+  {
+   "id": "create_blend_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:536 (cso_set_blend <- st_atom_blend.c)",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "bind_blend_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_context.c:551, 570 (restore), 356 (cso_unbind_context)",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "delete_blend_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/cso_cache/cso_cache.c:46 (cache eviction/destroy)",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_sampler_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_context.c:1459",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "bind_sampler_states",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_context.c:1521, 400 (cso_unbind_context, FS only: VS max_texture_samplers=0)",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "delete_sampler_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_cache.c:49",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_rasterizer_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_context.c:664; gallium/auxiliary/draw/draw_context.c:1034 (draw wide/aa stages)",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "bind_rasterizer_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_context.c:682, 705, 357; draw/draw_pipe_wide_point.c:219",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "draw wide-point/line stages only if point/line size >1 (max_point_size=max_line_width=1) or per-vertex point size; draw aaline/aapoint/pstipple stages are never installed by poulsback."
+   }
+  },
+  {
+   "id": "delete_rasterizer_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_cache.c:56; draw/draw_context.c:208",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_depth_stencil_alpha_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_context.c:596",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "bind_depth_stencil_alpha_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_context.c:614, 633, 417",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "delete_depth_stencil_alpha_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_cache.c:52",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_fs_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_program.c:557; gallium/auxiliary/nir/pipe_nir.h:32 (st internal clear/bitmap/drawpixels shaders)",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "bind_fs_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_context.c:718, 735, 420",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "delete_fs_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_program.c:259; st_context.c:294 (zombie shaders); st_cb_clear.c:88",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_vs_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_program.c:545; gallium/auxiliary/nir/pipe_nir.h:24",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "Vertex shaders run in Mesa's draw module (tgsi_exec caps from draw_init_shader_caps)."
+   }
+  },
+  {
+   "id": "bind_vs_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_context.c:749, 766, 422",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "delete_vs_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_program.c:247; st_context.c:290; st_cb_clear.c:92",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_gs_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_program.c:554; gallium/auxiliary/nir/pipe_nir.h:30; gallium/auxiliary/util/u_simple_shaders.c:199",
+    "gate": "shader_caps[GEOMETRY].max_instructions=0 (never written) -> no GL GS (_mesa_has_geometry_shaders needs GL>=3.2 or OES_geometry_shader, st_extensions.c:1366-1370); internal GS users off: layered clear needs caps.vs_instanceid (=0, st_cb_clear.c:166), PBO GS needs st->pbo.upload_enabled (texture_buffer_objects=0, st_pbo.c:648), HW GL_SELECT needs caps.hardware_gl_select (=false)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "bind_gs_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:986, 1011, 425; mesa/state_tracker/st_context.c:926",
+    "gate": "cso has_geometry_shader=false (cso_context.c:316-317, GEOMETRY max_instructions=0) guards every cso call; st_context.c:926 only if st->hw_select_shaders (caps.hardware_gl_select=false)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "delete_gs_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_program.c:256; st_context.c:298, 928; st_cb_clear.c:100",
+    "gate": "only for GS objects that were created (none: see create_gs_state)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_tcs_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_program.c:548; gallium/auxiliary/nir/pipe_nir.h:26",
+    "gate": "shader_caps[TESS_CTRL].max_instructions=0 -> ARB_tessellation_shader off (st_extensions.c:1361), _mesa_has_tessellation false",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "bind_tcs_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:1026, 1051, 428",
+    "gate": "cso has_tessellation=false (cso_context.c:319-320, TESS_CTRL max_instructions=0)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "delete_tcs_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_program.c:250; st_context.c:302",
+    "gate": "only for created TCS (none)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_tes_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_program.c:551; gallium/auxiliary/nir/pipe_nir.h:28",
+    "gate": "shader_caps[TESS_CTRL].max_instructions=0 -> ARB_tessellation_shader off (st_extensions.c:1361), _mesa_has_tessellation false; shader_caps[TESS_EVAL].max_instructions=0",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "bind_tes_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:1067, 1092, 429",
+    "gate": "cso has_tessellation=false (cso_context.c:319-320)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "delete_tes_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_program.c:253; st_context.c:306",
+    "gate": "only for created TES (none)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_vertex_elements_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:1277; gallium/auxiliary/util/u_vbuf.c:973",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "u_vbuf is active for client-side arrays (compat and GLES2) because caps.user_vertex_buffers=0 (u_vbuf.c:352; cso_context.c:257)."
+   }
+  },
+  {
+   "id": "bind_vertex_elements_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_context.c:1300, 438; u_vbuf.c:420",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "delete_vertex_elements_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_cache.c:59; u_vbuf.c:987",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_ts_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_program.c:560; gallium/auxiliary/nir/pipe_nir.h:34",
+    "gate": "caps.mesh_shader=0 -> EXT_mesh_shader off (st_extensions.c:1112)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "bind_ts_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:1180, 1203, 435",
+    "gate": "caps.mesh_shader=0 -> EXT_mesh_shader off (st_extensions.c:1112); cso checks caps.mesh_shader (cso_context.c:1178, 433)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "delete_ts_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_program.c:265; st_context.c:314",
+    "gate": "only for created task shaders (none)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_ms_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_program.c:563; gallium/auxiliary/nir/pipe_nir.h:36",
+    "gate": "caps.mesh_shader=0 -> EXT_mesh_shader off (st_extensions.c:1112)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "bind_ms_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:1218, 1241, 436",
+    "gate": "caps.mesh_shader=0 -> EXT_mesh_shader off (st_extensions.c:1112); cso checks caps.mesh_shader",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "delete_ms_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_program.c:268; st_context.c:318",
+    "gate": "only for created mesh shaders (none)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "set_blend_color",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_atom_blend.c:361",
+    "gate": "unconditional (ST_NEW_BLEND_COLOR atom)",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "set_stencil_ref",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:917, 935, 419",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "set_sample_mask",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_context.c:864, 465",
+    "gate": "unconditional (st_update_sample_state always calls cso_set_sample_mask; cso_unbind_context)",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "MaxSamples=0, so the mask is always ~0."
+   }
+  },
+  {
+   "id": "set_min_samples",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "cso_context.c:890, 467; mesa/state_tracker/st_cb_clear.c:280",
+    "gate": "NULL-checked in cso (cso_context.c:888, 466); cso_set_min_samples(cso,1) from clear_with_quad changes the cached 0 -> 1",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "caps.sample_shading=0, so st_update_sample_shading (st_atom_msaa.c:152) never calls it; only the meta-op value 1 and context unbind."
+   }
+  },
+  {
+   "id": "set_clip_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_atom_clip.c:67",
+    "gate": "caps.clip_planes=1 (u_screen.c:153) and the user clip planes changed (memcmp, st_atom_clip.c:63-65)",
+    "gl21": "reached",
+    "gles2": "unreached",
+    "note": "GL 2.x glClipPlane / gl_ClipVertex. GLES2 has no user clip planes, so the zero state never changes."
+   }
+  },
+  {
+   "id": "set_constant_buffer",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_atom_constbuf.c:150, 190, 60; gallium/auxiliary/cso_cache/cso_context.c:412",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "Slot 0 only: UBOs off (vs/fs max_const_buffers=1 -> MaxUniformBlocks=0; max_constant_buffer_size=0), so st_atom_constbuf.c:328 (slot 1+i) is unreached."
+   }
+  },
+  {
+   "id": "set_inlinable_constants",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_atom_constbuf.c:174, 201",
+    "gate": "called only if prog->info.num_inlinable_uniforms>0, which only nir_find_inlinable_uniforms() sets (compiler/nir/nir_inline_uniforms.c:424); no frontend calls it and poulsback finalize_nir (driver poulsback_nir.c:405-412) does not",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Gate is a driver opt-in, not a pipe cap. Test: num_inlinable_uniforms==0 after finalize_nir."
+   }
+  },
+  {
+   "id": "set_framebuffer_state",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:781, 798, 445",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "set_sample_locations",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_atom_msaa.c:98, 104",
+    "gate": "update_sample_locations returns early without ARB_sample_locations (st_atom_msaa.c:48); caps.programmable_sample_locations=0 (st_extensions.c:1069)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "set_polygon_stipple",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_atom_stipple.c:84",
+    "gate": "memcmp against ctx->PolygonStipple, which starts all-ones (main/polygon.c:362), so the first validation calls it in every API",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "GLES2 only ever sends the initial all-ones pattern. draw pstipple stage is not installed."
+   }
+  },
+  {
+   "id": "set_scissor_states",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_atom_scissor.c:106",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "set_window_rectangles",
+   "criteria": "NULL but reachable from GL 2.1 or GLES 2.0 (see note): fails until the hook is implemented or stubbed and the repro passes",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-GAP",
+    "callers": "mesa/state_tracker/st_atom_scissor.c:147",
+    "gate": "NOT NULL-checked; called when num/include/rects change while the draw FB is not the winsys FB. On-spec gate caps.max_window_rectangles=0 -> EXT_window_rectangles off (st_extensions.c:1131). Off-spec: _mesa_WindowRectanglesEXT (main/scissor.c:256-301) checks only mode and count<=MaxWindowRectangles(=0), not the extension; it is installed for every desktop context (glapi/gen/EXT_window_rectangles.xml:22; ES2 only >=3.0)",
+    "gl21": "conditional",
+    "gles2": "unreached",
+    "note": "OFF-SPEC GL 2.x crash: glWindowRectanglesEXT(GL_INCLUSIVE_EXT, 0, NULL) (accepted), bind an FBO, draw or clear -> include=true != cached false -> NULL call. glPopAttrib restore is guarded by the extension (main/attrib.c:991). Fix: no-op stub."
+   }
+  },
+  {
+   "id": "set_viewport_states",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:812, 852; mesa/state_tracker/st_atom_viewport.c:81",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "st_atom_viewport.c:81 only for num_viewports>1 (caps.max_viewports=1): unreached; index 0 goes through cso."
+   }
+  },
+  {
+   "id": "set_sampler_views",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_atom_texture.c:357; st_cb_bitmap.c:250; gallium/auxiliary/cso_cache/cso_context.c:403, 1806",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "Fragment stage only (fs max_sampler_views=1, vs 0)."
+   }
+  },
+  {
+   "id": "set_tess_state",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/state_tracker/st_atom_tess.c:46-47",
+    "gate": "NULL-checked",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Tessellation is also off by cap."
+   }
+  },
+  {
+   "id": "set_patch_vertices",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/state_tracker/st_atom_tess.c:52-53",
+    "gate": "NULL-checked",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "set_debug_callback",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/main/debug_output.c:747-758",
+    "gate": "NULL-checked (returns early)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "KHR_debug message log still works without it."
+   }
+  },
+  {
+   "id": "set_shader_buffers",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/state_tracker/st_atom_storagebuf.c:47,76; st_atom_atomicbuf.c:73,90; gallium/auxiliary/cso_cache/cso_context.c:406",
+    "gate": "st atoms NULL-check (st_atom_storagebuf.c:47, st_atom_atomicbuf.c:73); cso_unbind_context only if shader_caps[sh].max_shader_buffers>0 (0 for VS/FS); st_draw_hw_select.c:703 needs caps.hardware_gl_select (false); st_pbo_compute.c:1157 / st_texcompress_compute.c:199 need compute",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "SSBO/atomics also off: max_shader_buffers=0, max_hw_atomic_counters=0."
+   }
+  },
+  {
+   "id": "set_hw_atomic_buffers",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_atom_atomicbuf.c:188",
+    "gate": "early return when shader_caps[FRAGMENT].max_hw_atomic_counters==0 (st_atom_atomicbuf.c:180); ST_NEW_HW_ATOMICS is not even wired (st_context.c:381-384)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "set_shader_images",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/state_tracker/st_atom_image.c:157,173; st_cb_readpixels.c:206; st_cb_texture.c:2070",
+    "gate": "st_atom_image NULL-checks (st_atom_image.c:157); PBO image paths need st->pbo.download_enabled (caps.texture_buffer_objects=0, fs max_shader_images=0; st_pbo.c:648-659); cso_unbind_context maximg=0; CSO_UNBIND_FS_IMAGE0 is only used by those PBO paths",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "set_vertex_buffers",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:1387, 1437; gallium/auxiliary/util/u_vbuf.c:1395",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_stream_output_target",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/transformfeedback.c:447",
+    "gate": "only for bound TF buffers; caps.max_stream_output_buffers=0 -> EXT_transform_feedback off (st_extensions.c:1130): GL_TRANSFORM_FEEDBACK_BUFFER binding rejected (main/bufferobj.c:738), indexed binds rejected (index >= MaxTransformFeedbackBuffers=0, transformfeedback.c:600,675)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "stream_output_target_destroy",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "gallium/auxiliary/util/u_inlines.h:293 (pipe_so_target_reference)",
+    "gate": "only for targets that exist (none created)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "set_stream_output_targets",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:1662, 1715, 442",
+    "gate": "cso has_streamout=false (caps.max_stream_output_buffers=0, cso_context.c:330-331; checked at 441, 1643, 1700)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "stream_output_target_offset",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "none in GL frontends/helpers",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "No caller outside drivers."
+   }
+  },
+  {
+   "id": "set_frontend_noop",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/enable.c:1414; mesa/state_tracker/st_manager.c:1081",
+    "gate": "caps.frontend_noop=0 -> INTEL_blackhole_render off (st_extensions.c:1163); enable.c:1408 checks _mesa_has_INTEL_blackhole_render; st_manager.c:1079-1080 checks the cap",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "resource_copy_region",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_texture.c:423 (st_texture_image_copy); mesa/main/bufferobj.c:605 (glCopyBufferSubData); mesa/state_tracker/st_cb_copyimage.c:517 (glCopyImageSubDataNV)",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "Compat: ARB_copy_buffer (dummy_true) and NV_copy_image (always on, main/extensions.c:296). GLES2: mip-tree migration in st_finalize_texture."
+   }
+  },
+  {
+   "id": "image_copy_buffer",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "gallium/auxiliary/util/u_threaded_context.c:4485 only",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "u_threaded_context only; poulsback does not use it (PREFER_THREADED is stripped)."
+   }
+  },
+  {
+   "id": "blit",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/main/blit.c:580 (glBlitFramebuffer); mesa/state_tracker/st_cb_texture.c:2795 (texture readback); gallium/frontends/dri/dri2.c:1534 (blitImage)",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "Also gallium/auxiliary/util/u_gen_mipmap.c:127 (glGenerateMipmap fallback, caps.generate_mipmap=0) and DRI MSAA resolve."
+   }
+  },
+  {
+   "id": "clear",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_cb_clear.c:521",
+    "gate": "unconditional for buffers not routed to clear_with_quad",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "clear_render_target",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "gallium/auxiliary/util/u_surface.c:647 (u_default_clear_texture <- mesa/state_tracker/st_cb_texture.c:3797)",
+    "gate": "NULL-checked (u_surface.c:628) with util_clear_texture_sw fallback through texture_map (u_surface.c:694)",
+    "gl21": "conditional",
+    "gles2": "unreached",
+    "note": "glClearTexImage reachable in GL compat (ARB_clear_texture dummy_true, main/extensions_table.h:49); not in ES2 (EXT_clear_texture is ES 3.1)."
+   }
+  },
+  {
+   "id": "clear_depth_stencil",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "gallium/auxiliary/util/u_surface.c:624",
+    "gate": "NULL-checked (u_surface.c:607) with SW fallback",
+    "gl21": "conditional",
+    "gles2": "unreached",
+    "note": "As clear_render_target."
+   }
+  },
+  {
+   "id": "clear_texture",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/state_tracker/st_cb_texture.c:3793-3794",
+    "gate": "NULL-checked, else u_default_clear_texture",
+    "gl21": "conditional",
+    "gles2": "unreached",
+    "note": "glClearTexImage (compat only)."
+   }
+  },
+  {
+   "id": "clear_buffer",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/main/bufferobj.c:2794",
+    "gate": "NULL-checked (bufferobj.c:2781, SW fallback); glClearBuffer(Sub)Data",
+    "gl21": "reached",
+    "gles2": "unreached",
+    "note": "ARB_clear_buffer_object dummy_true for compat; no ES2 entry."
+   }
+  },
+  {
+   "id": "evaluate_depth_buffer",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/fbobject.c:6070",
+    "gate": "NOT NULL-checked, but guarded by ctx->Extensions.ARB_sample_locations (fbobject.c:6059); caps.programmable_sample_locations=0",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "flush",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_cb_flush.c:63; gallium/frontends/dri/dri2.c:396",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_fence_fd",
+   "criteria": "Set but no GL 2.1 or GLES 2.0 path reaches it with our caps: either a test reaches it, or it leaves the product (QC-dead)",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-UNREACHED",
+    "callers": "gallium/frontends/dri/dri_helpers.c:134 (dri_create_fence_fd), :880 (dri_image_fence_sync); mesa/main/externalobjects.c:628",
+    "gate": "dri_create_fence_fd needs EGL_ANDROID_native_fence_sync (caps.native_fence_fd=0; egl/drivers/dri2/egl_dri2.c:633,708; dri_helpers.c:86); img->in_fence_fd is only set by dri2_set_in_fence_fd (Android, egl/drivers/dri2/platform_android.c:112); glImportSemaphoreFdEXT needs EXT_semaphore_fd (caps.fence_signal=0, externalobjects.c:1232)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Dead under current caps: justify (kept for a future native_fence_fd=1) or advertise native_fence_fd and test."
+   }
+  },
+  {
+   "id": "fence_server_sync",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/main/syncobj.c:433; gallium/frontends/dri/dri_helpers.c:239",
+    "gate": "NULL-checked (syncobj.c:415, dri_helpers.c:238); glWaitSync (ARB_sync always on, main/extensions.c:280; ES2 via APPLE_sync) and eglWaitSyncKHR",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "fence_server_signal",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/externalobjects.c:730",
+    "gate": "glSignalSemaphoreEXT checks _mesa_has_EXT_semaphore (externalobjects.c:1088); caps.fence_signal=0 (st_extensions.c:1114)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_sampler_view",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_atom_texture.c:194; st_sampler_view.c:538; st_cb_drawpixels.c:1342",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "sampler_view_destroy",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/util/u_inlines.h:248 (pipe_sampler_view_reference)",
+    "gate": "unconditional on last unref; reached through u_default_sampler_view_release, which poulsback installs as sampler_view_release",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "sampler_view_release",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_sampler_view.c:92; st_context.c:258, 939",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "st_context.c:939 calls it unconditionally at destroy, even with a NULL view."
+   }
+  },
+  {
+   "id": "buffer_map",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/util/u_inlines.h:508 (pipe_buffer_map_range <- glMapBuffer*, u_upload_mgr, u_vbuf)",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "transfer_flush_region",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/util/u_inlines.h:561 (pipe_buffer_flush_mapped_range <- u_upload_mgr.c:131, main/bufferobj.c:556)",
+    "gate": "u_upload maps with PIPE_MAP_FLUSH_EXPLICIT because caps.buffer_map_persistent_coherent=false (gallium/auxiliary/util/u_upload_mgr.c:74-86); glFlushMappedBufferRange",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "buffer_unmap",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/util/u_inlines.h:537",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "texture_map",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/util/u_inlines.h:665, 685; mesa/state_tracker/st_texture.c:364",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "texture_unmap",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/util/u_inlines.h:693; mesa/state_tracker/st_texture.c:368; st_cb_texture.c:2972",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "buffer_subdata",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/main/bufferobj.c:116, 306, 363",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "texture_subdata",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_cb_texture.c:2215",
+    "gate": "glTex(Sub)Image fast path (no PBO, uncompressed, matching format)",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "texture_barrier",
+   "criteria": "Set but no GL 2.1 or GLES 2.0 path reaches it with our caps: either a test reaches it, or it leaves the product (QC-dead)",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-UNREACHED",
+    "callers": "mesa/main/barrier.c:118 (glTextureBarrier[NV]), :193 (glBlendBarrier), :207 (glFramebufferFetchBarrierEXT)",
+    "gate": "each caller checks an extension first: NV_texture_barrier (caps.texture_barrier=0, st_extensions.c:1154), KHR_blend_equation_advanced (caps.blend_equation_advanced=0, caps.fbfetch=0, st_extensions.c:1623-1637), EXT_shader_framebuffer_fetch_non_coherent (caps.fbfetch=0)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Dead with current caps."
+   }
+  },
+  {
+   "id": "memory_barrier",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/main/barrier.c:104 (memory_barrier); mesa/state_tracker/st_cb_readpixels.c:244; st_cb_texture.c:2106",
+    "gate": "barrier.c:103 NULL-checks. glMemoryBarrier (_mesa_MemoryBarrier, barrier.c:121) has no extension check and is installed for every desktop context (glapi/gen/ARB_shader_image_load_store.xml:83; ES2 only >=3.1); readpixels/texture callers are inside PBO paths that are off (pbo.download_enabled=false)",
+    "gl21": "conditional",
+    "gles2": "unreached",
+    "note": "Only the off-spec glMemoryBarrier entry reaches it in GL 2.x; test with GL_ALL_BARRIER_BITS."
+   }
+  },
+  {
+   "id": "resource_commit",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/bufferobj.c:5262; mesa/state_tracker/st_cb_texture.c:3844",
+    "gate": "needs a sparse buffer (GL_SPARSE_STORAGE_BIT_ARB rejected without ARB_sparse_buffer, bufferobj.c:2094-2102) or a sparse texture (GL_TEXTURE_SPARSE_ARB needs ARB_sparse_texture, main/texparam.c:694); caps.sparse_buffer_page_size=0, caps.max_sparse_texture_size=0 (st_extensions.c:1081-1082)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "resource_release",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/util/u_inlines.h:209 (pipe_resource_release <- st_cb_clear.c:316, st_draw.c:360, main/context.c:1195)",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_video_codec",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "gallium/auxiliary/vl/vl_proc.c:131",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Video (VA/VDPAU/vl) only."
+   }
+  },
+  {
+   "id": "create_video_buffer",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "gallium/auxiliary/vl only",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Video only."
+   }
+  },
+  {
+   "id": "create_compute_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "gallium/auxiliary/nir/pipe_nir.h:46 (<- st_program.c:567, st_pbo_compute.c, st_texcompress_compute.c)",
+    "gate": "caps.compute=0 and shader_caps[COMPUTE].max_instructions=0 -> ARB_compute_shader off (st_extensions.c:1706), _mesa_has_compute_shaders false; compute PBO needs PIPE_TEXTURE_TRANSFER_COMPUTE in caps.texture_transfer_modes (=BLIT only, u_screen.c:78; st_context.c:489-491); texcompress compute needs _mesa_has_compute_shaders (st_context.c:696)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Env MESA_COMPUTE_PBO sets st->force_compute_based_texture_transfer (st_pbo.c:681-684) and would reach this NULL hook from glGetTexImage/glReadPixels (debug env only)."
+   }
+  },
+  {
+   "id": "bind_compute_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:1107, 1132, 432",
+    "gate": "cso has_compute_shader=false (cso_context.c:322-327)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "delete_compute_state",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_program.c:262; st_context.c:310; st_pbo_compute.c:1359",
+    "gate": "only for created compute shaders (none)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "get_compute_state_info",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "none in GL frontends",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "rusticl / clover."
+   }
+  },
+  {
+   "id": "get_compute_state_subgroup_size",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "none in GL frontends",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "rusticl."
+   }
+  },
+  {
+   "id": "set_global_binding",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "gallium/auxiliary/util/u_threaded_context.c:2372 only",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "rusticl (and TC forwarding)."
+   }
+  },
+  {
+   "id": "launch_grid",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/compute.c:329, 371, 415; mesa/state_tracker/st_pbo_compute.c:1170; st_texcompress_compute.c:236",
+    "gate": "glDispatchCompute* check _mesa_has_compute_shaders (compute.c:39); caps.compute=0 and shader_caps[COMPUTE].max_instructions=0 -> ARB_compute_shader off (st_extensions.c:1706), _mesa_has_compute_shaders false; compute PBO needs PIPE_TEXTURE_TRANSFER_COMPUTE in caps.texture_transfer_modes (=BLIT only, u_screen.c:78; st_context.c:489-491); texcompress compute needs _mesa_has_compute_shaders (st_context.c:696)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "MESA_COMPUTE_PBO env as for create_compute_state."
+   }
+  },
+  {
+   "id": "draw_mesh_tasks",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/mesh_shader.c:55",
+    "gate": "_mesa_has_EXT_mesh_shader check (mesh_shader.c:27); caps.mesh_shader=0 -> EXT_mesh_shader off (st_extensions.c:1112)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "svm_migrate",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "none in GL frontends",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "rusticl SVM."
+   }
+  },
+  {
+   "id": "get_sample_position",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/main/multisample.c:95-96",
+    "gate": "NULL-checked, fallback (0.5,0.5)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "glGetMultisamplefv (GL 3.2/ARB_texture_multisample) only; safe even if reached."
+   }
+  },
+  {
+   "id": "get_timestamp",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/queryobj.c:421-422 (_mesa_get_timestamp <- main/get.c:1237)",
+    "gate": "screen->get_timestamp tried first (also NULL), then assert + call. Only GL_TIMESTAMP glGet, which carries extra_ARB_timer_query_or_EXT_disjoint_timer_query (main/get_hash_params.py:415); caps.query_timestamp=0",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Both pipe and screen get_timestamp are NULL."
+   }
+  },
+  {
+   "id": "flush_resource",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/frontends/dri/dri_drawable.c:514 (every SwapBuffers); dri2.c:390 (front-buffer flush), dri2.c:1537",
+    "gate": "unconditional at SwapBuffers",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  },
+  {
+   "id": "invalidate_resource",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/main/bufferobj.c:5098 (glInvalidateBufferData); mesa/main/fbobject.c:5654 (glInvalidateFramebuffer/glDiscardFramebufferEXT); gallium/frontends/dri/dri_drawable.c:504",
+    "gate": "fbobject.c:5653 and dri_drawable.c:501 NULL-check; bufferobj.c:5098 does not; bufferobj.c:314 needs caps.invalidate_buffer (=0, unreached)",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "Compat: ARB_invalidate_subdata dummy_true. ES2: EXT_discard_framebuffer dummy_true and EGL swap with __DRI2_FLUSH_INVALIDATE_ANCILLARY."
+   }
+  },
+  {
+   "id": "get_device_reset_status",
+   "criteria": "The poulsback-lost fixture reports PIPE_UNKNOWN_CONTEXT_RESET once per context, through its status or its callback, and nothing before the loss; the device-lost run's gltest --robust prints GL_UNKNOWN_CONTEXT_RESET once, then GL_CONTEXT_LOST",
+   "runner": {
+    "entrypoint": "eng/lab/x8-run.sh",
+    "arguments": [
+     "step2"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "device-lost"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_cb_flush.c:161",
+    "gate": "installed when caps.device_reset_status_query (=1, poulsback_screen.c init_caps)",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "the GPU's loss (poulsback_lost.h); the kernel names no guilty context; internal device runs 054 and 059"
+   }
+  },
+  {
+   "id": "set_device_reset_callback",
+   "criteria": "The poulsback-lost fixture reports PIPE_UNKNOWN_CONTEXT_RESET once per context, through its status or its callback, and nothing before the loss; the device-lost run's gltest --robust prints GL_UNKNOWN_CONTEXT_RESET once, then GL_CONTEXT_LOST",
+   "runner": {
+    "entrypoint": "eng/lab/x8-run.sh",
+    "arguments": [
+     "step2"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "device-lost"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "mesa/state_tracker/st_cb_flush.c:173-177",
+    "gate": "installed when caps.device_reset_status_query (=1, poulsback_screen.c init_caps)",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": "the GPU's loss (poulsback_lost.h); the kernel names no guilty context; internal device runs 054 and 059"
+   }
+  },
+  {
+   "id": "dump_debug_state",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "gallium/auxiliary/util/u_threaded_context.c:3449 (and driver_ddebug)",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Debug wrappers only (not applied: poulsback's DRM descriptor has no debug_screen_wrap)."
+   }
+  },
+  {
+   "id": "set_log_context",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "gallium/auxiliary/util/u_threaded_context.c:3478 (and driver_ddebug)",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Debug wrappers only."
+   }
+  },
+  {
+   "id": "emit_string_marker",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/debug_output.c:1094 (glDebugMessageInsert GL_DEBUG_TYPE_MARKER), :1380 (glStringMarkerGREMEDY)",
+    "gate": "ctx->has_string_marker = caps.string_marker (=0, st_context.c:801-802); GREMEDY_string_marker needs ST_DEBUG gremedy and caps.string_marker (st_extensions.c:1702)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "generate_mipmap",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/state_tracker/st_gen_mipmap.c:145",
+    "gate": "`!st->screen->caps.generate_mipmap ||` short-circuits (caps.generate_mipmap=0, st_gen_mipmap.c:144); falls back to util_gen_mipmap (blit)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_texture_handle",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/texturebindless.c:246; mesa/state_tracker/st_texture.c:558",
+    "gate": "ARB_bindless_texture checks in every entry point (main/texturebindless.c:594, 666, 743, 789, 841); caps.bindless_texture=0 (st_extensions.c:1042); st_texture.c paths only for existing handles",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "delete_texture_handle",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/texturebindless.c:86; mesa/state_tracker/st_texture.c:473",
+    "gate": "ARB_bindless_texture checks in every entry point (main/texturebindless.c:594, 666, 743, 789, 841); caps.bindless_texture=0 (st_extensions.c:1042); st_texture.c paths only for existing handles",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "make_texture_handle_resident",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/texturebindless.c:140, 154; mesa/state_tracker/st_texture.c:608",
+    "gate": "ARB_bindless_texture checks in every entry point (main/texturebindless.c:594, 666, 743, 789, 841); caps.bindless_texture=0 (st_extensions.c:1042); st_texture.c paths only for existing handles",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_image_handle",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/texturebindless.c:367; mesa/state_tracker/st_texture.c:574",
+    "gate": "ARB_bindless_texture checks in every entry point (main/texturebindless.c:594, 666, 743, 789, 841); caps.bindless_texture=0 (st_extensions.c:1042); st_texture.c paths only for existing handles",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "delete_image_handle",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/texturebindless.c:99; mesa/state_tracker/st_texture.c:513",
+    "gate": "ARB_bindless_texture checks in every entry point (main/texturebindless.c:594, 666, 743, 789, 841); caps.bindless_texture=0 (st_extensions.c:1042); st_texture.c paths only for existing handles",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "make_image_handle_resident",
+   "criteria": "NULL, and the caps dump shows each gating cap at the off value recorded in the case",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "gl",
+     "caps-dump"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CAP",
+    "callers": "mesa/main/texturebindless.c:189, 201; mesa/state_tracker/st_texture.c:655",
+    "gate": "ARB_bindless_texture checks in every entry point (main/texturebindless.c:594, 666, 743, 789, 841); caps.bindless_texture=0 (st_extensions.c:1042); st_texture.c paths only for existing handles",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "callback",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "gallium/auxiliary/util/u_threaded_context.c:5577 (sets it) only",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Used by debug wrappers on threaded contexts; no GL frontend caller."
+   }
+  },
+  {
+   "id": "set_context_param",
+   "criteria": "NULL, the frontend checks it for NULL (cited) and the trace shows the fallback path passing",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NULL-SAFE-CHECKED",
+    "callers": "mesa/main/glthread.c:180; mesa/state_tracker/st_context.h:496",
+    "gate": "NULL-checked indirectly: glthread->thread_sched_enabled requires set_context_param (glthread.c:261, checked at :166); st->thread_scheduler_disabled set when NULL (st_context.c:679-680, checked st_context.h:511)",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": ""
+   }
+  },
+  {
+   "id": "create_video_buffer_with_modifiers",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "none in GL frontends (VA/vl)",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Video only."
+   }
+  },
+  {
+   "id": "video_buffer_from_handle",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "none in GL frontends (VA/vl)",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Video only."
+   }
+  },
+  {
+   "id": "ml_subgraph_invoke",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "none (teflon)",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Teflon ML delegate only."
+   }
+  },
+  {
+   "id": "ml_subgraph_read_output",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "none (teflon)",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Teflon only."
+   }
+  },
+  {
+   "id": "ml_subgraph_deserialize",
+   "criteria": "Only non-GL frontends call it (cited); a source review confirms no GL 2.1 or GLES 2.0 path",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "gles2.gallium"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   },
+   "parameters": {
+    "ours": "NULL",
+    "verdict": "NOT-GL",
+    "callers": "none (teflon)",
+    "gate": "-",
+    "gl21": "unreached",
+    "gles2": "unreached",
+    "note": "Teflon only."
+   }
+  },
+  {
+   "id": "draw_vbo",
+   "criteria": "The trace of the full conformance run (GALLIUM_TRACE) records the hook, and every test that reached it passed",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "gallium-trace"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "gallium-ledger"
+   },
+   "parameters": {
+    "ours": "set",
+    "verdict": "SET-REACHED",
+    "callers": "gallium/auxiliary/cso_cache/cso_context.c:279 (cso_draw_vbo_default); gallium/auxiliary/util/u_vbuf.c:1473, 1761",
+    "gate": "unconditional",
+    "gl21": "reached",
+    "gles2": "reached",
+    "note": ""
+   }
+  }
+ ]
+}

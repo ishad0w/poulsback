@@ -1,0 +1,54 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gles2.egl-x11",
+ "source": "Survey of the window-system sources, 2026-11-03 (src/egl/drivers/dri2/platform_x11.c, src/loader)",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "egl-x11-window-swap",
+   "criteria": "A 256x256 window surface, a clear and eglSwapBuffers give that colour through XGetImage"
+  },
+  {
+   "id": "egl-x11-pbuffer",
+   "criteria": "A 64x64 pbuffer clear reads back with glReadPixels"
+  },
+  {
+   "id": "egl-x11-no-dri3-refuses",
+   "criteria": "Under modesetting without glamor (no DRI3) eglInitialize fails; no llvmpipe display"
+  },
+  {
+   "id": "egl-surfaceless-poulsback",
+   "criteria": "EGL_PLATFORM=surfaceless initializes on poulsback"
+  },
+  {
+   "id": "deqp-gles2-loads-ours",
+   "criteria": "Before a dEQP shard the libEGL, libGLESv2 and libGL links resolve into the run dir and dEQP-GLES2.info.renderer logs poulsback",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "deqp-gles2"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "conformance-harnesses+device-suite"
+   }
+  },
+  {
+   "id": "deqp-gles2-config-recorded",
+   "criteria": "Every dEQP shard records the config it picked; a run on any config other than rgba8888d24s8ms0 is flagged, so stencil NotSupported never looks clean",
+   "runner": {
+    "entrypoint": "eng/lab/dell-suite.sh",
+    "arguments": [
+     "conformance",
+     "deqp-gles2"
+    ],
+    "backend": "HARDWARE",
+    "repository": "workspace",
+    "builder": "conformance-harnesses+device-suite"
+   }
+  }
+ ]
+}

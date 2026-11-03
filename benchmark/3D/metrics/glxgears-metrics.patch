@@ -1,0 +1,91 @@
+--- a/glxgears.c
++++ b/glxgears.c
+@@ -45,6 +45,7 @@
+ 
+ 
+ #define BENCHMARK
++#include "metrics_adapter.h"
+ 
+ #ifdef BENCHMARK
+ 
+@@ -325,8 +326,7 @@
+ static void
+ draw_frame(Display *dpy, Window win)
+ {
+-   static int frames = 0;
+-   static double tRot0 = -1.0, tRate0 = -1.0;
++   static double tRot0 = -1.0;
+    double dt, t = current_time();
+ 
+    if (tRot0 < 0.0)
+@@ -344,19 +344,7 @@
+    draw_gears();
+    glXSwapBuffers(dpy, win);
+ 
+-   frames++;
+-   
+-   if (tRate0 < 0.0)
+-      tRate0 = t;
+-   if (t - tRate0 >= 5.0) {
+-      GLfloat seconds = t - tRate0;
+-      GLfloat fps = frames / seconds;
+-      printf("%d frames in %3.1f seconds = %6.3f FPS\n", frames, seconds,
+-             fps);
+-      fflush(stdout);
+-      tRate0 = t;
+-      frames = 0;
+-   }
++   metrics_tick();
+ }
+ 
+ 
+@@ -756,11 +744,14 @@
+ static void
+ event_loop(Display *dpy, Window win)
+ {
+-   while (1) {
++   while (!metrics_stopped()) {
+       int op;
+       while (!animate || XPending(dpy) > 0) {
+          XEvent event;
++         if (metrics_stopped()) return;
++         if (!XPending(dpy)) { usleep(10000); continue; }
+          XNextEvent(dpy, &event);
++         if (metrics_debug) printf("DEBUG xevent=%d\n", event.type);
+          op = handle_event(dpy, win, &event);
+          if (op == EXIT)
+             return;
+@@ -801,6 +792,7 @@
+    VisualID visId;
+    int i;
+ 
++   argc = metrics_arguments(argc, argv);
+    for (i = 1; i < argc; i++) {
+       if (strcmp(argv[i], "-display") == 0) {
+          dpyName = argv[i+1];
+@@ -855,6 +847,7 @@
+    XMapWindow(dpy, win);
+    glXMakeCurrent(dpy, win, ctx);
+    setup_vsync(dpy, win);
++   metrics_config(dpy, ctx, visId, winWidth, winHeight, swapinterval);
+ 
+    if (printInfo) {
+       printf("GL_RENDERER   = %s\n", (char *) glGetString(GL_RENDERER));
+@@ -872,7 +865,9 @@
+     */
+    reshape(winWidth, winHeight);
+ 
++   metrics_begin();
+    event_loop(dpy, win);
++   metrics_end();
+ 
+    glDeleteLists(gear1, 1);
+    glDeleteLists(gear2, 1);
+@@ -882,5 +877,5 @@
+    XDestroyWindow(dpy, win);
+    XCloseDisplay(dpy);
+ 
+-   return 0;
+-}
++   return metrics_error ? 2 : (metrics_signal ? 128 + metrics_signal : 0);
++}

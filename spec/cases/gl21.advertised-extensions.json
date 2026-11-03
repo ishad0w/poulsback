@@ -1,0 +1,848 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gl21.advertised-extensions",
+ "source": "EMGD 1.8 glxinfo on the reference Dell (capture not bundled; 70 GL extensions), and EXT_texture_sRGB",
+ "criteria": "The extension is in glxinfo of the M1 build and every piglit test matching its patterns passes (derived from gl21.external-conformance); no test or not advertised needs a test or an accepted exclusion",
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "ARB_depth_texture",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_depth_texture@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_draw_buffers",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_draw_buffers@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_fragment_program",
+   "parameters": {
+    "mesa_flag": "ARB_fragment_program"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_fragment_program@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_fragment_shader",
+   "parameters": {
+    "mesa_flag": "ARB_fragment_shader"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@shaders@glsl-fs-*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_half_float_pixel",
+   "parameters": {
+    "mesa_flag": "dummy_true",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "ARB_matrix_palette",
+   "parameters": {
+    "mesa_flag": "MISSING",
+    "exclusion_candidate": "Mesa 26.2.4 has no entry for it (src/mesa/main/extensions_table.h); a maintainer accepts or refuses the exclusion",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "ARB_multisample",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_multisample@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_multitexture",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@!opengl 1.3@texunits"
+    ]
+   }
+  },
+  {
+   "id": "ARB_occlusion_query",
+   "parameters": {
+    "mesa_flag": "ARB_occlusion_query"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_occlusion_query@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_pixel_buffer_object",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_pixel_buffer_object@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_point_parameters",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_point_parameters@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_point_sprite",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_point_sprite@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_shader_objects",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_shader_objects@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_shading_language_100",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@glsl-1.10@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_shadow",
+   "parameters": {
+    "mesa_flag": "ARB_shadow"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@!opengl 1.5@depth-tex-compare",
+     "*shadow2d*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_shadow_ambient",
+   "parameters": {
+    "mesa_flag": "MISSING",
+    "exclusion_candidate": "Mesa 26.2.4 has no entry for it (src/mesa/main/extensions_table.h); a maintainer accepts or refuses the exclusion",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "ARB_texture_border_clamp",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*bordercolor*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_texture_compression",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_texture_compression@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_texture_cube_map",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_texture_cube_map@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_texture_env_add",
+   "parameters": {
+    "mesa_flag": "dummy_true",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "ARB_texture_env_combine",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@ext_texture_env_combine@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_texture_env_crossbar",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_texture_env_crossbar@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_texture_env_dot3",
+   "parameters": {
+    "mesa_flag": "dummy_true",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "ARB_texture_float",
+   "parameters": {
+    "mesa_flag": "ARB_texture_float"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_texture_float@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_texture_mirrored_repeat",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*mirror*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_texture_non_power_of_two",
+   "parameters": {
+    "mesa_flag": "ARB_texture_non_power_of_two"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*npot*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_texture_rectangle",
+   "parameters": {
+    "mesa_flag": "NV_texture_rectangle"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_texture_rectangle@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_transpose_matrix",
+   "parameters": {
+    "mesa_flag": "dummy_true",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "ARB_vertex_blend",
+   "parameters": {
+    "mesa_flag": "MISSING",
+    "exclusion_candidate": "Mesa 26.2.4 has no entry for it (src/mesa/main/extensions_table.h); a maintainer accepts or refuses the exclusion",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "ARB_vertex_buffer_object",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_vertex_buffer_object@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_vertex_program",
+   "parameters": {
+    "mesa_flag": "ARB_vertex_program"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_vertex_program@*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_vertex_shader",
+   "parameters": {
+    "mesa_flag": "ARB_vertex_shader"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@shaders@glsl-vs-*"
+    ]
+   }
+  },
+  {
+   "id": "ARB_window_pos",
+   "parameters": {
+    "mesa_flag": "dummy_true",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "EXT_abgr",
+   "parameters": {
+    "mesa_flag": "dummy_true",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "EXT_bgra",
+   "parameters": {
+    "mesa_flag": "dummy_true",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "EXT_blend_color",
+   "parameters": {
+    "mesa_flag": "dummy_true",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "EXT_blend_equation_separate",
+   "parameters": {
+    "mesa_flag": "EXT_blend_equation_separate",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "EXT_blend_func_separate",
+   "parameters": {
+    "mesa_flag": "dummy_true",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "EXT_blend_minmax",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*blendminmax*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_blend_subtract",
+   "parameters": {
+    "mesa_flag": "dummy_true",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "EXT_compiled_vertex_array",
+   "parameters": {
+    "mesa_flag": "dummy_true",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "EXT_draw_range_elements",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*drawrangeelements*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_fog_coord",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@ext_fog_coord@*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_framebuffer_blit",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@ext_framebuffer_blit@*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_framebuffer_object",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@ext_framebuffer_object@*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_multi_draw_arrays",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*multidrawarrays*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_packed_pixels",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*texture-packed-formats*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_rescale_normal",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*rescale-normal*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_secondary_color",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*secondary*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_separate_specular_color",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*separate-specular*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_shadow_funcs",
+   "parameters": {
+    "mesa_flag": "ARB_shadow"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@!opengl 1.5@depth-tex-compare"
+    ]
+   }
+  },
+  {
+   "id": "EXT_stencil_two_side",
+   "parameters": {
+    "mesa_flag": "EXT_stencil_two_side"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*stencil-twoside*",
+     "*two-sided-stencil*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_stencil_wrap",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*stencil-wrap*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_texture3D",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*tex3d*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_texture_compression_s3tc",
+   "parameters": {
+    "mesa_flag": "EXT_texture_compression_s3tc"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@ext_texture_compression_s3tc@*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_texture_cube_map",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_texture_cube_map@*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_texture_edge_clamp",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@!opengl 1.2@texwrap*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_texture_env_add",
+   "parameters": {
+    "mesa_flag": "dummy_true",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "EXT_texture_env_combine",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@ext_texture_env_combine@*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_texture_env_dot3",
+   "parameters": {
+    "mesa_flag": "EXT_texture_env_dot3",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "EXT_texture_filter_anisotropic",
+   "parameters": {
+    "mesa_flag": "EXT_texture_filter_anisotropic",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "EXT_texture_lod_bias",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@ext_texture_lod_bias@*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_texture_object",
+   "parameters": {
+    "mesa_flag": "dummy_true",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "EXT_vertex_array",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*varray*"
+    ]
+   }
+  },
+  {
+   "id": "IMG_texture_compression_pvrtc",
+   "parameters": {
+    "mesa_flag": "MISSING",
+    "exclusion_candidate": "Mesa 26.2.4 has no entry for it (src/mesa/main/extensions_table.h); a maintainer accepts or refuses the exclusion",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "NV_blend_square",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*blendsquare*"
+    ]
+   }
+  },
+  {
+   "id": "NV_texgen_reflection",
+   "parameters": {
+    "mesa_flag": "dummy_true",
+    "gap": "no test of the M1 piglit selection targets it: a test or an accepted exclusion"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": []
+   }
+  },
+  {
+   "id": "NV_texture_rectangle",
+   "parameters": {
+    "mesa_flag": "NV_texture_rectangle"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_texture_rectangle@*"
+    ]
+   }
+  },
+  {
+   "id": "S3_s3tc",
+   "parameters": {
+    "mesa_flag": "ANGLE_texture_compression_dxt"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*s3tc*"
+    ]
+   }
+  },
+  {
+   "id": "SGIS_generate_mipmap",
+   "parameters": {
+    "mesa_flag": "dummy_true"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@sgis_generate_mipmap@*"
+    ]
+   }
+  },
+  {
+   "id": "EXT_texture_sRGB",
+   "parameters": {
+    "mesa_flag": "EXT_texture_sRGB",
+    "note": "GL 2.1 core; EMGD lacked the string"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@ext_texture_srgb@*"
+    ]
+   }
+  }
+ ]
+}

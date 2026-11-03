@@ -1,0 +1,370 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gl21.extra-features",
+ "source": "The GL 2.0 and 2.1 core features and the checks across them, one case per feature, plus Mesa core's software paths; piglit patterns in derive",
+ "criteria": "Derived from gl21.external-conformance: every piglit test matching the case's patterns passes, and at least one matches; no matching test is a failure (no evidence)",
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "glsl-110-vertex",
+   "parameters": {
+    "version": "2.0",
+    "step": "GPU vertex path"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@glsl-1.10@execution@vs-*",
+     "piglit@spec@glsl-1.10@compiler@*",
+     "piglit@shaders@glsl-vs-*"
+    ]
+   }
+  },
+  {
+   "id": "glsl-110-fragment",
+   "parameters": {
+    "version": "2.0",
+    "step": "fragment backend"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@glsl-1.10@execution@fs-*",
+     "piglit@shaders@glsl-fs-*",
+     "*glsl-derivs*",
+     "*glsl-fs-discard*"
+    ]
+   }
+  },
+  {
+   "id": "glsl-loops-indexing",
+   "parameters": {
+    "version": "2.0",
+    "step": "fragment backend: loops and dynamic indexing"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*glsl-*-loop*",
+     "*glsl-*-array-*",
+     "*vs-uniform-array-*"
+    ]
+   }
+  },
+  {
+   "id": "shader-limits",
+   "parameters": {
+    "version": "2.0",
+    "step": "vertex and fragment caps"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*glsl-max-varyings*",
+     "*glsl-max-vertex-attrib*",
+     "piglit@spec@arb_vertex_shader@getactiveattrib*",
+     "piglit@spec@!opengl 2.0@*max*"
+    ]
+   }
+  },
+  {
+   "id": "builtin-state",
+   "parameters": {
+    "version": "2.0",
+    "step": "Mesa"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*glsl-*-builtin*",
+     "*glsl-fs-fogcolor*"
+    ]
+   }
+  },
+  {
+   "id": "generic-attributes",
+   "parameters": {
+    "version": "2.0",
+    "step": "vertex path: vertex PDS"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*attribs*",
+     "*vertex-attrib-*"
+    ]
+   }
+  },
+  {
+   "id": "draw-buffers",
+   "parameters": {
+    "version": "2.0",
+    "step": "fragment backend: FBOs (one draw buffer)"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_draw_buffers@*",
+     "*fbo-mrt-*",
+     "*glsl-fs-fragdata-1*"
+    ]
+   }
+  },
+  {
+   "id": "npot-textures",
+   "parameters": {
+    "version": "2.0",
+    "step": "fragment backend: NPOT textures"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_texture_non_power_of_two@*",
+     "*fbo-npot*",
+     "*texwrap*npot*"
+    ]
+   }
+  },
+  {
+   "id": "point-sprites",
+   "parameters": {
+    "version": "2.0",
+    "step": "vertex path: points; fragment backend: varying replace"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*point-sprite*",
+     "*glsl-fs-pointcoord*",
+     "*point-coord-*",
+     "piglit@spec@arb_point_sprite@*"
+    ]
+   }
+  },
+  {
+   "id": "two-sided-stencil",
+   "parameters": {
+    "version": "2.0",
+    "step": "fragment backend: two-sided stencil"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*stencil-twoside*",
+     "*two-sided-stencil*",
+     "piglit@spec@ext_stencil_two_side@*"
+    ]
+   }
+  },
+  {
+   "id": "blend-equation-separate",
+   "parameters": {
+    "version": "2.0",
+    "step": "fragment backend: blending"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*blend-*",
+     "*fbo-blending-formats*",
+     "piglit@spec@ext_blend_equation_separate@*"
+    ]
+   }
+  },
+  {
+   "id": "two-sided-lighting-frontfacing",
+   "parameters": {
+    "version": "2.0",
+    "step": "fragment backend: front face",
+    "note": "EMGD's gl_FrontFacing is always true (EMGD fails)"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*glsl-fs-frontfacing*",
+     "*vs-*-two-side*"
+    ]
+   }
+  },
+  {
+   "id": "vertex-point-size",
+   "parameters": {
+    "version": "2.0",
+    "step": "GPU vertex path"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*glsl-vs-point-size*"
+    ]
+   }
+  },
+  {
+   "id": "shader-object-api",
+   "parameters": {
+    "version": "2.0",
+    "step": "Mesa"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_shader_objects@*",
+     "*getuniform-*"
+    ]
+   }
+  },
+  {
+   "id": "glsl-120",
+   "parameters": {
+    "version": "2.1",
+    "step": "Mesa front end"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@glsl-1.20@*",
+     "*glsl-*-mat*x*"
+    ]
+   }
+  },
+  {
+   "id": "nonsquare-matrix-uniforms",
+   "parameters": {
+    "version": "2.1",
+    "step": "Mesa"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@glsl-1.20@execution@uniform-*"
+    ]
+   }
+  },
+  {
+   "id": "pixel-buffer-objects",
+   "parameters": {
+    "version": "2.1",
+    "step": "Mesa + 2D core"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*pbo-*",
+     "piglit@spec@arb_pixel_buffer_object@*"
+    ]
+   }
+  },
+  {
+   "id": "srgb-textures",
+   "parameters": {
+    "version": "2.1",
+    "step": "fragment backend: sRGB sampling"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@ext_texture_srgb@*",
+     "*tex-srgb*"
+    ]
+   }
+  },
+  {
+   "id": "version-queries",
+   "parameters": {
+    "version": "2.1",
+    "step": "GL 2.1 coverage complete"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*glinfo*",
+     "piglit@spec@!opengl 2.1@*",
+     "piglit@spec@!opengl 2.0@*"
+    ]
+   }
+  },
+  {
+   "id": "refusals-keep-context",
+   "parameters": {
+    "version": "cross-cutting",
+    "step": "fragment backend",
+    "note": "The full gl21 selection runs without a context loss"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*"
+    ]
+   }
+  },
+  {
+   "id": "scenes-beyond-parameter-pool",
+   "parameters": {
+    "version": "cross-cutting",
+    "step": "partial renders"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*triangle-rasterization-overdraw*",
+     "*fbo-maxsize*"
+    ]
+   }
+  },
+  {
+   "id": "fbo-render-to-texture",
+   "parameters": {
+    "version": "cross-cutting",
+    "step": "fragment backend: render to texture"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@ext_framebuffer_object@*"
+    ]
+   }
+  },
+  {
+   "id": "framebuffer-blit",
+   "parameters": {
+    "version": "cross-cutting",
+    "step": "fragment backend: blit"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@ext_framebuffer_blit@*"
+    ]
+   }
+  },
+  {
+   "id": "float-textures",
+   "parameters": {
+    "version": "cross-cutting",
+    "step": "fragment backend (optional, EMGD has it)"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "piglit@spec@arb_texture_float@*",
+     "piglit@spec@arb_half_float_pixel@*"
+    ]
+   }
+  },
+  {
+   "id": "anisotropic-filtering",
+   "parameters": {
+    "version": "cross-cutting",
+    "step": "fragment backend: sampler"
+   },
+   "derive": {
+    "family": "gl21.external-conformance",
+    "match": [
+     "*texture-aniso*",
+     "piglit@spec@ext_texture_filter_anisotropic@*"
+    ]
+   }
+  }
+ ]
+}

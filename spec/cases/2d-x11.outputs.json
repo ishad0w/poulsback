@@ -1,0 +1,34 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-x11.outputs",
+ "source": "tests/acceptance/2d-x11.md#2d-x11.outputs: RandR per connector, DPMS, VT switch",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "randr-lvds-modes",
+   "criteria": "Every LVDS mode RandR lists sets and shows the bands at that size"
+  },
+  {
+   "id": "randr-vga-modes",
+   "criteria": "Every mode of a connected VGA monitor sets; the VGA connector reports disconnected when nothing is plugged"
+  },
+  {
+   "id": "randr-hotplug",
+   "criteria": "Plugging and unplugging VGA sends RRScreenChangeNotify and keeps LVDS"
+  },
+  {
+   "id": "randr-clone-extend",
+   "criteria": "LVDS + VGA clone and extended layouts present without tearing"
+  },
+  {
+   "id": "dpms-off-on",
+   "criteria": "eng/lab/x11/x11-dpms.sh: off, standby, suspend, on; the panel returns with the same frame"
+  },
+  {
+   "id": "vt-switch",
+   "criteria": "Ctrl+Alt+F1 and back with a GL client running: the desktop and the client render again, no errsite"
+  }
+ ]
+}

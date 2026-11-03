@@ -1,0 +1,149 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "release.quality-checks",
+ "source": "tests/acceptance/release.md#release.quality-checks",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "qc-dead",
+   "criteria": "QC-dead (a), (d) and (e) green in make check: no source under kernel/ or src/ that no build list names, no product function only tests reach, no tool or test that no make target, build list, documented command or lab script uses",
+   "runner": {
+    "entrypoint": "tools/quality.py",
+    "arguments": [
+     "check"
+    ],
+    "backend": "CPU_VM",
+    "repository": "driver",
+    "builder": "quality-checks"
+   }
+  },
+  {
+   "id": "qc-dead-reach",
+   "criteria": "QC-dead (b), (c) and (f) green in make check-reach: no product function nothing reaches in the Mesa driver or the DDX (relocation graph), no kernel function unreachable from the module entry points, no code an LTO link proves can never run",
+   "runner": {
+    "entrypoint": "tools/quality.py",
+    "arguments": [
+     "reach"
+    ],
+    "backend": "CPU_VM",
+    "repository": "driver",
+    "builder": "quality-checks"
+   }
+  },
+  {
+   "id": "qc-clones",
+   "criteria": "QC-clones: normalized 50-token clones at or below each file's tracked count, which may only fall",
+   "runner": {
+    "entrypoint": "tools/quality.py",
+    "arguments": [
+     "check"
+    ],
+    "backend": "CPU_VM",
+    "repository": "driver",
+    "builder": "quality-checks"
+   }
+  },
+  {
+   "id": "qc-warnings",
+   "criteria": "QC-warnings: the strict flags on product C, single-file globals static",
+   "runner": {
+    "entrypoint": "tools/quality.py",
+    "arguments": [
+     "check"
+    ],
+    "backend": "CPU_VM",
+    "repository": "driver",
+    "builder": "quality-checks"
+   }
+  },
+  {
+   "id": "qc-coverage",
+   "criteria": "QC-coverage, per function: every live product function is executed by a host suite (gcov) or named in a counting Dell record, apart from debts with a step; line coverage is reported, not ratcheted",
+   "runner": {
+    "entrypoint": "tools/coverage.py",
+    "arguments": [
+     "check"
+    ],
+    "backend": "CPU_VM",
+    "repository": "driver",
+    "builder": "quality-checks"
+   }
+  },
+  {
+   "id": "qc-size",
+   "criteria": "QC-size: no file over 1,500 lines or function over 200 outside the listed ones",
+   "runner": {
+    "entrypoint": "tools/quality.py",
+    "arguments": [
+     "check"
+    ],
+    "backend": "CPU_VM",
+    "repository": "driver",
+    "builder": "quality-checks"
+   }
+  },
+  {
+   "id": "qc-stale",
+   "criteria": "QC-stale: no comment or document names a missing identifier or path",
+   "runner": {
+    "entrypoint": "tools/check-project.py",
+    "arguments": [
+     "check"
+    ],
+    "backend": "CPU_VM",
+    "repository": "driver",
+    "builder": "quality-checks"
+   }
+  },
+  {
+   "id": "qc-lab",
+   "criteria": "QC-lab: ruff and shellcheck clean on the lab's tools",
+   "runner": {
+    "entrypoint": "eng/lab/check-lab.py",
+    "arguments": [],
+    "backend": "CPU_VM",
+    "repository": "workspace",
+    "builder": "quality-checks"
+   }
+  },
+  {
+   "id": "debt-list-empty",
+   "criteria": "The debt list is empty at M1; before that it holds only entries with a named later step",
+   "runner": {
+    "entrypoint": "tools/quality.py",
+    "arguments": [
+     "check"
+    ],
+    "backend": "CPU_VM",
+    "repository": "driver",
+    "builder": "quality-checks"
+   }
+  },
+  {
+   "id": "planted-cases",
+   "criteria": "Each check fails on its planted case (tests/project/test_quality.py)",
+   "runner": {
+    "entrypoint": "tests/project/test_quality.py",
+    "arguments": [],
+    "backend": "CPU_VM",
+    "repository": "driver",
+    "builder": "quality-checks"
+   }
+  },
+  {
+   "id": "review-pass-open-findings",
+   "criteria": "The last review pass has no open dead-code or duplication finding",
+   "runner": {
+    "entrypoint": "docs/checklist.md",
+    "arguments": [
+     "release.quality-gates"
+    ],
+    "backend": "SOURCE",
+    "repository": "driver",
+    "builder": "review"
+   }
+  }
+ ]
+}

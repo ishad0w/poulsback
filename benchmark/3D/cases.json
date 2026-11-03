@@ -1,0 +1,145 @@
+[
+  {
+    "id": "gears",
+    "binary": "glxgears-8.5.0",
+    "args": [
+      "-geometry",
+      "{size}",
+      "-swapinterval",
+      "0",
+      "-info"
+    ],
+    "kind": "interactive",
+    "description": "Unchanged mesa-demos 8.5.0 GLX gears, windowed",
+    "window": "{size}"
+  },
+  {
+    "id": "gears-fullscreen",
+    "binary": "glxgears-8.5.0",
+    "args": [
+      "-fullscreen",
+      "-swapinterval",
+      "0",
+      "-info"
+    ],
+    "kind": "interactive",
+    "description": "Unchanged gears at the actual X screen size",
+    "window": "fullscreen"
+  },
+  {
+    "id": "heads",
+    "binary": "glxheads-8.5.0",
+    "args": [
+      "{display}",
+      "{display}"
+    ],
+    "kind": "interactive",
+    "description": "Unchanged mesa-demos 8.5.0, two GLX connections",
+    "window": "300x300"
+  },
+  {
+    "id": "metrics",
+    "binary": "glxgears-metrics",
+    "args": [
+      "-geometry",
+      "{size}",
+      "-swapinterval",
+      "0",
+      "--duration",
+      "10"
+    ],
+    "kind": "throughput",
+    "description": "Instrumented 9.0.0 gears timing; separate from unchanged-app acceptance",
+    "window": "{size}"
+  },
+  {
+    "id": "poulscube",
+    "binary": "poulscube",
+    "args": [
+      "-geometry",
+      "{size}",
+      "-swapinterval",
+      "0",
+      "-info"
+    ],
+    "kind": "interactive",
+    "description": "The poulsback terminal logo in retro neon: the cube turns and shatters every 8 s; one cube draw a frame, CPU-culled faces, baked shading",
+    "window": "{size}"
+  },
+  {
+    "id": "poulscube-fullscreen",
+    "binary": "poulscube",
+    "args": [
+      "-fullscreen",
+      "-swapinterval",
+      "0",
+      "-info"
+    ],
+    "kind": "interactive",
+    "description": "poulscube at the actual X screen size",
+    "window": "fullscreen"
+  },
+  {
+    "id": "poulscube-timed",
+    "binary": "poulscube",
+    "args": [
+      "-geometry",
+      "{size}",
+      "-swapinterval",
+      "0",
+      "-duration",
+      "24"
+    ],
+    "kind": "throughput",
+    "description": "poulscube for 24 s (three effect cycles), then a frame-time and CPU summary",
+    "window": "{size}"
+  },
+  {
+    "id": "lighting",
+    "binary": "tri-lit",
+    "args": [],
+    "kind": "interactive",
+    "description": "Fixed-function lighting and vertex normals",
+    "window": "250x250"
+  },
+  {
+    "id": "clipping",
+    "binary": "tri-clip",
+    "args": [],
+    "kind": "interactive",
+    "description": "Triangle clipping",
+    "window": "250x250"
+  },
+  {
+    "id": "culling",
+    "binary": "tri-cull",
+    "args": [],
+    "kind": "interactive",
+    "description": "Face culling",
+    "window": "250x250"
+  },
+  {
+    "id": "flat",
+    "binary": "tri-flat",
+    "args": [],
+    "kind": "interactive",
+    "description": "Flat triangle shading",
+    "window": "250x250"
+  },
+  {
+    "id": "arrays",
+    "binary": "drawarrays",
+    "args": [],
+    "kind": "interactive",
+    "description": "Array drawing",
+    "window": "250x250"
+  },
+  {
+    "id": "elements",
+    "binary": "drawelements",
+    "args": [],
+    "kind": "interactive",
+    "description": "Indexed drawing",
+    "window": "250x250"
+  }
+]

@@ -1,0 +1,46 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-x11.present-order",
+ "source": "tests/acceptance/2d-x11.md#2d-x11.present-order: Present and DRI3",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "present-flip",
+   "criteria": "eng/lab/x11/present-flip.c: every completion after the first a flip, MSC steps by 1 for at least 99.5 % of frames, UST 16.697 ms +- 1 %"
+  },
+  {
+   "id": "present-cover",
+   "criteria": "present-flip cover: copies while covered, flips again after"
+  },
+  {
+   "id": "idle-notify-order",
+   "criteria": "Every presented pixmap gets its IdleNotify; none is written while read"
+  },
+  {
+   "id": "bands-check",
+   "criteria": "present-flip watch: no red band and no broken bar on any scanline"
+  },
+  {
+   "id": "present-copy-2d",
+   "criteria": "A windowed Present copy runs on the 2D core"
+  },
+  {
+   "id": "dri3-open",
+   "criteria": "DRI3 Open returns a render node of this device"
+  },
+  {
+   "id": "dri3-pixmap-from-buffers",
+   "criteria": "PixmapFromBuffers with SCANOUT and plain BOs, every format the DDX accepts"
+  },
+  {
+   "id": "dri3-buffers-from-pixmap",
+   "criteria": "BuffersFromPixmap round trip, same bytes"
+  },
+  {
+   "id": "dri3-fence",
+   "criteria": "FenceFromFD/FDFromFence order a client render before X reads it"
+  }
+ ]
+}

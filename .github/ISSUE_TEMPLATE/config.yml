@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 ishad0w and the poulsback contributors
+# SPDX-License-Identifier: MIT
+
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/ishad0w/poulsback/blob/HEAD/SECURITY.md
+    about: Find Alex's private contact for confidential vulnerability reports.
+  - name: Support and reporting guide
+    url: https://github.com/ishad0w/poulsback/blob/HEAD/SUPPORT.md
+    about: Questions and incomplete reports are welcome; find help and reporting guidance here.

@@ -1,0 +1,716 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gles2.gallium-formats",
+ "source": "Mesa 26.2.4 headers (the prepared root's Mesa SDK) and the driver at HEAD, survey 2026-11-03: every format x target x bind is_format_supported accepts; vertex formats from mesa/main/varray.c",
+ "criteria": "The resource works in that role on the GPU path; the claims and the cases are the same set",
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "texture-2d/B8G8R8A8_UNORM/render-target"
+  },
+  {
+   "id": "texture-2d/B8G8R8A8_UNORM/display-target"
+  },
+  {
+   "id": "texture-2d/B8G8R8A8_UNORM/scanout"
+  },
+  {
+   "id": "texture-2d/B8G8R8A8_UNORM/shared"
+  },
+  {
+   "id": "texture-2d/B8G8R8A8_UNORM/linear"
+  },
+  {
+   "id": "texture-2d/B8G8R8A8_UNORM/sampler-view"
+  },
+  {
+   "id": "texture-2d/B8G8R8X8_UNORM/render-target"
+  },
+  {
+   "id": "texture-2d/B8G8R8X8_UNORM/display-target"
+  },
+  {
+   "id": "texture-2d/B8G8R8X8_UNORM/scanout"
+  },
+  {
+   "id": "texture-2d/B8G8R8X8_UNORM/shared"
+  },
+  {
+   "id": "texture-2d/B8G8R8X8_UNORM/linear"
+  },
+  {
+   "id": "texture-2d/B8G8R8X8_UNORM/sampler-view"
+  },
+  {
+   "id": "texture-2d/Z24X8_UNORM/depth-stencil"
+  },
+  {
+   "id": "texture-rect/B8G8R8A8_UNORM/render-target"
+  },
+  {
+   "id": "texture-rect/B8G8R8A8_UNORM/display-target"
+  },
+  {
+   "id": "texture-rect/B8G8R8A8_UNORM/scanout"
+  },
+  {
+   "id": "texture-rect/B8G8R8A8_UNORM/shared"
+  },
+  {
+   "id": "texture-rect/B8G8R8A8_UNORM/linear"
+  },
+  {
+   "id": "texture-rect/B8G8R8A8_UNORM/sampler-view"
+  },
+  {
+   "id": "texture-rect/B8G8R8X8_UNORM/render-target"
+  },
+  {
+   "id": "texture-rect/B8G8R8X8_UNORM/display-target"
+  },
+  {
+   "id": "texture-rect/B8G8R8X8_UNORM/scanout"
+  },
+  {
+   "id": "texture-rect/B8G8R8X8_UNORM/shared"
+  },
+  {
+   "id": "texture-rect/B8G8R8X8_UNORM/linear"
+  },
+  {
+   "id": "texture-rect/B8G8R8X8_UNORM/sampler-view"
+  },
+  {
+   "id": "texture-rect/Z24X8_UNORM/depth-stencil"
+  },
+  {
+   "id": "buffer/index-buffer"
+  },
+  {
+   "id": "buffer/constant-buffer"
+  },
+  {
+   "id": "buffer/vertex-state"
+  },
+  {
+   "id": "buffer/vertex-buffer/B10G10R10A2_SNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/B10G10R10A2_SSCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/B10G10R10A2_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/B10G10R10A2_USCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/B8G8R8A8_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R10G10B10A2_SNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R10G10B10A2_SSCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R10G10B10A2_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R10G10B10A2_USCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R11G11B10_FLOAT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16_FLOAT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16B16A16_FLOAT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16B16A16_SINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16B16A16_SNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16B16A16_SSCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16B16A16_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16B16A16_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16B16A16_USCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16B16_FLOAT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16B16_SINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16B16_SNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16B16_SSCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16B16_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16B16_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16B16_USCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16_FLOAT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16_SINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16_SNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16_SSCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16G16_USCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16_SINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16_SNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16_SSCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R16_USCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32_FIXED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32_FLOAT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32A32_FIXED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32A32_FLOAT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32A32_SINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32A32_SNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32A32_SSCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32A32_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32A32_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32A32_USCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32_FIXED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32_FLOAT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32_SINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32_SNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32_SSCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32B32_USCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32_FIXED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32_FLOAT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32_SINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32_SNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32_SSCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32G32_USCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32_SINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32_SNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32_SSCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R32_USCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R64_FLOAT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R64G64B64A64_FLOAT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R64G64B64A64_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R64G64B64_FLOAT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R64G64B64_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R64G64_FLOAT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R64G64_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R64_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8B8A8_SINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8B8A8_SNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8B8A8_SSCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8B8A8_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8B8A8_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8B8A8_USCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8B8_SINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8B8_SNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8B8_SSCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8B8_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8B8_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8B8_USCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8_SINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8_SNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8_SSCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8G8_USCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8_SINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8_SNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8_SSCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8_UINT",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8_UNORM",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/vertex-buffer/R8_USCALED",
+   "parameters": {
+    "source": "mesa/main/varray.c vertex_formats"
+   }
+  },
+  {
+   "id": "buffer/any-format-claim",
+   "criteria": "is_format_supported accepts every format for PIPE_BUFFER; the claim must shrink to the formats the GPU vertex fetch implements, each with its case above",
+   "parameters": {
+    "state": "claim wider than the tested set (survey 2026-11-03)"
+   }
+  }
+ ]
+}

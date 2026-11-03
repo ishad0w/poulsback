@@ -1,0 +1,34 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "release.recovery-hardware",
+ "source": "tests/acceptance/release.md#release.recovery-hardware",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "client-kill-mid-frame",
+   "criteria": "SIGKILL a GL client inside a frame: its jobs complete or retire, no BIF fault, Shmem back"
+  },
+  {
+   "id": "client-kill-under-load",
+   "criteria": "SIGKILL one of four busy GL clients; the others keep rendering"
+  },
+  {
+   "id": "x-killed-while-flipping",
+   "criteria": "Kill X during present-flip; the display returns to the console, the next X starts"
+  },
+  {
+   "id": "context-destroy-inflight",
+   "criteria": "CONTEXT_DESTROY with jobs queued waits for them or cancels unpublished ones"
+  },
+  {
+   "id": "timeout-wedges-no-resubmit",
+   "criteria": "A job past the scheduler timeout wedges the engine; nothing is resubmitted; resources stay in HOLD"
+  },
+  {
+   "id": "hold-on-unknown-outcome",
+   "criteria": "An unknown GPU outcome keeps resources in HOLD and the run ends with a reboot"
+  }
+ ]
+}

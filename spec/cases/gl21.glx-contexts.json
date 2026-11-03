@@ -1,0 +1,48 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gl21.glx-contexts",
+ "source": "this case's parameters and the MSAA 4x window visuals",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "glx-make-current"
+  },
+  {
+   "id": "glx-share-lists"
+  },
+  {
+   "id": "glx-swap-interval"
+  },
+  {
+   "id": "glx-destroy-inflight"
+  },
+  {
+   "id": "glx-two-displays"
+  },
+  {
+   "id": "glx-pixmap"
+  },
+  {
+   "id": "glxinfo-direct",
+   "retired": "Same check as gl21.wsi-configs/glx-direct-poulsback"
+  },
+  {
+   "id": "glx-visuals-msaa4",
+   "retired": "Same check as gl21.wsi-configs/glx-visual-msaa4"
+  },
+  {
+   "id": "gl-processes-4",
+   "criteria": "Four GL processes render in their own windows at once, each image exact, no HOLD"
+  },
+  {
+   "id": "gl-threads-2-contexts",
+   "criteria": "One process renders from two threads with two contexts at once, each image exact"
+  },
+  {
+   "id": "gl-threads-shared-context-objects",
+   "criteria": "Two threads share textures and buffers through share lists; updates in one are seen by the other after glFinish"
+  }
+ ]
+}

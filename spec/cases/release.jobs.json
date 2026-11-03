@@ -1,0 +1,42 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "release.jobs",
+ "source": "tests/acceptance/release.md#release.jobs",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "submit-1000-fenced",
+   "criteria": "1,000 consecutive SUBMIT frames, all fenced, final target golden"
+  },
+  {
+   "id": "syncobj-order",
+   "criteria": "in_syncobj orders a job after another context job; out_syncobj signals at completion"
+  },
+  {
+   "id": "two-contexts-interleaved",
+   "criteria": "Two contexts interleave jobs with no cross-context corruption"
+  },
+  {
+   "id": "twod-during-raster",
+   "criteria": "2D jobs run during a 3D raster pass with both images exact"
+  },
+  {
+   "id": "ta-raster-overlap",
+   "criteria": "The next TA runs during the raster with images exact"
+  },
+  {
+   "id": "partial-render-4x-pool",
+   "criteria": "A scene of four times the parameter pool renders exactly"
+  },
+  {
+   "id": "second-oom-no-wedge",
+   "criteria": "The second out-of-memory in one scene no longer wedges"
+  },
+  {
+   "id": "irq-completion-only",
+   "criteria": "Jobs complete by IRQ, 2-3 interrupts per frame, no polling path left"
+  }
+ ]
+}

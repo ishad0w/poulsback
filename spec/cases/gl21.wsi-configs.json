@@ -1,0 +1,90 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gl21.wsi-configs",
+ "source": "tests/acceptance/gl21.md#gl21.wsi-configs; survey of the window-system sources, 2026-11-03 (Xorg 21.1.7 glx/, Mesa 26.2.4 src/glx, src/egl, src/loader, the DRI frontend)",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "egl-x11-rgba8888-d24s8",
+   "criteria": "eglChooseConfig(RGBA8888, DEPTH 24, STENCIL 8, WINDOW|PBUFFER) returns a config and dEQP picks rgba8888d24s8ms0; needs Z24_UNORM_S8_UINT; internal device run 016 found none"
+  },
+  {
+   "id": "egl-x11-rgb565-d16",
+   "criteria": "EGL on X11 in a depth-16 session offers an RGB565 window config with depth 16"
+  },
+  {
+   "id": "egl-x11-msaa4",
+   "criteria": "eglChooseConfig(EGL_SAMPLES 4, EGL_WINDOW_BIT) returns a config exactly when the 4-sample GLX visual renders (one driver list)"
+  },
+  {
+   "id": "egl-x11-reaches-poulsback",
+   "criteria": "eglInitialize on the X11 platform uses DRI3, GL_RENDERER is poulsback, GL_VERSION has Mesa 26.2.4 and the run dir libraries are mapped"
+  },
+  {
+   "id": "egl-x11-configs-match-driver",
+   "criteria": "Every EGL config is one of the driver formats and its EGL_NATIVE_VISUAL_ID is a core X visual of matching depth"
+  },
+  {
+   "id": "glx-fbconfig-rgba8-d24s8",
+   "criteria": "A d24s8 double-buffered visual exists and a stencil-masked draw reads back as expected; needs Z24_UNORM_S8_UINT"
+  },
+  {
+   "id": "glx-visual-depth16",
+   "criteria": "In a DefaultDepth 16 session a depth-16 visual is direct and a clear to red reads 0xF800; needs RGB565 in the kernel, DDX and driver"
+  },
+  {
+   "id": "glx-visual-depth16-d16",
+   "criteria": "In the depth-16 session a 565 visual with depth 16 resolves a depth test; needs Z16 or mixed_color_depth_bits"
+  },
+  {
+   "id": "glx-visual-msaa4",
+   "criteria": "glXChooseFBConfig(SAMPLE_BUFFERS 1, SAMPLES 4, WINDOW, DOUBLEBUFFER) gives a config, GL_SAMPLES is 4 and edge pixels of a swapped triangle are resolved"
+  },
+  {
+   "id": "glx-samples-honest",
+   "criteria": "No client fbconfig or EGL config claims samples the driver does not render"
+  },
+  {
+   "id": "glx-direct-poulsback",
+   "criteria": "glXIsDirect, GL_RENDERER poulsback, GL_VERSION with Mesa 26.2.4 and GLX_RENDERER_ACCELERATED_MESA 1 on every offered visual; the suites use it as a precheck"
+  },
+  {
+   "id": "glx-server-provider-swrast",
+   "criteria": "The Xorg log shows the DRISWRAST provider (no DRI2 in the DDX) and no \"no usable GL providers\""
+  },
+  {
+   "id": "glx-server-configs-raw",
+   "criteria": "A raw xcb-glx probe records the server configs and finds a TrueColor depth-24 double-buffered config with depth 24, stencil 0, samples 0"
+  },
+  {
+   "id": "glx-client-configs-subset",
+   "criteria": "Every client fbconfig is one of the driver formats and appears in the raw server list"
+  },
+  {
+   "id": "glx-client-visual-renders",
+   "criteria": "glXChooseVisual(RGBA, DOUBLEBUFFER, DEPTH 24) returns a visual that renders a clear read back by XGetImage, direct"
+  },
+  {
+   "id": "glx-root-visual-direct",
+   "criteria": "A direct context on the root visual renders; today the server root config is d24s8, so this waits for Z24_UNORM_S8_UINT"
+  },
+  {
+   "id": "glx-argb-visual-direct",
+   "criteria": "A depth-32 GLX visual takes a direct context and alpha 0x80 reads back from the window pixmap with Composite on"
+  },
+  {
+   "id": "glx-config-count-stable",
+   "criteria": "The client fbconfig and visual counts equal the recorded baseline (a Debian Mesa change can drop the server MSAA configs)"
+  },
+  {
+   "id": "glx-visual-depth16-absent-at-depth24",
+   "criteria": "In the depth-24 session no depth-16 GLX visual is listed and the server 565 configs have no GLX_WINDOW_BIT (the server rule, recorded)"
+  },
+  {
+   "id": "glx-visual-ms4-server",
+   "criteria": "The raw server list has a TrueColor depth-24 window config with 4 samples"
+  }
+ ]
+}

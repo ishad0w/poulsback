@@ -1,0 +1,1724 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# SPDX-FileCopyrightText: 2026 ishad0w and the poulsback contributors
+--- a/Makefile
++++ b/Makefile
+@@ -3,7 +3,7 @@
+ #	KMS driver for the GMA500
+ #
+ 
+-gma500_gfx-y += \
++poulsback-y += \
+ 	  backlight.o \
+ 	  cdv_device.o \
+ 	  cdv_intel_crt.o \
+@@ -37,6 +37,6 @@
+ 	  psb_lid.o \
+ 	  psb_irq.o
+ 
+-gma500_gfx-$(CONFIG_ACPI) +=  opregion.o
++poulsback-$(CONFIG_ACPI) +=  opregion.o
+ 
+-obj-$(CONFIG_DRM_GMA500) += gma500_gfx.o
++obj-$(CONFIG_DRM_GMA500) += poulsback.o
+--- a/backlight.c
++++ b/backlight.c
+@@ -97,8 +97,11 @@
+ 		backlight_device_register(dev_priv->ops->backlight_name,
+ 					  dev->dev, dev,
+ 					  &gma_backlight_ops, &props);
+-	if (IS_ERR(dev_priv->backlight_device))
+-		return PTR_ERR(dev_priv->backlight_device);
++	if (IS_ERR(dev_priv->backlight_device)) {
++		ret = PTR_ERR(dev_priv->backlight_device);
++		dev_priv->backlight_device = NULL;
++		return ret;
++	}
+ #endif
+ 
+ 	return 0;
+--- a/framebuffer.c
++++ b/framebuffer.c
+@@ -5,6 +5,9 @@
+  *
+  **************************************************************************/
+ 
++#include "poulsback_bo.h"
++#include "poulsback_display.h"
++#include "poulsback_framebuffer.h"
+ #include <linux/console.h>
+ #include <linux/delay.h>
+ #include <linux/errno.h>
+@@ -34,6 +37,11 @@
+ 	.destroy = drm_gem_fb_destroy,
+ 	.create_handle = drm_gem_fb_create_handle,
+ };
++
++bool psb_framebuffer_is_legacy(const struct drm_framebuffer *fb)
++{
++	return fb && fb->funcs == &psb_fb_funcs;
++}
+ 
+ static vm_fault_t psbfb_vm_fault(struct vm_fault *vmf)
+ {
+@@ -297,6 +305,14 @@
+ 	if (obj == NULL)
+ 		return ERR_PTR(-ENOENT);
+ 
++	/* A poulsback BO is not a psb_gem_object: only a SCANOUT BO becomes a
++	 * (typed) framebuffer, which never enters legacy plane paths. */
++	if (poulsback_bo_is_object(obj)) {
++		fb = poulsback_bo_is_scanout(obj) ? poulsback_framebuffer_create(dev, obj, cmd)
++						  : ERR_PTR(-EINVAL);
++		drm_gem_object_put(obj);
++		return fb;
++	}
+ 	/* Let the core code do all the work */
+ 	fb = psb_framebuffer_create(dev, cmd, obj);
+ 	if (IS_ERR(fb))
+--- a/framebuffer.h
++++ b/framebuffer.h
+@@ -12,6 +12,8 @@
+ #include "psb_drv.h"
+ 
+ extern int gma_connector_clones(struct drm_device *dev, int type_mask);
++/* Exact private legacy type identity; no reference, pin or display authority. */
++bool psb_framebuffer_is_legacy(const struct drm_framebuffer *fb);
+ 
+ #endif
+ 
+--- a/gem.c
++++ b/gem.c
+@@ -12,6 +12,8 @@
+  */
+ 
+ #include <linux/pagemap.h>
++#include <linux/limits.h>
++#include <linux/string.h>
+ 
+ #include <asm/set_memory.h>
+ 
+@@ -20,53 +22,96 @@
+ 
+ #include "gem.h"
+ #include "psb_drv.h"
++#include "sgx535_source_epoch.h"
++#include <linux/module.h>
++#include <linux/list.h>
++
++#include "poulsback_gem_hold.inc"
+ 
+ /*
+  * PSB GEM object
+  */
+ 
++static int psb_gem_display_reserved(struct psb_gem_object *);
++
+ int psb_gem_pin(struct psb_gem_object *pobj)
+ {
+ 	struct drm_gem_object *obj = &pobj->base;
+ 	struct drm_device *dev = obj->dev;
+ 	struct drm_psb_private *dev_priv = to_drm_psb_private(dev);
+-	u32 gpu_base = dev_priv->gtt.gatt_start;
+ 	struct page **pages;
+ 	unsigned int npages;
+ 	int ret;
++	bool put_pages_ref = false;
+ 
++	if (READ_ONCE(pobj->poulsback_held))
++		return -EBUSY;
++	ret = sgx535_epoch_external_begin(dev);
++	if (ret)
++		return ret;
+ 	ret = dma_resv_lock(obj->resv, NULL);
+-	if (drm_WARN_ONCE(dev, ret, "dma_resv_lock() failed, ret=%d\n", ret))
++	if (drm_WARN_ONCE(dev, ret, "dma_resv_lock() failed, ret=%d\n", ret)) {
++		WARN_ON(sgx535_epoch_external_end(dev));
+ 		return ret;
++	}
+ 
+-	if (pobj->in_gart || pobj->stolen)
++	if (READ_ONCE(pobj->poulsback_held)) {
++		ret = -EBUSY;
++		goto err_dma_resv_unlock;
++	}
++	if (pobj->in_gart || pobj->stolen) {
++		if (!pobj->stolen && (!pobj->pages || !pobj->poulsback_pages_module_ref)) {
++			ret = -ESTALE;
++			(void)poulsback_gem_hold_locked(pobj, ret);
++			goto err_dma_resv_unlock;
++		}
+ 		goto out; /* already mapped */
++	}
+ 
++	/* A mapped nonstolen page array pins this module before the first PAT,
++	 * GTT or MMU writer, through every pin and uncertain final release. */
++	if (!try_module_get(THIS_MODULE)) {
++		ret = -ENODEV;
++		goto err_dma_resv_unlock;
++	}
++	pobj->poulsback_pages_module_ref = true;
+ 	pages = drm_gem_get_pages(obj);
+ 	if (IS_ERR(pages)) {
+ 		ret = PTR_ERR(pages);
++		pobj->poulsback_pages_module_ref = false;
++		put_pages_ref = true;
+ 		goto err_dma_resv_unlock;
+ 	}
+ 
+ 	npages = obj->size / PAGE_SIZE;
+ 
+-	set_pages_array_wc(pages, npages);
++	/* A partial cache change or insertion owns the entire original page
++	 * array until an independently proven cleanup. Never free on errno. */
++	pobj->pages = pages;
++	ret = set_pages_array_wc(pages, npages);
++	if (ret) {
++		poulsback_gem_hold_locked(pobj, ret);
++		goto err_dma_resv_unlock;
++	}
+ 
++	/* Display uses the GTT only; SGX context0 never aliases the object. */
+ 	psb_gtt_insert_pages(dev_priv, &pobj->resource, pages);
+-	psb_mmu_insert_pages(psb_mmu_get_default_pd(dev_priv->mmu), pages,
+-			     (gpu_base + pobj->offset), npages, 0, 0,
+-			     PSB_MMU_CACHED_MEMORY);
+-
+-	pobj->pages = pages;
+ 
+ out:
++	if (pobj->in_gart == INT_MAX) {
++		ret = -EOVERFLOW;
++		goto err_dma_resv_unlock;
++	}
+ 	++pobj->in_gart;
+ 	dma_resv_unlock(obj->resv);
+-
++	WARN_ON(sgx535_epoch_external_end(dev));
+ 	return 0;
+ 
+ err_dma_resv_unlock:
+ 	dma_resv_unlock(obj->resv);
++	WARN_ON(sgx535_epoch_external_end(dev));
++	if (put_pages_ref)
++		module_put(THIS_MODULE);
+ 	return ret;
+ }
+ 
+@@ -75,16 +120,41 @@
+ 	struct drm_gem_object *obj = &pobj->base;
+ 	struct drm_device *dev = obj->dev;
+ 	struct drm_psb_private *dev_priv = to_drm_psb_private(dev);
+-	u32 gpu_base = dev_priv->gtt.gatt_start;
+ 	unsigned long npages;
+ 	int ret;
++	bool put_pages_ref = false;
+ 
++	if (READ_ONCE(pobj->poulsback_held))
++		return;
++	ret = sgx535_epoch_external_begin(dev);
++	if (ret) {
++		poulsback_gem_hold(pobj, ret);
++		return;
++	}
+ 	ret = dma_resv_lock(obj->resv, NULL);
+-	if (drm_WARN_ONCE(dev, ret, "dma_resv_lock() failed, ret=%d\n", ret))
++	if (drm_WARN_ONCE(dev, ret, "dma_resv_lock() failed, ret=%d\n", ret)) {
++		poulsback_gem_hold(pobj, ret);
++		WARN_ON(sgx535_epoch_external_end(dev));
+ 		return;
++	}
++	if (READ_ONCE(pobj->poulsback_held))
++		goto out;
++	if (WARN_ON(!pobj->in_gart)) {
++		(void)poulsback_gem_hold_locked(pobj, -EINVAL);
++		goto out;
++	}
++	if (!pobj->stolen && (!pobj->pages || !pobj->poulsback_pages_module_ref)) {
++		(void)poulsback_gem_hold_locked(pobj, -ESTALE);
++		goto out;
++	}
+ 
+-	WARN_ON(!pobj->in_gart);
+-
++	/* Other legacy callers may consume their own pins, never a specifically
++	 * owned display token. Keep its original tuple on a stray/double unpin. */
++	ret = psb_gem_display_reserved(pobj);
++	if (ret < 0 || (ret && pobj->in_gart <= ret)) {
++		(void)poulsback_gem_hold_locked(pobj, ret < 0 ? ret : -EBUSY);
++		goto out;
++	}
+ 	--pobj->in_gart;
+ 
+ 	if (pobj->in_gart || pobj->stolen)
+@@ -92,18 +162,28 @@
+ 
+ 	npages = obj->size / PAGE_SIZE;
+ 
+-	psb_mmu_remove_pages(psb_mmu_get_default_pd(dev_priv->mmu),
+-			     (gpu_base + pobj->offset), npages, 0, 0);
+ 	psb_gtt_remove_pages(dev_priv, &pobj->resource);
+ 
+ 	/* Reset caching flags */
+-	set_pages_array_wb(pobj->pages, npages);
++	ret = set_pages_array_wb(pobj->pages, npages);
++	if (ret) {
++		poulsback_gem_hold_locked(pobj, ret);
++		goto out;
++	}
+ 
+ 	drm_gem_put_pages(obj, pobj->pages, true, false);
+ 	pobj->pages = NULL;
++	pobj->poulsback_pages_module_ref = false;
++	if (pobj->poulsback_freeing)
++		pobj->poulsback_put_after_free = true;
++	else
++		put_pages_ref = true;
+ 
+ out:
+ 	dma_resv_unlock(obj->resv);
++	WARN_ON(sgx535_epoch_external_end(dev));
++	if (put_pages_ref)
++		module_put(THIS_MODULE);
+ }
+ 
+ static vm_fault_t psb_gem_fault(struct vm_fault *vmf);
+@@ -111,17 +191,30 @@
+ static void psb_gem_free_object(struct drm_gem_object *obj)
+ {
+ 	struct psb_gem_object *pobj = to_psb_gem_object(obj);
++	bool put_module;
+ 
++	pobj->poulsback_freeing = true;
+ 	/* Undo the mmap pin if we are destroying the object */
+-	if (pobj->mmapping)
++	if (pobj->mmapping && !READ_ONCE(pobj->poulsback_held))
+ 		psb_gem_unpin(pobj);
+-
++	if (READ_ONCE(pobj->poulsback_held) || (!pobj->stolen && (pobj->in_gart || pobj->pages))) {
++		poulsback_gem_hold(pobj, -EBUSY);
++		return;
++	}
++	if (READ_ONCE(pobj->poulsback_display_pins[0]) ||
++	    READ_ONCE(pobj->poulsback_display_pins[1])) {
++		poulsback_gem_hold(pobj, -EBUSY);
++		return;
++	}
+ 	drm_gem_object_release(obj);
+ 
+ 	WARN_ON(pobj->in_gart && !pobj->stolen);
+ 
+ 	release_resource(&pobj->resource);
++	put_module = pobj->poulsback_put_after_free;
+ 	kfree(pobj);
++	if (put_module)
++		module_put(THIS_MODULE);
+ }
+ 
+ static const struct vm_operations_struct psb_gem_vm_ops = {
+@@ -135,6 +228,200 @@
+ 	.vm_ops = &psb_gem_vm_ops,
+ };
+ 
++/* Extra ownership of an already resident legacy mapping. No page allocation,
++ * PAT/PTE/plane effect or interpretation of an aggregate count as last-fetch. */
++static bool psb_display_pin_same(const struct psb_gem_display_pin *a,
++				 const struct psb_gem_display_pin *b)
++{
++	return a->self == b->self && a->dev == b->dev && a->object == b->object &&
++	       a->parent == b->parent && a->pages == b->pages && a->source == b->source &&
++	       a->source_check == b->source_check &&
++	       a->epoch == b->epoch && a->bytes == b->bytes && a->start == b->start &&
++	       a->end == b->end && a->aperture_start == b->aperture_start &&
++	       a->aperture_end == b->aperture_end && a->stolen_bytes == b->stolen_bytes &&
++	       a->pipe == b->pipe && a->offset == b->offset && a->kind == b->kind &&
++	       a->count == b->count && a->acquired == b->acquired;
++}
++static int psb_display_object(struct drm_device *dev, struct drm_gem_object *object)
++{
++	/* Positive private table and exact device precede every container cast. */
++	if (!dev || !object || object->dev != dev || object->funcs != &psb_gem_object_funcs)
++		return -EXDEV;
++	return IS_PSB(dev) ? 0 : -EOPNOTSUPP;
++}
++static int psb_display_pin_tuple(struct psb_gem_object *p, const struct psb_gem_display_pin *c)
++{
++	struct drm_psb_private *d = to_drm_psb_private(c->dev);
++	struct resource *r = &p->resource, *a = d->gtt_mem;
++	u64 bytes = p->base.size;
++	if (p->poulsback_held || p->poulsback_freeing || p->poulsback_put_after_free)
++		return -EIO;
++	if (!p->in_gart) {
++		return -EOPNOTSUPP;
++	}
++	if (p->in_gart < 0)
++		return -ESTALE;
++	if (!a || a != c->parent || a->start != c->aperture_start || a->end != c->aperture_end ||
++	    a->end < a->start || a->end > U32_MAX || d->gtt.stolen_size != c->stolen_bytes ||
++	    c->stolen_bytes > a->end - a->start + 1 || r->parent != a || r->child || r->flags ||
++	    !bytes || (bytes & (PAGE_SIZE - 1)) || bytes != c->bytes || r->start != c->start ||
++	    r->end != c->end || r->end < r->start || r->end - r->start != bytes - 1 ||
++	    r->start < a->start || r->end > a->end || p->offset != c->offset ||
++	    r->start - a->start != c->offset || p->pages != c->pages ||
++	    c->count != bytes / PAGE_SIZE)
++		return -ESTALE;
++	if (c->kind == PSB_DISPLAY_PIN_STOLEN) {
++		if (!p->stolen || p->pages || p->poulsback_pages_module_ref || !c->stolen_bytes ||
++		    r->end - a->start >= c->stolen_bytes) {
++			return -EOPNOTSUPP;
++		}
++	} else if (c->kind == PSB_DISPLAY_PIN_SYSTEM_PAGES) {
++		if (p->stolen || !p->pages || !p->poulsback_pages_module_ref ||
++		    r->start - a->start < c->stolen_bytes) {
++			return -EOPNOTSUPP;
++		}
++		for (u32 i = 0; i < c->count; i++)
++			if (!c->pages[i])
++				return -ESTALE;
++	} else {
++		return -EOPNOTSUPP;
++	}
++	return 0;
++}
++static int psb_display_pin_current(struct psb_gem_object *p, struct psb_gem_display_pin *pin)
++{
++	u32 i;
++	dma_resv_assert_held(p->base.resv);
++	/* Find the original private owner before trusting mutable token fields. */
++	for (i = 0; i < 2; i++)
++		if (p->poulsback_display_pins[i] == pin)
++			break;
++	if (i == 2 || !pin || pin->self != pin || !pin->acquired ||
++	    pin->pipe != i || !psb_display_pin_same(pin, &p->poulsback_display_pin_original[i]))
++		return -ESTALE;
++	return psb_display_pin_tuple(p, &p->poulsback_display_pin_original[i]);
++}
++static int psb_gem_display_reserved(struct psb_gem_object *p)
++{
++	int n = 0, ret;
++	dma_resv_assert_held(p->base.resv);
++	for (u32 i = 0; i < 2; i++)
++		if (p->poulsback_display_pins[i]) {
++			ret = psb_display_pin_current(p, p->poulsback_display_pins[i]);
++			if (ret)
++				return ret;
++			n++;
++		}
++	return n;
++}
++struct psb_display_pin_action {
++	struct psb_gem_object *object;
++	struct psb_gem_display_pin *pin;
++};
++static int psb_display_pin_acquire_check(void *context)
++{
++	struct psb_display_pin_action *a = context;
++	struct psb_gem_display_pin *c = a->pin;
++	int ret = psb_display_pin_tuple(a->object, c);
++	if (!ret && a->object->in_gart == INT_MAX)
++		ret = -EOVERFLOW;
++	if (!ret && a->object->poulsback_display_pins[c->pipe])
++		ret = -EBUSY;
++	return ret ? ret : c->source_check(c, c->source);
++}
++static void psb_display_pin_acquire_commit(void *context)
++{
++	struct psb_display_pin_action *a = context;
++	struct psb_gem_display_pin *c = a->pin;
++	++a->object->in_gart;
++	c->acquired = true;
++	a->object->poulsback_display_pin_original[c->pipe] = *c;
++	a->object->poulsback_display_pins[c->pipe] = c;
++}
++int psb_gem_display_pin_acquire(struct drm_device *dev, struct drm_gem_object *object, u32 pipe,
++				u64 epoch, struct psb_gem_display_pin *pin,
++				int (*source_check)(const struct psb_gem_display_pin *, void *),
++				void *source)
++{
++	struct psb_display_pin_action action;
++	struct psb_gem_object *p;
++	struct drm_psb_private *d;
++	struct resource *root;
++	int ret, idx;
++	if (!pin || pipe > 1 || !epoch || !source_check || !source ||
++	    memchr_inv(pin, 0, sizeof(*pin)))
++		return -EINVAL;
++	ret = psb_display_object(dev, object);
++	if (ret)
++		return ret;
++	if (!drm_dev_enter(dev, &idx))
++		return -ENODEV;
++	p = to_psb_gem_object(object);
++	d = to_drm_psb_private(dev);
++	ret = sgx535_epoch_external_begin(dev);
++	if (ret)
++		goto exit;
++	ret = dma_resv_lock(object->resv, NULL);
++	if (ret)
++		goto end;
++	root = d->gtt_mem;
++	if (!root) {
++		ret = -ESTALE;
++		goto unlock;
++	}
++	*pin = (struct psb_gem_display_pin){.self = pin,
++					    .dev = dev,
++					    .object = object,
++					    .parent = root,
++					    .pages = p->pages,
++					    .source = source,
++					    .source_check = source_check,
++					    .epoch = epoch,
++					    .bytes = object->size,
++					    .start = p->resource.start,
++					    .end = p->resource.end,
++					    .aperture_start = root->start,
++					    .aperture_end = root->end,
++					    .stolen_bytes = d->gtt.stolen_size,
++					    .pipe = pipe,
++					    .offset = p->offset,
++					    .kind = p->stolen ? PSB_DISPLAY_PIN_STOLEN
++							      : PSB_DISPLAY_PIN_SYSTEM_PAGES,
++					    .count = object->size / PAGE_SIZE};
++	action = (struct psb_display_pin_action){p, pin};
++	ret = sgx535_epoch_external_finalize(dev, epoch, psb_display_pin_acquire_check,
++					     psb_display_pin_acquire_commit, &action);
++	if (ret && !pin->acquired)
++		memset(pin, 0, sizeof(*pin)); /* No count/registry commit took place. */
++unlock:
++	dma_resv_unlock(object->resv);
++end:
++	WARN_ON(sgx535_epoch_external_end(dev));
++exit:
++	drm_dev_exit(idx);
++	return ret;
++}
++int psb_gem_display_pin_lock(struct drm_device *dev, struct drm_gem_object *object,
++			     struct psb_gem_display_pin *pin)
++{
++	int ret = psb_display_object(dev, object);
++	if (ret)
++		return ret;
++	if (!sgx535_epoch_external_active(dev))
++		return -EPERM;
++	ret = dma_resv_lock(object->resv, NULL);
++	if (ret)
++		return ret;
++	ret = psb_display_pin_current(to_psb_gem_object(object), pin);
++	if (ret)
++		dma_resv_unlock(object->resv);
++	return ret;
++}
++void psb_gem_display_pin_unlock(struct drm_gem_object *object)
++{
++	dma_resv_unlock(object->resv);
++}
++
+ struct psb_gem_object *
+ psb_gem_create(struct drm_device *dev, u64 size, const char *name, bool stolen, u32 align)
+ {
+@@ -149,6 +436,7 @@
+ 	if (!pobj)
+ 		return ERR_PTR(-ENOMEM);
+ 	obj = &pobj->base;
++	INIT_LIST_HEAD(&pobj->poulsback_hold_link);
+ 
+ 	/* GTT resource */
+ 
+--- a/gem.h
++++ b/gem.h
+@@ -9,6 +9,7 @@
+ #define _GEM_H
+ 
+ #include <linux/kernel.h>
++#include <linux/list.h>
+ 
+ #include <drm/drm_gem.h>
+ 
+@@ -18,6 +19,36 @@
+  * PSB GEM object
+  */
+ 
++enum psb_gem_display_pin_kind {
++	PSB_DISPLAY_PIN_NONE,
++	PSB_DISPLAY_PIN_SYSTEM_PAGES,
++	PSB_DISPLAY_PIN_STOLEN
++};
++struct psb_gem_display_pin {
++	struct psb_gem_display_pin *self;
++	struct drm_device *dev;
++	struct drm_gem_object *object;
++	struct resource *parent;
++	struct page **pages;
++	void *source;
++	int (*source_check)(const struct psb_gem_display_pin *, void *);
++	u64 epoch, bytes, start, end, aperture_start, aperture_end, stolen_bytes;
++	u32 pipe, offset, count;
++	enum psb_gem_display_pin_kind kind;
++	bool acquired;
++};
++/* Parent source retains FB/GEM/module/device, actual modeset locks and SRCU.
++ * Adds only a CPU count to an already resident typed legacy mapping. STOLEN
++ * never claims system pages or a cache handoff. Token storage survives HOLD. */
++int psb_gem_display_pin_acquire(struct drm_device *, struct drm_gem_object *, u32 pipe, u64 epoch,
++				struct psb_gem_display_pin *,
++				int (*)(const struct psb_gem_display_pin *, void *), void *);
++/* Existing same-task external operation. Lock before GTT; a failed lock or
++ * check leaves no resv lock held. */
++int psb_gem_display_pin_lock(struct drm_device *, struct drm_gem_object *,
++			     struct psb_gem_display_pin *);
++void psb_gem_display_pin_unlock(struct drm_gem_object *);
++
+ struct psb_gem_object {
+ 	struct drm_gem_object base;
+ 
+@@ -27,6 +58,11 @@
+ 	bool stolen;			/* Backed from stolen RAM */
+ 	bool mmapping;			/* Is mmappable */
+ 	struct page **pages;		/* Backing pages if present */
++	struct list_head poulsback_hold_link;
++	bool poulsback_held, poulsback_module_ref;
++	bool poulsback_pages_module_ref, poulsback_freeing, poulsback_put_after_free;
++	struct psb_gem_display_pin *poulsback_display_pins[2];
++	struct psb_gem_display_pin poulsback_display_pin_original[2];
+ };
+ 
+ static inline struct psb_gem_object *to_psb_gem_object(struct drm_gem_object *obj)
+@@ -39,6 +75,7 @@
+ 
+ int psb_gem_pin(struct psb_gem_object *pobj);
+ void psb_gem_unpin(struct psb_gem_object *pobj);
++bool psb_gem_retained(struct drm_device *dev);
+ 
+ /*
+  * Memory management
+--- a/gma_display.c
++++ b/gma_display.c
+@@ -7,6 +7,9 @@
+  *	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+  */
+ 
++#include "poulsback_bo.h"
++#include "poulsback_framebuffer.h"
++#include "poulsback_display_psb_source.h"
+ #include <linux/delay.h>
+ #include <linux/highmem.h>
+ 
+@@ -66,6 +69,10 @@
+ 	unsigned long start, offset;
+ 	u32 dspcntr;
+ 	int ret = 0;
++
++	ret = poulsback_framebuffer_legacy_check(fb, old_fb);
++	if (ret)
++		return ret;
+ 
+ 	if (!gma_power_begin(dev, true))
+ 		return 0;
+@@ -201,6 +208,14 @@
+ 	const struct psb_offset *map = &dev_priv->regmap[pipe];
+ 	u32 temp;
+ 
++	/* A typed front keeps the pipe running (Present needs its vblanks);
++	 * the encoders switch the panel. */
++	if (poulsback_framebuffer_is_object(crtc->primary->fb))
++		return;
++	if (poulsback_framebuffer_legacy_check(crtc->primary->fb,
++						 crtc->primary->old_fb))
++		return;
++
+ 	/* XXX: When our outputs are all unaware of DPMS modes other than off
+ 	 * and on, we should map those modes to DRM_MODE_DPMS_OFF in the CRTC.
+ 	 */
+@@ -373,6 +388,12 @@
+ 		goto unlock;
+ 	}
+ 
++	/* poulsback BOs cannot enter stock cursor casts. */
++	if (poulsback_bo_is_object(obj)) {
++		ret = -EOPNOTSUPP;
++		goto unref_cursor;
++	}
++
+ 	if (obj->size < width * height * 4) {
+ 		dev_dbg(dev->dev, "Buffer is too small\n");
+ 		ret = -ENOMEM;
+@@ -486,6 +507,10 @@
+ 	struct psb_gem_object *pobj;
+ 	const struct drm_crtc_helper_funcs *crtc_funcs = crtc->helper_private;
+ 
++	if (poulsback_framebuffer_legacy_check(crtc->primary->fb,
++						 crtc->primary->old_fb))
++		return;
++
+ 	crtc_funcs->dpms(crtc, DRM_MODE_DPMS_OFF);
+ 
+ 	if (crtc->primary->fb) {
+@@ -512,54 +537,54 @@
+ 		       uint32_t page_flip_flags,
+ 		       struct drm_modeset_acquire_ctx *ctx)
+ {
+-	struct gma_crtc *gma_crtc = to_gma_crtc(crtc);
+ 	struct drm_framebuffer *current_fb = crtc->primary->fb;
+ 	struct drm_framebuffer *old_fb = crtc->primary->old_fb;
+-	const struct drm_crtc_helper_funcs *crtc_funcs = crtc->helper_private;
+-	struct drm_device *dev = crtc->dev;
+-	unsigned long flags;
+ 	int ret;
+ 
+-	if (!crtc_funcs->mode_set_base)
++	{
++		bool handled;
++		ret = poulsback_display_psb_page_flip(crtc, fb, event, ctx, &handled);
++		if (handled)
++			return ret;
++	}
++	ret = poulsback_framebuffer_legacy_check(fb, current_fb);
++	if (!ret)
++		ret = poulsback_framebuffer_legacy_check(old_fb, NULL);
++	if (ret)
++		return ret;
++
++	/* The replaced buffer stays pinned until its vblank, an outstanding
++	 * flip returns -EBUSY and the event is armed after the store. */
++	return poulsback_display_psb_legacy_flip(crtc, fb, event);
++}
++
++static int gma_crtc_set_config(struct drm_mode_set *set,
++			       struct drm_modeset_acquire_ctx *ctx)
++{
++	int ret;
++
++	if (!set || !set->crtc || !set->crtc->primary)
+ 		return -EINVAL;
+-
+-	/* Using mode_set_base requires the new fb to be set already. */
+-	crtc->primary->fb = fb;
+-
+-	if (event) {
+-		spin_lock_irqsave(&dev->event_lock, flags);
+-
+-		WARN_ON(drm_crtc_vblank_get(crtc) != 0);
+-
+-		gma_crtc->page_flip_event = event;
+-		spin_unlock_irqrestore(&dev->event_lock, flags);
+-
+-		/* Call this locked if we want an event at vblank interrupt. */
+-		ret = crtc_funcs->mode_set_base(crtc, crtc->x, crtc->y, old_fb);
+-		if (ret) {
+-			spin_lock_irqsave(&dev->event_lock, flags);
+-			if (gma_crtc->page_flip_event) {
+-				gma_crtc->page_flip_event = NULL;
+-				drm_crtc_vblank_put(crtc);
+-			}
+-			spin_unlock_irqrestore(&dev->event_lock, flags);
+-		}
+-	} else {
+-		ret = crtc_funcs->mode_set_base(crtc, crtc->x, crtc->y, old_fb);
+-	}
+-
+-	/* Restore previous fb in case of failure. */
++	{
++		bool handled;
++		ret = poulsback_display_psb_set_config(set, &handled);
++		if (handled)
++			return ret;
++	}
++	/* Core helpers may call encoder.prepare before CRTC mode_set. */
++	ret = poulsback_framebuffer_legacy_check(set->fb, set->crtc->primary->fb);
++	if (!ret)
++		ret = poulsback_framebuffer_legacy_check(set->crtc->primary->old_fb, NULL);
+ 	if (ret)
+-		crtc->primary->fb = current_fb;
+-
+-	return ret;
++		return ret;
++	return drm_crtc_helper_set_config(set, ctx);
+ }
+ 
+ const struct drm_crtc_funcs gma_crtc_funcs = {
+ 	.cursor_set = gma_crtc_cursor_set,
+ 	.cursor_move = gma_crtc_cursor_move,
+ 	.gamma_set = gma_crtc_gamma_set,
+-	.set_config = drm_crtc_helper_set_config,
++	.set_config = gma_crtc_set_config,
+ 	.destroy = gma_crtc_destroy,
+ 	.page_flip = gma_crtc_page_flip,
+ 	.enable_vblank = gma_crtc_enable_vblank,
+@@ -622,6 +647,10 @@
+ 	const struct psb_offset *map = &dev_priv->regmap[gma_crtc->pipe];
+ 	uint32_t palette_reg;
+ 	int i;
++
++	if (poulsback_framebuffer_legacy_check(crtc->primary->fb,
++						 crtc->primary->old_fb))
++		return;
+ 
+ 	if (!crtc_state) {
+ 		dev_err(dev->dev, "No crtc state\n");
+--- a/gtt.c
++++ b/gtt.c
+@@ -9,6 +9,7 @@
+ 
+ #include "gem.h" /* TODO: for struct psb_gem_object, see psb_gtt_restore() */
+ #include "psb_drv.h"
++#include <linux/limits.h>
+ 
+ 
+ /*
+@@ -42,6 +43,8 @@
+ 	return 0;
+ }
+ 
++#include "poulsback_display_gtt_reservation.inc"
++
+ /**
+  *	psb_gtt_mask_pte	-	generate GTT pte entry
+  *	@pfn: page number to encode
+@@ -166,23 +169,30 @@
+ 	mutex_destroy(&dev_priv->gtt_mutex);
+ }
+ 
+-/* Clear GTT. Use a scratch page to avoid accidents or scribbles. */
++/* Initial takeover or PM rebuild, before restoring GEM bindings. */
+ static void psb_gtt_clear(struct drm_psb_private *pdev)
+ {
+ 	resource_size_t pfn_base;
+-	unsigned long i;
++	unsigned long i, entries;
+ 	uint32_t pte;
+ 
++	/* One entry backs one aperture page; init_ranges() checked that this
++	 * active extent fits the table mapping. Unused capacity is not owned
++	 * merely because it lies in that mapping.
++	 */
++	entries = pdev->gtt.gatt_pages;
+ 	pfn_base = page_to_pfn(pdev->scratch_page);
+ 	pte = psb_gtt_mask_pte(pfn_base, PSB_MMU_CACHED_MEMORY);
+ 
+-	for (i = 0; i < pdev->gtt.gtt_pages; ++i)
++	mutex_lock(&pdev->gtt_mutex);
++	for (i = 0; i < entries; ++i)
+ 		iowrite32(pte, pdev->gtt_map + i);
+ 
+ 	(void)ioread32(pdev->gtt_map + i - 1);
+-}
+-
+-static void psb_gtt_init_ranges(struct drm_psb_private *dev_priv)
++	mutex_unlock(&pdev->gtt_mutex);
++}
++
++static int psb_gtt_init_ranges(struct drm_psb_private *dev_priv)
+ {
+ 	struct drm_device *dev = &dev_priv->dev;
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+@@ -209,7 +219,7 @@
+ 	if (!gtt_start || !gtt_pages) {
+ 		dev_dbg(dev->dev, "GTT PCI BAR not initialized.\n");
+ 		gtt_pages = 64;
+-		gtt_start = dev_priv->pge_ctl;
++		gtt_start = gtt_phys_start;
+ 	}
+ 
+ 	gatt_start = pci_resource_start(pdev, PSB_GATT_RESOURCE);
+@@ -243,6 +253,15 @@
+ 		gtt_mem = &pdev->resource[PSB_GATT_RESOURCE];
+ 	}
+ 
++	/* The table mapping uses unsigned long bytes and both counts are stored
++	 * as unsigned int. One u32 table entry backs one aperture page.
++	 */
++	if (!gtt_pages || gtt_pages > UINT_MAX ||
++	    gtt_pages > (ULONG_MAX >> PAGE_SHIFT) ||
++	    !gatt_pages || gatt_pages > UINT_MAX ||
++	    gatt_pages > (gtt_pages << PAGE_SHIFT) / sizeof(*dev_priv->gtt_map))
++		return -EINVAL;
++
+ 	pg->gtt_phys_start = gtt_phys_start;
+ 	pg->mmu_gatt_start = mmu_gatt_start;
+ 	pg->gtt_start = gtt_start;
+@@ -250,6 +269,7 @@
+ 	pg->gatt_start = gatt_start;
+ 	pg->gatt_pages = gatt_pages;
+ 	dev_priv->gtt_mem = gtt_mem;
++	return 0;
+ }
+ 
+ int psb_gtt_init(struct drm_device *dev)
+@@ -264,9 +284,12 @@
+ 	if (ret)
+ 		goto err_mutex_destroy;
+ 
+-	psb_gtt_init_ranges(dev_priv);
+-
+-	dev_priv->gtt_map = ioremap(pg->gtt_phys_start, pg->gtt_pages << PAGE_SHIFT);
++	ret = psb_gtt_init_ranges(dev_priv);
++	if (ret)
++		goto err_psb_gtt_disable;
++
++	dev_priv->gtt_map = ioremap(pg->gtt_phys_start,
++				(unsigned long)pg->gtt_pages << PAGE_SHIFT);
+ 	if (!dev_priv->gtt_map) {
+ 		dev_err(dev->dev, "Failure to map gtt.\n");
+ 		ret = -ENOMEM;
+@@ -288,7 +311,8 @@
+ {
+ 	struct drm_psb_private *dev_priv = to_drm_psb_private(dev);
+ 	struct psb_gtt *pg = &dev_priv->gtt;
+-	unsigned int old_gtt_pages = pg->gtt_pages;
++	struct psb_gtt old_gtt = *pg;
++	struct resource *old_gtt_mem = dev_priv->gtt_mem;
+ 	int ret;
+ 
+ 	/* Enable the GTT */
+@@ -296,16 +320,29 @@
+ 	if (ret)
+ 		return ret;
+ 
+-	psb_gtt_init_ranges(dev_priv);
+-
+-	if (old_gtt_pages != pg->gtt_pages) {
++	ret = psb_gtt_init_ranges(dev_priv);
++	if (ret)
++		goto err_restore_ranges;
++
++	/* The caller has selected the saved root before this check. It must
++	 * still match the retained mapping and allocated aperture geometry.
++	 */
++	if (old_gtt.gtt_pages != pg->gtt_pages ||
++	    old_gtt.gtt_phys_start != pg->gtt_phys_start ||
++	    old_gtt.gtt_start != pg->gtt_start ||
++	    old_gtt.gatt_start != pg->gatt_start ||
++	    old_gtt.gatt_pages != pg->gatt_pages) {
+ 		dev_err(dev->dev, "GTT resume error.\n");
+ 		ret = -ENODEV;
+-		goto err_psb_gtt_disable;
++		goto err_restore_ranges;
+ 	}
+ 
+ 	psb_gtt_clear(dev_priv);
+-
++	goto err_psb_gtt_disable;
++
++err_restore_ranges:
++	*pg = old_gtt;
++	dev_priv->gtt_mem = old_gtt_mem;
+ err_psb_gtt_disable:
+ 	psb_gtt_disable(dev_priv);
+ 	return ret;
+--- a/mmu.c
++++ b/mmu.c
+@@ -9,6 +9,7 @@
+ #include "mmu.h"
+ #include "psb_drv.h"
+ #include "psb_reg.h"
++#include "sgx535_source_epoch.h"
+ 
+ /*
+  * Code for the SGX MMU:
+@@ -91,7 +92,7 @@
+ }
+ #endif
+ 
+-void psb_mmu_flush(struct psb_mmu_driver *driver)
++static void psb_mmu_flush_unguarded(struct psb_mmu_driver *driver)
+ {
+ 	struct drm_device *dev = driver->dev;
+ 	struct drm_psb_private *dev_priv = to_drm_psb_private(dev);
+@@ -99,10 +100,8 @@
+ 
+ 	down_write(&driver->sem);
+ 	val = PSB_RSGX32(PSB_CR_BIF_CTRL);
+-	if (atomic_read(&driver->needs_tlbflush))
+-		PSB_WSGX32(val | _PSB_CB_CTRL_INVALDC, PSB_CR_BIF_CTRL);
+-	else
+-		PSB_WSGX32(val | _PSB_CB_CTRL_FLUSH, PSB_CR_BIF_CTRL);
++	/* SGX535 core 1.2.1: invalidate the directory cache, never FLUSH. */
++	PSB_WSGX32(val | _PSB_CB_CTRL_INVALDC, PSB_CR_BIF_CTRL);
+ 
+ 	/* Make sure data cache is turned off and MMU is flushed before
+ 	   restoring bank interface control register */
+@@ -117,7 +116,7 @@
+ 	up_write(&driver->sem);
+ }
+ 
+-void psb_mmu_set_pd_context(struct psb_mmu_pd *pd, int hw_context)
++static void psb_mmu_set_pd_context_unguarded(struct psb_mmu_pd *pd, int hw_context)
+ {
+ 	struct drm_device *dev = pd->driver->dev;
+ 	struct drm_psb_private *dev_priv = to_drm_psb_private(dev);
+@@ -226,7 +225,7 @@
+ 	kfree(pt);
+ }
+ 
+-void psb_mmu_free_pagedir(struct psb_mmu_pd *pd)
++static void psb_mmu_free_pagedir_unguarded(struct psb_mmu_pd *pd)
+ {
+ 	struct psb_mmu_driver *driver = pd->driver;
+ 	struct drm_device *dev = driver->dev;
+@@ -406,7 +405,7 @@
+ 	return pd;
+ }
+ 
+-void psb_mmu_driver_takedown(struct psb_mmu_driver *driver)
++static void psb_mmu_driver_takedown_unguarded(struct psb_mmu_driver *driver)
+ {
+ 	struct drm_device *dev = driver->dev;
+ 	struct drm_psb_private *dev_priv = to_drm_psb_private(dev);
+@@ -416,7 +415,7 @@
+ 	kfree(driver);
+ }
+ 
+-struct psb_mmu_driver *psb_mmu_driver_init(struct drm_device *dev,
++static struct psb_mmu_driver *psb_mmu_driver_init_unguarded(struct drm_device *dev,
+ 					   int trap_pagefaults,
+ 					   int invalid_type,
+ 					   atomic_t *msvdx_mmu_invaldc)
+@@ -522,214 +521,6 @@
+ 	mb();
+ }
+ 
+-void psb_mmu_remove_pfn_sequence(struct psb_mmu_pd *pd,
+-				 unsigned long address, uint32_t num_pages)
+-{
+-	struct psb_mmu_pt *pt;
+-	unsigned long addr;
+-	unsigned long end;
+-	unsigned long next;
+-	unsigned long f_address = address;
+-
+-	down_read(&pd->driver->sem);
+-
+-	addr = address;
+-	end = addr + (num_pages << PAGE_SHIFT);
+-
+-	do {
+-		next = psb_pd_addr_end(addr, end);
+-		pt = psb_mmu_pt_alloc_map_lock(pd, addr);
+-		if (!pt)
+-			goto out;
+-		do {
+-			psb_mmu_invalidate_pte(pt, addr);
+-			--pt->count;
+-		} while (addr += PAGE_SIZE, addr < next);
+-		psb_mmu_pt_unmap_unlock(pt);
+-
+-	} while (addr = next, next != end);
+-
+-out:
+-	if (pd->hw_context != -1)
+-		psb_mmu_flush_ptes(pd, f_address, num_pages, 1, 1);
+-
+-	up_read(&pd->driver->sem);
+-
+-	if (pd->hw_context != -1)
+-		psb_mmu_flush(pd->driver);
+-
+-	return;
+-}
+-
+-void psb_mmu_remove_pages(struct psb_mmu_pd *pd, unsigned long address,
+-			  uint32_t num_pages, uint32_t desired_tile_stride,
+-			  uint32_t hw_tile_stride)
+-{
+-	struct psb_mmu_pt *pt;
+-	uint32_t rows = 1;
+-	uint32_t i;
+-	unsigned long addr;
+-	unsigned long end;
+-	unsigned long next;
+-	unsigned long add;
+-	unsigned long row_add;
+-	unsigned long f_address = address;
+-
+-	if (hw_tile_stride)
+-		rows = num_pages / desired_tile_stride;
+-	else
+-		desired_tile_stride = num_pages;
+-
+-	add = desired_tile_stride << PAGE_SHIFT;
+-	row_add = hw_tile_stride << PAGE_SHIFT;
+-
+-	down_read(&pd->driver->sem);
+-
+-	/* Make sure we only need to flush this processor's cache */
+-
+-	for (i = 0; i < rows; ++i) {
+-
+-		addr = address;
+-		end = addr + add;
+-
+-		do {
+-			next = psb_pd_addr_end(addr, end);
+-			pt = psb_mmu_pt_map_lock(pd, addr);
+-			if (!pt)
+-				continue;
+-			do {
+-				psb_mmu_invalidate_pte(pt, addr);
+-				--pt->count;
+-
+-			} while (addr += PAGE_SIZE, addr < next);
+-			psb_mmu_pt_unmap_unlock(pt);
+-
+-		} while (addr = next, next != end);
+-		address += row_add;
+-	}
+-	if (pd->hw_context != -1)
+-		psb_mmu_flush_ptes(pd, f_address, num_pages,
+-				   desired_tile_stride, hw_tile_stride);
+-
+-	up_read(&pd->driver->sem);
+-
+-	if (pd->hw_context != -1)
+-		psb_mmu_flush(pd->driver);
+-}
+-
+-int psb_mmu_insert_pfn_sequence(struct psb_mmu_pd *pd, uint32_t start_pfn,
+-				unsigned long address, uint32_t num_pages,
+-				int type)
+-{
+-	struct psb_mmu_pt *pt;
+-	uint32_t pte;
+-	unsigned long addr;
+-	unsigned long end;
+-	unsigned long next;
+-	unsigned long f_address = address;
+-	int ret = -ENOMEM;
+-
+-	down_read(&pd->driver->sem);
+-
+-	addr = address;
+-	end = addr + (num_pages << PAGE_SHIFT);
+-
+-	do {
+-		next = psb_pd_addr_end(addr, end);
+-		pt = psb_mmu_pt_alloc_map_lock(pd, addr);
+-		if (!pt) {
+-			ret = -ENOMEM;
+-			goto out;
+-		}
+-		do {
+-			pte = psb_mmu_mask_pte(start_pfn++, type);
+-			psb_mmu_set_pte(pt, addr, pte);
+-			pt->count++;
+-		} while (addr += PAGE_SIZE, addr < next);
+-		psb_mmu_pt_unmap_unlock(pt);
+-
+-	} while (addr = next, next != end);
+-	ret = 0;
+-
+-out:
+-	if (pd->hw_context != -1)
+-		psb_mmu_flush_ptes(pd, f_address, num_pages, 1, 1);
+-
+-	up_read(&pd->driver->sem);
+-
+-	if (pd->hw_context != -1)
+-		psb_mmu_flush(pd->driver);
+-
+-	return ret;
+-}
+-
+-int psb_mmu_insert_pages(struct psb_mmu_pd *pd, struct page **pages,
+-			 unsigned long address, uint32_t num_pages,
+-			 uint32_t desired_tile_stride, uint32_t hw_tile_stride,
+-			 int type)
+-{
+-	struct psb_mmu_pt *pt;
+-	uint32_t rows = 1;
+-	uint32_t i;
+-	uint32_t pte;
+-	unsigned long addr;
+-	unsigned long end;
+-	unsigned long next;
+-	unsigned long add;
+-	unsigned long row_add;
+-	unsigned long f_address = address;
+-	int ret = -ENOMEM;
+-
+-	if (hw_tile_stride) {
+-		if (num_pages % desired_tile_stride != 0)
+-			return -EINVAL;
+-		rows = num_pages / desired_tile_stride;
+-	} else {
+-		desired_tile_stride = num_pages;
+-	}
+-
+-	add = desired_tile_stride << PAGE_SHIFT;
+-	row_add = hw_tile_stride << PAGE_SHIFT;
+-
+-	down_read(&pd->driver->sem);
+-
+-	for (i = 0; i < rows; ++i) {
+-
+-		addr = address;
+-		end = addr + add;
+-
+-		do {
+-			next = psb_pd_addr_end(addr, end);
+-			pt = psb_mmu_pt_alloc_map_lock(pd, addr);
+-			if (!pt)
+-				goto out;
+-			do {
+-				pte = psb_mmu_mask_pte(page_to_pfn(*pages++),
+-						       type);
+-				psb_mmu_set_pte(pt, addr, pte);
+-				pt->count++;
+-			} while (addr += PAGE_SIZE, addr < next);
+-			psb_mmu_pt_unmap_unlock(pt);
+-
+-		} while (addr = next, next != end);
+-
+-		address += row_add;
+-	}
+-
+-	ret = 0;
+-out:
+-	if (pd->hw_context != -1)
+-		psb_mmu_flush_ptes(pd, f_address, num_pages,
+-				   desired_tile_stride, hw_tile_stride);
+-
+-	up_read(&pd->driver->sem);
+-
+-	if (pd->hw_context != -1)
+-		psb_mmu_flush(pd->driver);
+-
+-	return ret;
+-}
+-
+ int psb_mmu_virtual_to_pfn(struct psb_mmu_pd *pd, uint32_t virtual,
+ 			   unsigned long *pfn)
+ {
+@@ -770,3 +561,5 @@
+ 	up_read(&pd->driver->sem);
+ 	return ret;
+ }
++
++#include "poulsback_foreign_mmu.inc"
+--- a/mmu.h
++++ b/mmu.h
+@@ -64,23 +64,8 @@
+ 					   int invalid_type);
+ extern void psb_mmu_free_pagedir(struct psb_mmu_pd *pd);
+ extern void psb_mmu_flush(struct psb_mmu_driver *driver);
+-extern void psb_mmu_remove_pfn_sequence(struct psb_mmu_pd *pd,
+-					unsigned long address,
+-					uint32_t num_pages);
+-extern int psb_mmu_insert_pfn_sequence(struct psb_mmu_pd *pd,
+-				       uint32_t start_pfn,
+-				       unsigned long address,
+-				       uint32_t num_pages, int type);
+ extern int psb_mmu_virtual_to_pfn(struct psb_mmu_pd *pd, uint32_t virtual,
+ 				  unsigned long *pfn);
+ extern void psb_mmu_set_pd_context(struct psb_mmu_pd *pd, int hw_context);
+-extern int psb_mmu_insert_pages(struct psb_mmu_pd *pd, struct page **pages,
+-				unsigned long address, uint32_t num_pages,
+-				uint32_t desired_tile_stride,
+-				uint32_t hw_tile_stride, int type);
+-extern void psb_mmu_remove_pages(struct psb_mmu_pd *pd,
+-				 unsigned long address, uint32_t num_pages,
+-				 uint32_t desired_tile_stride,
+-				 uint32_t hw_tile_stride);
+ 
+ #endif
+--- a/power.c
++++ b/power.c
+@@ -30,6 +30,8 @@
+ 
+ #include "gem.h"
+ #include "power.h"
++#include "sgx535_source_epoch.h"
++#include "poulsback_display_psb_source.h"
+ #include "psb_drv.h"
+ #include "psb_reg.h"
+ #include "psb_intel_reg.h"
+@@ -107,10 +109,11 @@
+  *	Resume the display hardware restoring state and enabling
+  *	as necessary.
+  */
+-static void gma_resume_display(struct pci_dev *pdev)
++static int gma_resume_display(struct pci_dev *pdev)
+ {
+ 	struct drm_device *dev = pci_get_drvdata(pdev);
+ 	struct drm_psb_private *dev_priv = to_drm_psb_private(dev);
++	int ret;
+ 
+ 	/* turn on the display power island */
+ 	dev_priv->ops->power_up(dev);
+@@ -120,9 +123,13 @@
+ 			dev_priv->gmch_ctrl | _PSB_GMCH_ENABLED);
+ 
+ 	/* Rebuild our GTT mappings */
+-	psb_gtt_resume(dev);
+-	psb_gem_mm_resume(dev);
+-	dev_priv->ops->restore_regs(dev);
++	ret = psb_gtt_resume(dev);
++	if (ret)
++		return ret;
++	ret = psb_gem_mm_resume(dev);
++	if (ret)
++		return ret;
++	return dev_priv->ops->restore_regs(dev);
+ }
+ 
+ /**
+@@ -180,6 +187,14 @@
+ 	struct pci_dev *pdev = to_pci_dev(_dev);
+ 	struct drm_device *dev = pci_get_drvdata(pdev);
+ 
++	if (poulsback_display_psb_source_retained(dev))
++		return -EBUSY;
++	if (psb_gem_retained(dev) || sgx535_epoch_pm_begin(dev))
++		return -EBUSY;
++	/* pm_begin closed the source: a display owner published before that
++	 * stays rooted, and power/IRQ teardown must refuse. */
++	if (poulsback_display_psb_source_retained(dev))
++		return -EBUSY;
+ 	gma_irq_uninstall(dev);
+ 	gma_suspend_display(dev);
+ 	gma_suspend_pci(pdev);
+@@ -197,10 +212,23 @@
+ 	struct pci_dev *pdev = to_pci_dev(_dev);
+ 	struct drm_device *dev = pci_get_drvdata(pdev);
+ 
+-	gma_resume_pci(pdev);
+-	gma_resume_display(pdev);
+-	gma_irq_install(dev);
+-	return 0;
++	int ret;
++
++	if (poulsback_display_psb_source_retained(dev))
++		return -EBUSY;
++	if (psb_gem_retained(dev) || sgx535_epoch_pm_begin(dev))
++		return -EBUSY;
++	/* pm_begin closed the source: a display owner published before that
++	 * stays rooted, and power/IRQ teardown must refuse. */
++	if (poulsback_display_psb_source_retained(dev))
++		return -EBUSY;
++	ret = gma_resume_pci(pdev);
++	if (ret)
++		return ret;
++	ret = gma_resume_display(pdev);
++	if (ret)
++		return ret;
++	return gma_irq_install(dev);
+ }
+ 
+ /**
+--- a/psb_drv.c
++++ b/psb_drv.c
+@@ -33,9 +33,19 @@
+ #include "mid_bios.h"
+ #include "power.h"
+ #include "psb_drv.h"
++#include "sgx535_source_epoch.h"
++#include "sgx535_debug.h"
++#include "poulsback_bo.h"
++#include "poulsback_bo_uapi.h"
++#include "poulsback_engine.h"
++#include "poulsback_file.h"
++#include "poulsback_exec_uapi.h"
++#include "poulsback_display_psb_source.h"
++#include <drm/drm_prime.h>
+ #include "psb_intel_reg.h"
+ #include "psb_irq.h"
+ #include "psb_reg.h"
++#include "poulsback_sgx_root_boot.inc"
+ 
+ static const struct drm_driver driver;
+ static int psb_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent);
+@@ -92,6 +102,13 @@
+  * Standard IOCTLs.
+  */
+ static const struct drm_ioctl_desc psb_ioctls[] = {
++	DRM_IOCTL_DEF_DRV(PB_BO_CREATE, poulsback_bo_create_ioctl, DRM_RENDER_ALLOW),
++	DRM_IOCTL_DEF_DRV(PB_BO_INFO, poulsback_bo_info_ioctl, DRM_RENDER_ALLOW),
++	DRM_IOCTL_DEF_DRV(PB_CONTEXT_CREATE, poulsback_context_create_ioctl, DRM_RENDER_ALLOW),
++	DRM_IOCTL_DEF_DRV(PB_CONTEXT_DESTROY, poulsback_context_destroy_ioctl, DRM_RENDER_ALLOW),
++	DRM_IOCTL_DEF_DRV(PB_SUBMIT, poulsback_submit_ioctl, DRM_RENDER_ALLOW),
++	DRM_IOCTL_DEF_DRV(PB_DISPLAY_INFO, poulsback_display_info_ioctl, DRM_RENDER_ALLOW),
++	DRM_IOCTL_DEF_DRV(PB_SUBMIT_2D, poulsback_submit_2d_ioctl, DRM_RENDER_ALLOW),
+ };
+ 
+ /**
+@@ -102,11 +119,12 @@
+  */
+ static void psb_spank(struct drm_psb_private *dev_priv)
+ {
++	sgx535_epoch_lost(&dev_priv->dev, SGX535_EPOCH_RESET);
+ 	PSB_WSGX32(_PSB_CS_RESET_BIF_RESET | _PSB_CS_RESET_DPM_RESET |
+ 		_PSB_CS_RESET_TA_RESET | _PSB_CS_RESET_USE_RESET |
+ 		_PSB_CS_RESET_ISP_RESET | _PSB_CS_RESET_TSP_RESET |
+ 		_PSB_CS_RESET_TWOD_RESET, PSB_CR_SOFT_RESET);
+-	PSB_RSGX32(PSB_CR_SOFT_RESET);
++	(void)PSB_RSGX32(PSB_CR_SOFT_RESET);
+ 
+ 	msleep(1);
+ 
+@@ -159,21 +177,40 @@
+ 	/* mmu_gatt ?? */
+ 	PSB_WSGX32(pg->gatt_start, PSB_CR_BIF_TWOD_REQ_BASE);
+ 	PSB_RSGX32(PSB_CR_BIF_TWOD_REQ_BASE); /* Post */
+-
+-	return 0;
++	return sgx535_epoch_bind(dev);
+ }
+ 
+ static void psb_driver_unload(struct drm_device *dev)
+ {
+ 	struct drm_psb_private *dev_priv = to_drm_psb_private(dev);
+ 
+-	/* TODO: Kill vblank etc here */
++	/* First, including out_err and devm_add_action_or_reset's reset callback.
++	 * The engine's claim requires a complete teardown before unload. */
++	if (poulsback_engine_retained(dev))
++		return;
++	if (sgx535_epoch_close(dev))
++		return; /* Keep a busy engine on HOLD. */
++
++	/* HOLD is an intentional diagnostic retention until reboot, not recovery. */
++	if (psb_gem_retained(dev))
++		return;
++
++	/* Close registration before inspecting roots. DRM refs retain managed
++	 * CRTC/private storage; this guard retains manual GTT/MMIO/power too. */
++	if (poulsback_display_psb_source_retained(dev))
++		return;
++	/* Before private MMIO/CRTC teardown, quiesce poll/vblank and drain IRQ. */
++	if (dev->mode_config.num_crtc) {
++		struct drm_crtc *crtc;
++		drm_kms_helper_poll_disable(dev);
++		drm_for_each_crtc(crtc, dev)
++			drm_crtc_vblank_off(crtc);
++	}
++	gma_irq_uninstall(dev);
+ 
+ 	gma_backlight_exit(dev);
+ 	psb_modeset_cleanup(dev);
+ 
+-	gma_irq_uninstall(dev);
+-
+ 	if (dev_priv->ops->chip_teardown)
+ 		dev_priv->ops->chip_teardown(dev);
+ 
+@@ -184,13 +221,6 @@
+ 		dev_priv->pf_pd = NULL;
+ 	}
+ 	if (dev_priv->mmu) {
+-		struct psb_gtt *pg = &dev_priv->gtt;
+-
+-		psb_mmu_remove_pfn_sequence(
+-			psb_mmu_get_default_pd
+-			(dev_priv->mmu),
+-			pg->mmu_gatt_start,
+-			dev_priv->vram_stolen_size >> PAGE_SHIFT);
+ 		psb_mmu_driver_takedown(dev_priv->mmu);
+ 		dev_priv->mmu = NULL;
+ 	}
+@@ -238,15 +268,12 @@
+ 	struct drm_connector_list_iter conn_iter;
+ 	struct drm_connector *connector;
+ 	struct gma_encoder *gma_encoder;
+-	struct psb_gtt *pg;
+ 	int ret = -ENOMEM;
+ 
+ 	/* initializing driver private data */
+ 
+ 	dev_priv->ops = (struct psb_ops *)flags;
+ 
+-	pg = &dev_priv->gtt;
+-
+ 	pci_set_master(pdev);
+ 
+ 	dev_priv->num_pipe = dev_priv->ops->pipes;
+@@ -347,13 +374,13 @@
+ 
+ 	ret = psb_do_init(dev);
+ 	if (ret)
+-		return ret;
++		goto out_err;
+ 
+-	/* Add stolen memory to SGX MMU */
+-	ret = psb_mmu_insert_pfn_sequence(psb_mmu_get_default_pd(dev_priv->mmu),
+-					  dev_priv->stolen_base >> PAGE_SHIFT,
+-					  pg->gatt_start,
+-					  pg->stolen_size >> PAGE_SHIFT, 0);
++	/* Display GTT was populated independently by psb_gem_mm_init(); SGX
++	 * context0 stays empty from allocation (no stolen-memory alias). */
++	ret = poulsback_sgx_root_boot_admit(dev);
++	if (ret)
++		goto out_err;
+ 
+ 	psb_mmu_set_pd_context(psb_mmu_get_default_pd(dev_priv->mmu), 0);
+ 	psb_mmu_set_pd_context(dev_priv->pf_pd, 1);
+@@ -382,7 +409,9 @@
+ 	PSB_WVDC32(0xFFFFFFFF, PSB_INT_MASK_R);
+ 	spin_unlock_irqrestore(&dev_priv->irqmask_lock, irqflags);
+ 
+-	gma_irq_install(dev);
++	ret = gma_irq_install(dev);
++	if (ret)
++		goto out_err;
+ 
+ 	dev->max_vblank_count = 0xffffff; /* only 24 bits of frame count */
+ 
+@@ -406,7 +435,7 @@
+ 	drm_connector_list_iter_end(&conn_iter);
+ 
+ 	if (ret)
+-		return ret;
++		goto out_err;
+ 	psb_intel_opregion_enable_asle(dev);
+ 
+ 	return devm_add_action_or_reset(dev->dev, psb_device_release, dev);
+@@ -457,6 +486,8 @@
+ 	if (ret)
+ 		return ret;
+ 
++	drm_info(dev, "%s (poulsback)\n", dev_priv->ops->name);
++
+ 	return 0;
+ }
+ 
+@@ -464,7 +495,12 @@
+ {
+ 	struct drm_device *dev = pci_get_drvdata(pdev);
+ 
+-	drm_dev_unregister(dev);
++	(void)sgx535_epoch_quiesce(dev, SGX535_EPOCH_REMOVE);
++	/* Retained owners (HOLD, the executor's claim, a display source) keep
++	 * PD/PT/cache/MMIO and module/device refs; unload decides. Unplug drains
++	 * any physical operation SRCU without source/engine locks. No callback
++	 * may resume after it. */
++	drm_dev_unplug(dev);
+ }
+ 
+ static DEFINE_RUNTIME_DEV_PM_OPS(psb_pm_ops, gma_power_suspend, gma_power_resume, NULL);
+@@ -481,7 +517,15 @@
+ };
+ 
+ static const struct drm_driver driver = {
+-	.driver_features = DRIVER_MODESET | DRIVER_GEM,
++	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_SYNCOBJ | DRIVER_RENDER,
++	.open = poulsback_file_open,
++	.postclose = poulsback_file_close,
++	.debugfs_init = poulsback_display_debugfs_init,
++	/* BOs export and import through DRM's helpers; other objects refuse. */
++	.prime_handle_to_fd = poulsback_prime_handle_to_fd,
++	.prime_fd_to_handle = poulsback_prime_fd_to_handle,
++	.gem_prime_import = poulsback_prime_import,
++	.gem_prime_mmap = drm_gem_prime_mmap,
+ 	.lastclose = drm_fb_helper_lastclose,
+ 
+ 	.num_ioctls = ARRAY_SIZE(psb_ioctls),
+@@ -503,19 +547,29 @@
+ 	.probe = psb_pci_probe,
+ 	.remove = psb_pci_remove,
+ 	.driver.pm = &psb_pm_ops,
++	/* The claimed SGX has no ordinary unbind/rebind contract. */
++	.driver.suppress_bind_attrs = true,
+ };
+ 
+ static int __init psb_init(void)
+ {
++	int ret;
+ 	if (drm_firmware_drivers_only())
+ 		return -ENODEV;
+ 
+-	return pci_register_driver(&psb_pci_driver);
++	ret = sgx535_diag_start();
++	if (ret)
++		return ret;
++	ret = pci_register_driver(&psb_pci_driver);
++	if (ret)
++		sgx535_diag_stop();
++	return ret;
+ }
+ 
+ static void __exit psb_exit(void)
+ {
+ 	pci_unregister_driver(&psb_pci_driver);
++	sgx535_diag_stop();
+ }
+ 
+ late_initcall(psb_init);
+--- a/psb_drv.h
++++ b/psb_drv.h
+@@ -19,14 +19,15 @@
+ #include "oaktrail.h"
+ #include "opregion.h"
+ #include "power.h"
++#include "poulsback_display_psb_source.h"
+ #include "psb_intel_drv.h"
+ #include "psb_reg.h"
+ 
+ #define DRIVER_AUTHOR "Alan Cox <alan@linux.intel.com> and others"
+ 
+-#define DRIVER_NAME "gma500"
+-#define DRIVER_DESC "DRM driver for the Intel GMA500, GMA600, GMA3600, GMA3650"
+-#define DRIVER_DATE "20140314"
++#define DRIVER_NAME "poulsback"
++#define DRIVER_DESC "DRM driver for the Intel GMA500, GMA600, GMA3600, GMA3650 (poulsback)"
++#define DRIVER_DATE "20260201"
+ 
+ #define DRIVER_MAJOR 1
+ #define DRIVER_MINOR 0
+@@ -436,6 +437,10 @@
+ 	bool modeset;	/* true if we have done the mode_device setup */
+ 
+ 	struct drm_crtc *plane_to_crtc_mapping[PSB_NUM_PIPE];
++	/* Bounded roots for the existing static PSB source owners. */
++	struct poulsback_display_psb_source *poulsback_display_sources[2];
++	struct psb_static_owner *poulsback_display_static_owners[2];
++	struct poulsback_display_flips poulsback_display_flips;
+ 	struct drm_crtc *pipe_to_crtc_mapping[PSB_NUM_PIPE];
+ 	uint32_t num_pipe;
+ 
+--- a/psb_intel_display.c
++++ b/psb_intel_display.c
+@@ -15,6 +15,7 @@
+ #include "power.h"
+ #include "psb_drv.h"
+ #include "psb_intel_drv.h"
++#include "poulsback_framebuffer.h"
+ #include "psb_intel_reg.h"
+ 
+ #define INTEL_LIMIT_I9XX_SDVO_DAC   0
+@@ -87,6 +88,15 @@
+ 	return 1;
+ }
+ 
++static bool psb_intel_crtc_mode_fixup(struct drm_crtc *crtc,
++				     const struct drm_display_mode *mode,
++				     struct drm_display_mode *adjusted_mode)
++{
++	/* Internal set_mode callers bypass the public set_config boundary. */
++	return !poulsback_framebuffer_legacy_check(crtc->primary->fb,
++						 crtc->primary->old_fb);
++}
++
+ static int psb_intel_crtc_mode_set(struct drm_crtc *crtc,
+ 			       struct drm_display_mode *mode,
+ 			       struct drm_display_mode *adjusted_mode,
+@@ -99,7 +109,7 @@
+ 	const struct drm_crtc_helper_funcs *crtc_funcs = crtc->helper_private;
+ 	int pipe = gma_crtc->pipe;
+ 	const struct psb_offset *map = &dev_priv->regmap[pipe];
+-	int refclk;
++	int refclk, ret;
+ 	struct gma_clock_t clock;
+ 	u32 dpll = 0, fp = 0, dspcntr, pipeconf;
+ 	bool ok, is_sdvo = false;
+@@ -107,6 +117,10 @@
+ 	struct drm_connector_list_iter conn_iter;
+ 	struct drm_connector *connector;
+ 	const struct gma_limit_t *limit;
++
++	ret = poulsback_framebuffer_legacy_check(crtc->primary->fb, old_fb);
++	if (ret)
++		return ret;
+ 
+ 	/* No scan out no play */
+ 	if (crtc->primary->fb == NULL) {
+@@ -422,6 +436,7 @@
+ 
+ const struct drm_crtc_helper_funcs psb_intel_helper_funcs = {
+ 	.dpms = gma_crtc_dpms,
++	.mode_fixup = psb_intel_crtc_mode_fixup,
+ 	.mode_set = psb_intel_crtc_mode_set,
+ 	.mode_set_base = gma_pipe_set_base,
+ 	.prepare = gma_crtc_prepare,
+--- a/psb_irq.c
++++ b/psb_irq.c
+@@ -15,6 +15,9 @@
+ #include "psb_drv.h"
+ #include "psb_intel_reg.h"
+ #include "psb_irq.h"
++#include "poulsback_display_psb_source.h"
++#include "poulsback_display_vblank.h"
++#include "sgx535_engine_irq.h"
+ #include "psb_reg.h"
+ 
+ /*
+@@ -128,6 +131,7 @@
+ 		unsigned long flags;
+ 
+ 		drm_handle_vblank(dev, pipe);
++		poulsback_display_psb_vblank(dev, pipe);
+ 
+ 		spin_lock_irqsave(&dev->event_lock, flags);
+ 		if (gma_crtc->page_flip_event) {
+@@ -211,6 +215,8 @@
+ 	struct drm_psb_private *dev_priv = to_drm_psb_private(dev);
+ 	uint32_t vdc_stat, dsp_int = 0, sgx_int = 0, hotplug_int = 0;
+ 	u32 sgx_stat_1, sgx_stat_2;
++	unsigned long fixed_flags;
++	enum sgx535_engine_irq_route fixed_route;
+ 	int handled = 0;
+ 
+ 	spin_lock(&dev_priv->irqmask_lock);
+@@ -234,9 +240,15 @@
+ 	}
+ 
+ 	if (sgx_int) {
++		fixed_flags = sgx535_engine_irq_lock();
+ 		sgx_stat_1 = PSB_RSGX32(PSB_CR_EVENT_STATUS);
+ 		sgx_stat_2 = PSB_RSGX32(PSB_CR_EVENT_STATUS2);
+-		gma_sgx_interrupt(dev, sgx_stat_1, sgx_stat_2);
++		fixed_route = sgx535_engine_irq_route_locked(dev, sgx_stat_1, sgx_stat_2);
++		if (fixed_route != SGX535_ENGINE_IRQ_POLL_OWNER) {
++			sgx535_engine_irq_capture_locked(dev, sgx_stat_1, sgx_stat_2);
++			gma_sgx_interrupt(dev, sgx_stat_1, sgx_stat_2);
++		}
++		sgx535_engine_irq_unlock(fixed_flags);
+ 		handled = 1;
+ 	}
+ 
+@@ -365,9 +377,9 @@
+ 			gma_disable_pipestat(dev_priv, i, PIPE_VBLANK_INTERRUPT_ENABLE);
+ 	}
+ 
+-	dev_priv->vdc_irq_mask &= _PSB_IRQ_SGX_FLAG |
+-				  _PSB_IRQ_MSVDX_FLAG |
+-				  _LNC_IRQ_TOPAZ_FLAG;
++	/* A registered IRQ is being removed: disable every source before
++	 * free_irq synchronizes with handlers and private MMIO is freed. */
++	dev_priv->vdc_irq_mask = 0;
+ 
+ 	/* These two registers are safe even if display island is off */
+ 	PSB_WVDC32(~dev_priv->vdc_irq_mask, PSB_INT_MASK_R);
+@@ -380,6 +392,7 @@
+ 	spin_unlock_irqrestore(&dev_priv->irqmask_lock, irqflags);
+ 
+ 	free_irq(pdev->irq, dev);
++	dev_priv->irq_enabled = false;
+ 	if (dev_priv->use_msi)
+ 		pci_disable_msi(pdev);
+ }
+@@ -445,6 +458,7 @@
+ {
+ 	struct drm_device *dev = crtc->dev;
+ 	unsigned int pipe = crtc->index;
++	const struct psb_offset *map = &to_drm_psb_private(dev)->regmap[pipe];
+ 	uint32_t high_frame = PIPEAFRAMEHIGH;
+ 	uint32_t low_frame = PIPEAFRAMEPIXEL;
+ 	uint32_t pipeconf_reg = PIPEACONF;
+@@ -488,13 +502,16 @@
+ 	do {
+ 		high1 = ((REG_READ(high_frame) & PIPE_FRAME_HIGH_MASK) >>
+ 			 PIPE_FRAME_HIGH_SHIFT);
+-		low =  ((REG_READ(low_frame) & PIPE_FRAME_LOW_MASK) >>
+-			PIPE_FRAME_LOW_SHIFT);
++		low = REG_READ(low_frame);
+ 		high2 = ((REG_READ(high_frame) & PIPE_FRAME_HIGH_MASK) >>
+ 			 PIPE_FRAME_HIGH_SHIFT);
+ 	} while (high1 != high2);
+ 
+-	count = (high1 << 8) | low;
++	/* Count vblank starts, as the vblank interrupt sees them: the raw
++	 * frame counter increments at the start of active (HW-DISP-004). */
++	count = poulsback_display_vblank_count(
++		(high1 << 8) | (low & PIPE_FRAME_LOW_MASK) >> PIPE_FRAME_LOW_SHIFT,
++		low & PIPE_PIXEL_MASK, REG_READ(map->htotal), REG_READ(map->vblank));
+ 
+ err_gma_power_end:
+ 	gma_power_end(dev);

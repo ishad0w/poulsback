@@ -1,0 +1,498 @@
+{
+  "artifacts": {
+    "mesa": {
+      "bytes": 68613948,
+      "filename": "mesa-26.2.4.tar.xz",
+      "sha256": "bce5f7fbebb934373b86c999a064d52fb5065878dc57f287f95346648ec832e9",
+      "url": "https://archive.mesa3d.org/mesa-26.2.4.tar.xz"
+    },
+    "mesa-demos": {
+      "bytes": 12032382,
+      "filename": "mesa-demos_8.5.0.orig.tar.gz",
+      "sha256": "2472818cea452a34229d03084e7c81f94267d14a39c5287379de0fb1dc02caab",
+      "url": "https://deb.debian.org/debian/pool/main/m/mesa-demos/mesa-demos_8.5.0.orig.tar.gz"
+    },
+    "xorg": {
+      "bytes": 8922821,
+      "filename": "xorg-server_21.1.7.orig.tar.gz",
+      "sha256": "1a9005f47c7ea83645a977581324439628a32c4426303e5a4b9c2d6615becfbf",
+      "url": "https://deb.debian.org/debian/pool/main/x/xorg-server/xorg-server_21.1.7.orig.tar.gz"
+    },
+    "xorg-diff": {
+      "bytes": 221532,
+      "filename": "xorg-server_21.1.7-3+deb12u13.diff.gz",
+      "sha256": "2e2402de559cf20e3ba8c9f4e400b215749f29829adf291132d6e8f066b8a75e",
+      "url": "https://security.debian.org/debian-security/pool/updates/main/x/xorg-server/xorg-server_21.1.7-3+deb12u13.diff.gz"
+    },
+    "xorg-dsc": {
+      "bytes": 4013,
+      "filename": "xorg-server_21.1.7-3+deb12u13.dsc",
+      "sha256": "dbe8017d4ec9c987c0c7ab6f192bce6f9c13a70f2854431eca6890cb41c1a244",
+      "url": "https://security.debian.org/debian-security/pool/updates/main/x/xorg-server/xorg-server_21.1.7-3+deb12u13.dsc"
+    }
+  },
+  "corpus_files": {
+    "mesa-26.2.4/VERSION": {
+      "bytes": 7,
+      "sha256": "6fdb5e1a17496d2a90f08d87bf219fa0cbe025d0b95962ed326788c76ebbc947"
+    },
+    "mesa-26.2.4/meson.build": {
+      "bytes": 92704,
+      "sha256": "2ef3a9d67e66903f12b030203e5160c1a40ac5deae9073409ec105451ef43785"
+    },
+    "mesa-26.2.4/meson.options": {
+      "bytes": 22449,
+      "sha256": "594059789faf5e0e58aa30b60967f66975a421484d45c6a59c54b234f5ded06c"
+    },
+    "mesa-26.2.4/src/compiler/glsl/meson.build": {
+      "bytes": 7108,
+      "sha256": "fd229ed862eb8145fcfb16386c9d1471fd197f27515b3c47bd5a189d8f455269"
+    },
+    "mesa-26.2.4/src/compiler/glsl/standalone.cpp": {
+      "bytes": 17796,
+      "sha256": "23e3f7aa805f2d13b0ca77afd169277d31bde3f9e7ef9bbb13bceadbbe3f21c7"
+    },
+    "mesa-26.2.4/src/gallium/auxiliary/pipe-loader/pipe_loader_drm.c": {
+      "bytes": 13796,
+      "sha256": "6ad6f13a7881c64b877e16496f243073ed42fb10a10dc9a98aaba2331b94edbf"
+    },
+    "mesa-26.2.4/src/gallium/auxiliary/target-helpers/drm_helper.h": {
+      "bytes": 13975,
+      "sha256": "37fda14864cb7e2be79422e3a34d3615ab254ac238383f347c3f73364f9ab382"
+    },
+    "mesa-26.2.4/src/gallium/auxiliary/target-helpers/drm_helper_public.h": {
+      "bytes": 1758,
+      "sha256": "cafc0b73f56071eeb427e30c057ebea9116098bc3d7cce197f897a21df86cb81"
+    },
+    "mesa-26.2.4/src/gallium/include/frontend/drm_driver.h": {
+      "bytes": 1127,
+      "sha256": "7592c6b80c9d57a5fb498f6ba88c563a179c2f42ce20d717730a423389a038b1"
+    },
+    "mesa-26.2.4/src/gallium/include/pipe/p_screen.h": {
+      "bytes": 35671,
+      "sha256": "1b87db30af0f522a7345cf09795306eb2f1986ee8ccf4a516ade083d2b1d52d0"
+    },
+    "mesa-26.2.4/src/gallium/meson.build": {
+      "bytes": 5885,
+      "sha256": "c4a399f3aeb2c9d737136efb56756f6945b73a7fd8a58f91797174e3d686cf49"
+    },
+    "mesa-26.2.4/src/gallium/targets/dri/meson.build": {
+      "bytes": 3469,
+      "sha256": "b2e62ee857c50fa23ab2b01f1fe0db3d4124a816855e78ff22444632fb93cbba"
+    },
+    "mesa-26.2.4/src/gallium/targets/dril/dril_target.c": {
+      "bytes": 23275,
+      "sha256": "4af597d63e2a27a6779482815c84c62540b5b1e5d49ab89fdb73edeab15f4b84"
+    },
+    "mesa-26.2.4/src/gallium/targets/dril/meson.build": {
+      "bytes": 5162,
+      "sha256": "165c905a38a299a8d06c797a0aaedd280d9bbff27161f5b6f17898b91c9b8151"
+    },
+    "mesa-demos-8.5.0/meson.build": {
+      "bytes": 4199,
+      "sha256": "afdf0debc599d59982a31f9d7ebd49d96474869beab6efa0f244ca30007042af"
+    },
+    "mesa-demos-8.5.0/src/xdemos/glxgears.c": {
+      "bytes": 23388,
+      "sha256": "3873db84d708b5d8b3cac39270926ba46d812c2f6362da8e6cd0a1bff6628ae6"
+    },
+    "mesa-demos-8.5.0/src/xdemos/glxheads.c": {
+      "bytes": 7959,
+      "sha256": "1db68c888271e2fb087e7e56fdc87d190260b2b52249373e1815b9ba2b081bd3"
+    },
+    "mesa-demos-8.5.0/src/xdemos/glxinfo.c": {
+      "bytes": 41940,
+      "sha256": "bd366eddab50c89b08d71bc4b9d6c61658a27360375e10a9974e79e333284108"
+    },
+    "mesa-demos-8.5.0/src/xdemos/meson.build": {
+      "bytes": 2267,
+      "sha256": "9e95900fd0e7940494968749833c187f6d828bf2686a6e8617902d2ce3d9e516"
+    },
+    "xorg-server-21.1.7/glamor/Makefile.am": {
+      "bytes": 1152,
+      "sha256": "03349af6f3491f77c8313959be3ef7f4c546ff43468c5e9ba7d9a3637c0aca72"
+    },
+    "xorg-server-21.1.7/glamor/Makefile.in": {
+      "bytes": 37122,
+      "sha256": "9a55ea004a3838eb2a547e791b90b3b19bc6d23b97e5d5aecdf514ea5f4276ab"
+    },
+    "xorg-server-21.1.7/glamor/glamor.c": {
+      "bytes": 38377,
+      "sha256": "cc686af7ce8fa69b9ad9274269f64ea7aaae69437f319390eebc053b7fe41feb"
+    },
+    "xorg-server-21.1.7/glamor/glamor.h": {
+      "bytes": 17353,
+      "sha256": "8aa2777088e4443b64413eab2a286dfaf42f695882fa01a7692dd0e56cf727c7"
+    },
+    "xorg-server-21.1.7/glamor/glamor_addtraps.c": {
+      "bytes": 1589,
+      "sha256": "87c10c05dccad6632b8c2fa83d9481f7e89d738057929c1e0563a628c56ee0fb"
+    },
+    "xorg-server-21.1.7/glamor/glamor_composite_glyphs.c": {
+      "bytes": 20931,
+      "sha256": "43f9f911b0ae6243421c8bd09e1e94d66b0a99c27a0d5ed3a24e9df07f7569cb"
+    },
+    "xorg-server-21.1.7/glamor/glamor_compositerects.c": {
+      "bytes": 8665,
+      "sha256": "ec44fb08c22ffa892d59a47934d6f309b5ec733e99a17cd3a9885b3f5134a762"
+    },
+    "xorg-server-21.1.7/glamor/glamor_context.h": {
+      "bytes": 1877,
+      "sha256": "bad1ab3a9cc7a249ad7638285649cda57703d826c5743e312acbd1cc732b542e"
+    },
+    "xorg-server-21.1.7/glamor/glamor_copy.c": {
+      "bytes": 26314,
+      "sha256": "8519619e97f1d6852be51dc16738b8b7df652dd38ab4c3fe32fce2de3dd8270b"
+    },
+    "xorg-server-21.1.7/glamor/glamor_core.c": {
+      "bytes": 8783,
+      "sha256": "93059cb100b44db45a3dbb4c0416c34a2c2d37830ed6dbe7cdbd722ed5a0c085"
+    },
+    "xorg-server-21.1.7/glamor/glamor_dash.c": {
+      "bytes": 10813,
+      "sha256": "f604198bcddb012a3dc92ce6a3fcc0ad67b71c3de440e656f5b67998421460c7"
+    },
+    "xorg-server-21.1.7/glamor/glamor_debug.h": {
+      "bytes": 2688,
+      "sha256": "d6d2295ab04878ebb718b6529928bf425abf0fcd4cd37dfb07ba0c923a5d716a"
+    },
+    "xorg-server-21.1.7/glamor/glamor_egl.c": {
+      "bytes": 33833,
+      "sha256": "6f829a9e99fe2c4149e28567117d22b6e996550ac9654e4396cc76256c45dcb1"
+    },
+    "xorg-server-21.1.7/glamor/glamor_egl.h": {
+      "bytes": 3204,
+      "sha256": "ff8b51ccd8a129702a018aa60b4d2a45d758ff26d6176ad820b9d08109765b79"
+    },
+    "xorg-server-21.1.7/glamor/glamor_egl_ext.h": {
+      "bytes": 3078,
+      "sha256": "c558ca00beafc83dc7800d264fe3d1e0e3bb5945f053f4dc90329bf64ccea547"
+    },
+    "xorg-server-21.1.7/glamor/glamor_egl_stubs.c": {
+      "bytes": 1926,
+      "sha256": "b77f8845bef12b88e44540748cb8ab92880810f89e123f79cd05d760acdfc711"
+    },
+    "xorg-server-21.1.7/glamor/glamor_eglmodule.c": {
+      "bytes": 2017,
+      "sha256": "d9f66057e4e59ced4d5409a8cc3a4bbf51a4081d5e917623c4e8b03ffb0b0c5f"
+    },
+    "xorg-server-21.1.7/glamor/glamor_fbo.c": {
+      "bytes": 11389,
+      "sha256": "3b0f17e1ee79ce624cb541468a72ec4890919e50906688c476a4b4479196aba2"
+    },
+    "xorg-server-21.1.7/glamor/glamor_font.c": {
+      "bytes": 7769,
+      "sha256": "8abd5882b291798699ff2c3dd4d022eca6630a370d98495a31cc125a1ee34b0b"
+    },
+    "xorg-server-21.1.7/glamor/glamor_font.h": {
+      "bytes": 1734,
+      "sha256": "396fce8efcd6014f241e93e06b4b58fa3ec801410831d96753911d1fd03bc89e"
+    },
+    "xorg-server-21.1.7/glamor/glamor_glx.c": {
+      "bytes": 2342,
+      "sha256": "80142eae8b9dfddcb8e5686c25480eb45f4ee8314d158c8481210917143de18d"
+    },
+    "xorg-server-21.1.7/glamor/glamor_glyphblt.c": {
+      "bytes": 8518,
+      "sha256": "c52f21c517e589a76d094a2f7f00757fa03b38fe9517fe9b104ae6e2c5b301b5"
+    },
+    "xorg-server-21.1.7/glamor/glamor_gradient.c": {
+      "bytes": 55883,
+      "sha256": "0abbd61643bdc79eb6c2e7b8078850443e5b49db92678890dc2d25de311b00cc"
+    },
+    "xorg-server-21.1.7/glamor/glamor_image.c": {
+      "bytes": 5461,
+      "sha256": "18500f675a05c32582dc6eb58d36292116e5676ce52139971f3a20c6c07984e2"
+    },
+    "xorg-server-21.1.7/glamor/glamor_largepixmap.c": {
+      "bytes": 61595,
+      "sha256": "c368ad2cd9c7b7d50a5f3b3454c19da6a7529eba02d331df82a5b4b014533070"
+    },
+    "xorg-server-21.1.7/glamor/glamor_lines.c": {
+      "bytes": 5344,
+      "sha256": "f82b561085daf0fd1eefbf3c20c364fe6da10978a72dd6026a593e6c7d12e3a8"
+    },
+    "xorg-server-21.1.7/glamor/glamor_picture.c": {
+      "bytes": 11742,
+      "sha256": "d71efbb4e9dc3fb15f11f172e5aebc7c310f188a2daa8e038e1aa8fc39328424"
+    },
+    "xorg-server-21.1.7/glamor/glamor_pixmap.c": {
+      "bytes": 5071,
+      "sha256": "221072d6dc75c0777fe74e448b3e925ad6ad635b4261005e6400f57d4a587605"
+    },
+    "xorg-server-21.1.7/glamor/glamor_points.c": {
+      "bytes": 4081,
+      "sha256": "7ecded7f5c2d5e09c173ad3f953d446fba775ac590b2ed7690c31d85f7c284ad"
+    },
+    "xorg-server-21.1.7/glamor/glamor_prepare.c": {
+      "bytes": 9591,
+      "sha256": "065877bb2f54ac397315ecc72f81c88610c26e7df0e84a88ec74eba03ea0d82a"
+    },
+    "xorg-server-21.1.7/glamor/glamor_prepare.h": {
+      "bytes": 1892,
+      "sha256": "09a9dc5a289a65c42f85f6f8f9f34e19d64d35355448a0ec11061cfc5b62b5a0"
+    },
+    "xorg-server-21.1.7/glamor/glamor_priv.h": {
+      "bytes": 29293,
+      "sha256": "4be664928f892ddd9a45f5bf38e361b7c19fd92a00f8980de321407733b2fe48"
+    },
+    "xorg-server-21.1.7/glamor/glamor_program.c": {
+      "bytes": 23411,
+      "sha256": "b164226ccee04933455dc6704d78b12357168bbd7659af383905b5d251c1ecce"
+    },
+    "xorg-server-21.1.7/glamor/glamor_program.h": {
+      "bytes": 5816,
+      "sha256": "bdd8f6ba93fdfcd51934695493bd9e7855bb229dc46145bb8c75b1d013b472ca"
+    },
+    "xorg-server-21.1.7/glamor/glamor_rects.c": {
+      "bytes": 7139,
+      "sha256": "fed8bf041e08a434c2b885b019b7d223b6f8cf9fc9cdf321f878ea3aab6ef8a7"
+    },
+    "xorg-server-21.1.7/glamor/glamor_render.c": {
+      "bytes": 64923,
+      "sha256": "6d70a5e74bfeeee5ac2cc77ccf6f288602067c1db1c495b69e877d91995a793c"
+    },
+    "xorg-server-21.1.7/glamor/glamor_segs.c": {
+      "bytes": 5516,
+      "sha256": "5b7ae063153ee36e94cd2603f31126c28f18e6f7e3fcdc510dc06255eec41932"
+    },
+    "xorg-server-21.1.7/glamor/glamor_spans.c": {
+      "bytes": 12309,
+      "sha256": "65636ab011ac19017809618c9530f167a7df7346fa09a3415c5d0d4c6bb9c9d0"
+    },
+    "xorg-server-21.1.7/glamor/glamor_sync.c": {
+      "bytes": 4123,
+      "sha256": "12f1ffee50f21d14ec8345ca33f91655c91181a7fb2595c83d25f1406846dd85"
+    },
+    "xorg-server-21.1.7/glamor/glamor_text.c": {
+      "bytes": 16075,
+      "sha256": "85271954770a4bd2d116113835fd31f7b0804e7bae4eafbb10b0f53cf581e9e5"
+    },
+    "xorg-server-21.1.7/glamor/glamor_transfer.c": {
+      "bytes": 7728,
+      "sha256": "e2f5de1fc81c9179d90af56e6c3a032bbc3f72adce8fc1c66bcd617312f4c924"
+    },
+    "xorg-server-21.1.7/glamor/glamor_transfer.h": {
+      "bytes": 2083,
+      "sha256": "07cd3f07e19e84b01b57038ee45fe7ea884c1e1ec5a3501cccb609d8bff39b39"
+    },
+    "xorg-server-21.1.7/glamor/glamor_transform.c": {
+      "bytes": 9674,
+      "sha256": "f107dc2b2b328fe0c3e4b85f766c1072aae69780b2b2d357b1b142a8323edba4"
+    },
+    "xorg-server-21.1.7/glamor/glamor_transform.h": {
+      "bytes": 3826,
+      "sha256": "736a3744fa26fb260feb54c3a1f8b345fb65dc69e7ac257233410e75006a3dff"
+    },
+    "xorg-server-21.1.7/glamor/glamor_trapezoid.c": {
+      "bytes": 5101,
+      "sha256": "62545c303af53db37eff44fd44aaf00beb9b47d328acb6f1f4a36a9892e4817a"
+    },
+    "xorg-server-21.1.7/glamor/glamor_triangles.c": {
+      "bytes": 1787,
+      "sha256": "86b0b5291fe923cdf478f2dc606e2e83d81ecc5f5248620ca03ebfc135fdfbc7"
+    },
+    "xorg-server-21.1.7/glamor/glamor_utils.c": {
+      "bytes": 2604,
+      "sha256": "c91eaeab07589d3d7e6cf4fc0cce2af72f6dca28b7fb1bec7230ab0713d97aad"
+    },
+    "xorg-server-21.1.7/glamor/glamor_utils.h": {
+      "bytes": 24707,
+      "sha256": "54fcc0fed5fa964bd3cb11b3b550476a5b3a6561d654ecb5bfcb43f6592a1775"
+    },
+    "xorg-server-21.1.7/glamor/glamor_vbo.c": {
+      "bytes": 7171,
+      "sha256": "ce8789fc6f69a7a1e177e9a725dd738a53c0930b04f8b26c8adb2bcbdf846cb3"
+    },
+    "xorg-server-21.1.7/glamor/glamor_window.c": {
+      "bytes": 2461,
+      "sha256": "71041053317e12e2f5c2e9a68661547e8f6c3ee90c6df943d583e02973946de3"
+    },
+    "xorg-server-21.1.7/glamor/glamor_xv.c": {
+      "bytes": 22537,
+      "sha256": "72e281fa44dd39df3af430b8e9b96f7f16724345b538d3492be372212696cf83"
+    },
+    "xorg-server-21.1.7/glamor/meson.build": {
+      "bytes": 1238,
+      "sha256": "c0873ab654e5b42f558d6fff44f0c8cff04d5226f5c2669bb47e4a6dd12769b0"
+    },
+    "xorg-server-21.1.7/hw/xfree86/drivers/modesetting/driver.c": {
+      "bytes": 62763,
+      "sha256": "ef0ac836bd732c52844d76143ddbbfa6aefcbea3f8be26776e7093d2ca88978f"
+    }
+  },
+  "corpus_shaders": {
+    "copyarea-fs_exec.fragment": {
+      "bytes": 52,
+      "sha256": "41baf9ed08d8a49773394d3365fd1c2706c182a91fa91832231b7e4943b65343"
+    },
+    "copyarea-vs_vars.fragment": {
+      "bytes": 26,
+      "sha256": "aa84dc8aa79512d657cbeca95c5ce8569d528db67d6f532dd59e83b6b74b6752"
+    },
+    "copyarea.frag": {
+      "bytes": 163,
+      "sha256": "bc99ad991d8b904faf39511131249d16206d1b27fb80359ab0b68ce59d5ec499"
+    },
+    "copyarea.vert": {
+      "bytes": 314,
+      "sha256": "156644e25dd676e61e102218b568720338b9320d41321830bb62b6509e3eae21"
+    },
+    "linear-large.frag": {
+      "bytes": 2323,
+      "sha256": "c37e139186f4ee97968484eff48290be336ba35ef22e87dca16a50c20d1978ca"
+    },
+    "linear-large.vert": {
+      "bytes": 211,
+      "sha256": "032fc7d928235ffc8388a73812a3c5eb031fbff4dd9cf7324636617db02c8634"
+    },
+    "linear-small.frag": {
+      "bytes": 3984,
+      "sha256": "b476a1f982488d254fb75746703b8dd80923c227f755aff962aa41a2a9ecec0a"
+    },
+    "linear-small.vert": {
+      "bytes": 211,
+      "sha256": "032fc7d928235ffc8388a73812a3c5eb031fbff4dd9cf7324636617db02c8634"
+    },
+    "radial-large.frag": {
+      "bytes": 3122,
+      "sha256": "42a78a1b178292061ec3e1372c931948702acfee498ece8e686d0a31eaee691e"
+    },
+    "radial-large.vert": {
+      "bytes": 211,
+      "sha256": "032fc7d928235ffc8388a73812a3c5eb031fbff4dd9cf7324636617db02c8634"
+    },
+    "radial-small.frag": {
+      "bytes": 4783,
+      "sha256": "dc3c9f9a4c49fb8f81a3035ea9572d98cf28c8a98d66ee3f3843a0e6049e4036"
+    },
+    "radial-small.vert": {
+      "bytes": 211,
+      "sha256": "032fc7d928235ffc8388a73812a3c5eb031fbff4dd9cf7324636617db02c8634"
+    }
+  },
+  "dependencies": {
+    "mesa": {
+      "archive": "mesa",
+      "checksum_url": "https://docs.mesa3d.org/relnotes/26.2.4.html",
+      "root": "mesa-26.2.4",
+      "version": "26.2.4"
+    },
+    "mesa-demos": {
+      "archive": "mesa-demos",
+      "root": "mesa-demos-8.5.0",
+      "version": "8.5.0"
+    },
+    "xorg": {
+      "archive": "xorg",
+      "root": "xorg-server-21.1.7",
+      "version": "2:21.1.7-3+deb12u13"
+    }
+  },
+  "mesa_overlay_inputs": {
+    "VERSION": {
+      "bytes": 7,
+      "sha256": "6fdb5e1a17496d2a90f08d87bf219fa0cbe025d0b95962ed326788c76ebbc947"
+    },
+    "meson.build": {
+      "bytes": 92704,
+      "sha256": "2ef3a9d67e66903f12b030203e5160c1a40ac5deae9073409ec105451ef43785"
+    },
+    "meson.options": {
+      "bytes": 22449,
+      "sha256": "594059789faf5e0e58aa30b60967f66975a421484d45c6a59c54b234f5ded06c"
+    },
+    "src/compiler/nir/nir_lower_const_arrays_to_uniforms.c": {
+      "bytes": 14154,
+      "sha256": "89df14243657991380d68dcd7149680fcb89e19221d8c46fe722831bb8d66866"
+    },
+    "src/gallium/auxiliary/draw/draw_vs.c": {
+      "bytes": 7323,
+      "sha256": "5ee0a4792bb17cb2a45d05d0b1e21c6391459527633e9f973287b8bf22f10300"
+    },
+    "src/gallium/auxiliary/pipe-loader/pipe_loader_drm.c": {
+      "bytes": 13796,
+      "sha256": "6ad6f13a7881c64b877e16496f243073ed42fb10a10dc9a98aaba2331b94edbf"
+    },
+    "src/gallium/auxiliary/target-helpers/drm_helper.h": {
+      "bytes": 13975,
+      "sha256": "37fda14864cb7e2be79422e3a34d3615ab254ac238383f347c3f73364f9ab382"
+    },
+    "src/gallium/auxiliary/target-helpers/drm_helper_public.h": {
+      "bytes": 1758,
+      "sha256": "cafc0b73f56071eeb427e30c057ebea9116098bc3d7cce197f897a21df86cb81"
+    },
+    "src/gallium/auxiliary/util/u_upload_mgr.c": {
+      "bytes": 10517,
+      "sha256": "31e9544a8ba017d58449f12dc0a8e829ca03c672503874c3c52276c78423b582"
+    },
+    "src/gallium/meson.build": {
+      "bytes": 5885,
+      "sha256": "c4a399f3aeb2c9d737136efb56756f6945b73a7fd8a58f91797174e3d686cf49"
+    },
+    "src/gallium/targets/dri/meson.build": {
+      "bytes": 3469,
+      "sha256": "b2e62ee857c50fa23ab2b01f1fe0db3d4124a816855e78ff22444632fb93cbba"
+    },
+    "src/gallium/targets/dril/dril_target.c": {
+      "bytes": 23275,
+      "sha256": "4af597d63e2a27a6779482815c84c62540b5b1e5d49ab89fdb73edeab15f4b84"
+    },
+    "src/gallium/targets/dril/meson.build": {
+      "bytes": 5162,
+      "sha256": "165c905a38a299a8d06c797a0aaedd280d9bbff27161f5b6f17898b91c9b8151"
+    }
+  },
+  "mesa_patches": {
+    "src/compiler/nir/nir_lower_const_arrays_to_uniforms.c": {
+      "input": {
+        "bytes": 2722,
+        "sha256": "bac2366d650dd757972a8e63a807726f404506f16d019f60e934c821af5b5108"
+      },
+      "path": "src/gallium/mesa/patches/nir-const-array-budget.patch",
+      "result": {
+        "bytes": 15123,
+        "sha256": "310d28a977806e52781f8e3b2b9a891620fb0bfa125d33cc3b105823dfde1b2f"
+      }
+    }
+  },
+  "schema": "poulsback-graphics-source-lock-v1",
+  "shader_selection": {
+    "context_selection": "Upstream EGL first tries desktop GL, rejects GL below 2.1, then creates GLES2; no user API selection option",
+    "copy_scope": "copyarea real program-builder output is captured; vs_vars/fs_exec additionally retained as labelled fragments",
+    "cpu_frontend_fragment_uniform_components": [
+      64,
+      256
+    ],
+    "frontend_programs": [
+      "linear-small",
+      "linear-large",
+      "radial-small",
+      "radial-large",
+      "copyarea"
+    ],
+    "glsl_validation_profiles": [
+      100,
+      120
+    ],
+    "large_stops": 18,
+    "pixman_repeat": {
+      "none": 0,
+      "normal": 1,
+      "pad": 2,
+      "reflect": 3
+    },
+    "scope": "Only selected startup gradients and copyarea; this is not the full glamor shader/API corpus",
+    "small_stops": 8,
+    "startup_programs": [
+      "linear-small",
+      "linear-large",
+      "radial-small",
+      "radial-large"
+    ]
+  },
+  "xorg_debian": {
+    "diff": "xorg-diff",
+    "dsc": "xorg-dsc"
+  }
+}

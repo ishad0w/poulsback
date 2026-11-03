@@ -1,0 +1,37 @@
+{
+  "schema": "poulsback-exclusions-v1",
+  "exclusions": [
+    {
+      "match": "exact",
+      "pattern": "2d-x11.outputs/randr-vga-modes",
+      "reason": "The VGA output (SDVO B on pipe A) is excluded for now: no VGA display is available for device testing. It returns once one is.",
+      "evidence": "Maintainer decision of 2026-11-03; docs/status/x11.md records the exclusion.",
+      "accepted_by": "maintainer",
+      "accepted_on": "2026-11-03"
+    },
+    {
+      "match": "exact",
+      "pattern": "2d-x11.outputs/randr-hotplug",
+      "reason": "The VGA output (SDVO B on pipe A) is excluded for now: no VGA display is available for device testing. It returns once one is.",
+      "evidence": "Maintainer decision of 2026-11-03; docs/status/x11.md records the exclusion.",
+      "accepted_by": "maintainer",
+      "accepted_on": "2026-11-03"
+    },
+    {
+      "match": "exact",
+      "pattern": "2d-x11.outputs/randr-clone-extend",
+      "reason": "The VGA output (SDVO B on pipe A) is excluded for now: no VGA display is available for device testing. It returns once one is.",
+      "evidence": "Maintainer decision of 2026-11-03; docs/status/x11.md records the exclusion.",
+      "accepted_by": "maintainer",
+      "accepted_on": "2026-11-03"
+    },
+    {
+      "match": "exact",
+      "pattern": "release.kms-display/vga-connector",
+      "reason": "The VGA output (SDVO B on pipe A) is excluded for now: no VGA display is available for device testing. It returns once one is.",
+      "evidence": "Maintainer decision of 2026-11-03; docs/status/x11.md records the exclusion.",
+      "accepted_by": "maintainer",
+      "accepted_on": "2026-11-03"
+    }
+  ]
+}

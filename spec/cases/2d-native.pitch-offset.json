@@ -1,0 +1,223 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-native.pitch-offset",
+ "source": "eng/lab/bo/bo-2d-fixtures.c --list at workspace 569c3f6; case = job name with the fixture prefix removed; result line from out/bo-2d-fixtures.jsonl (status pass)",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "wc/argb/s128-d16256-page/fill"
+  },
+  {
+   "id": "wc/argb/s128-d16256-page/copy"
+  },
+  {
+   "id": "wc/argb/s384-page-d128/fill"
+  },
+  {
+   "id": "wc/argb/s384-page-d128/copy"
+  },
+  {
+   "id": "wc/argb/s5120-d640-line/fill"
+  },
+  {
+   "id": "wc/argb/s5120-d640-line/copy"
+  },
+  {
+   "id": "wc/argb/d-ends-at-last-byte/fill"
+  },
+  {
+   "id": "wc/argb/d-ends-at-last-byte/copy"
+  },
+  {
+   "id": "wc/argb/s-ends-at-last-byte-4062/fill"
+  },
+  {
+   "id": "wc/argb/s-ends-at-last-byte-4062/copy"
+  },
+  {
+   "id": "wc/xrgb/s128-d16256-page/fill"
+  },
+  {
+   "id": "wc/xrgb/s128-d16256-page/copy"
+  },
+  {
+   "id": "wc/xrgb/s384-page-d128/fill"
+  },
+  {
+   "id": "wc/xrgb/s384-page-d128/copy"
+  },
+  {
+   "id": "wc/xrgb/s5120-d640-line/fill"
+  },
+  {
+   "id": "wc/xrgb/s5120-d640-line/copy"
+  },
+  {
+   "id": "wc/xrgb/d-ends-at-last-byte/fill"
+  },
+  {
+   "id": "wc/xrgb/d-ends-at-last-byte/copy"
+  },
+  {
+   "id": "wc/xrgb/s-ends-at-last-byte-4062/fill"
+  },
+  {
+   "id": "wc/xrgb/s-ends-at-last-byte-4062/copy"
+  },
+  {
+   "id": "wc/rgb565/s128-d16256-page/fill"
+  },
+  {
+   "id": "wc/rgb565/s128-d16256-page/copy"
+  },
+  {
+   "id": "wc/rgb565/s384-page-d128/fill"
+  },
+  {
+   "id": "wc/rgb565/s384-page-d128/copy"
+  },
+  {
+   "id": "wc/rgb565/s5120-d640-line/fill"
+  },
+  {
+   "id": "wc/rgb565/s5120-d640-line/copy"
+  },
+  {
+   "id": "wc/rgb565/d-ends-at-last-byte/fill"
+  },
+  {
+   "id": "wc/rgb565/d-ends-at-last-byte/copy"
+  },
+  {
+   "id": "wc/rgb565/s-ends-at-last-byte-4062/fill"
+  },
+  {
+   "id": "wc/rgb565/s-ends-at-last-byte-4062/copy"
+  },
+  {
+   "id": "wb/argb/s128-d16256-page/fill"
+  },
+  {
+   "id": "wb/argb/s128-d16256-page/copy"
+  },
+  {
+   "id": "wb/argb/s384-page-d128/fill"
+  },
+  {
+   "id": "wb/argb/s384-page-d128/copy"
+  },
+  {
+   "id": "wb/argb/s5120-d640-line/fill"
+  },
+  {
+   "id": "wb/argb/s5120-d640-line/copy"
+  },
+  {
+   "id": "wb/argb/d-ends-at-last-byte/fill"
+  },
+  {
+   "id": "wb/argb/d-ends-at-last-byte/copy"
+  },
+  {
+   "id": "wb/argb/s-ends-at-last-byte-4062/fill"
+  },
+  {
+   "id": "wb/argb/s-ends-at-last-byte-4062/copy"
+  },
+  {
+   "id": "wb/xrgb/s128-d16256-page/fill"
+  },
+  {
+   "id": "wb/xrgb/s128-d16256-page/copy"
+  },
+  {
+   "id": "wb/xrgb/s384-page-d128/fill"
+  },
+  {
+   "id": "wb/xrgb/s384-page-d128/copy"
+  },
+  {
+   "id": "wb/xrgb/s5120-d640-line/fill"
+  },
+  {
+   "id": "wb/xrgb/s5120-d640-line/copy"
+  },
+  {
+   "id": "wb/xrgb/d-ends-at-last-byte/fill"
+  },
+  {
+   "id": "wb/xrgb/d-ends-at-last-byte/copy"
+  },
+  {
+   "id": "wb/xrgb/s-ends-at-last-byte-4062/fill"
+  },
+  {
+   "id": "wb/xrgb/s-ends-at-last-byte-4062/copy"
+  },
+  {
+   "id": "wb/rgb565/s128-d16256-page/fill"
+  },
+  {
+   "id": "wb/rgb565/s128-d16256-page/copy"
+  },
+  {
+   "id": "wb/rgb565/s384-page-d128/fill"
+  },
+  {
+   "id": "wb/rgb565/s384-page-d128/copy"
+  },
+  {
+   "id": "wb/rgb565/s5120-d640-line/fill"
+  },
+  {
+   "id": "wb/rgb565/s5120-d640-line/copy"
+  },
+  {
+   "id": "wb/rgb565/d-ends-at-last-byte/fill"
+  },
+  {
+   "id": "wb/rgb565/d-ends-at-last-byte/copy"
+  },
+  {
+   "id": "wb/rgb565/s-ends-at-last-byte-4062/fill"
+  },
+  {
+   "id": "wb/rgb565/s-ends-at-last-byte-4062/copy"
+  },
+  {
+   "id": "refuse/offset-4"
+  },
+  {
+   "id": "refuse/stride-192"
+  },
+  {
+   "id": "refuse/stride-32768"
+  },
+  {
+   "id": "refuse/past-bo-end"
+  },
+  {
+   "id": "refuse/row-over-stride"
+  },
+  {
+   "id": "refuse/height-0"
+  },
+  {
+   "id": "refuse/width-4096"
+  },
+  {
+   "id": "refuse/stride-16384"
+  },
+  {
+   "id": "refuse/format-4"
+  },
+  {
+   "id": "refuse/two-views-of-one-bo"
+  },
+  {
+   "id": "refuse/copy-between-formats"
+  }
+ ]
+}

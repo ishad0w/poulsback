@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 ishad0w and the poulsback contributors
+# SPDX-License-Identifier: MIT
+
+name: Feature request
+description: Describe a use case, missing capability or proposed improvement.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing an idea. Use cases are welcome even if you do not have an implementation plan.
+
+        The [current status](https://github.com/ishad0w/poulsback/blob/HEAD/docs/status/README.md) and [existing issues](https://github.com/ishad0w/poulsback/issues) may provide useful context.
+
+        For a suspected vulnerability, please email [Alex](mailto:alex@kmn.io) privately so we can discuss the details there.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What would you like to do, and what would make it easier or possible?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Requested behavior or ideas
+      description: If you have a solution in mind, describe it here. It is also fine to leave this open for discussion.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or workarounds
+      description: What have you tried or considered, if anything?
+  - type: textarea
+    id: context
+    attributes:
+      label: Relevant hardware, software or references
+      description: If applicable, include the machine/GPU, distribution, application, API requirement or supporting documentation. Links and examples help.

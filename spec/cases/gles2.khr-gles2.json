@@ -1,0 +1,20 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "gles2.khr-gles2",
+ "source": "VK-GL-CTS opengl-es-cts-3.2.14.0 khronos_mustpass/main/gles2-khr-main.txt",
+ "criteria": "dEQP reports Pass; NotSupported, QualityWarning, CompatibilityWarning, Fail, Crash and Timeout are not passes (an optional extension test needs an accepted exclusion)",
+ "runner": null,
+ "external": {
+  "source": "ops/build/vk-gl-cts/download/VK-GL-CTS-opengl-es-cts-3.2.14.0.tar.gz",
+  "member": "VK-GL-CTS-opengl-es-cts-3.2.14.0/external/openglcts/data/gl_cts/data/mustpass/gles/khronos_mustpass/main/gles2-khr-main.txt",
+  "select": [
+   "*"
+  ],
+  "count": 473,
+  "sha256": "93adbd3599e9d0a41066d4f4a3d1a7604bf4c435cd2440b9b1b47270a05b7d4f",
+  "source_sha256": "93adbd3599e9d0a41066d4f4a3d1a7604bf4c435cd2440b9b1b47270a05b7d4f",
+  "builder": "conformance-harnesses (glcts not built yet)",
+  "note": "Pinned from the archive member; needs the glcts binary, which the conformance build does not include yet"
+ },
+ "cases": []
+}

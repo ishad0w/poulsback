@@ -1,0 +1,80 @@
+From: ishad0w and the poulsback contributors
+Subject: [PATCH] nir: reserve constant-array slots from a bounded uniform budget
+SPDX-FileCopyrightText: 2026 ishad0w and the poulsback contributors
+SPDX-License-Identifier: MIT
+
+Charge each referenced uniform once against the remaining promotion budget.
+Stop charging at exhaustion, without forming an overflowing component total.
+Preserve declarations, reflection and the existing array eligibility policy.
+If reference tracking cannot insert, leave no budget for new uniform arrays.
+
+This project contribution modifies the MIT-licensed Mesa26.2.4 source. Its
+original Valve copyright and permission notice are retained unchanged.
+---
+--- a/src/compiler/nir/nir_lower_const_arrays_to_uniforms.c
++++ b/src/compiler/nir/nir_lower_const_arrays_to_uniforms.c
+@@ -222,15 +222,45 @@
+ }
+ 
+ static unsigned
+-count_uniforms(nir_shader *shader)
++remaining_uniform_components(nir_function_impl *impl, unsigned budget)
+ {
+-   unsigned total = 0;
+-
+-   nir_foreach_variable_with_modes(var, shader, nir_var_uniform) {
+-      total += glsl_get_component_slots(var->type);
+-   }
+-
+-   return total;
++   struct set referenced_uniforms;
++   _mesa_pointer_set_init(&referenced_uniforms, NULL);
++
++   nir_foreach_block(block, impl) {
++      nir_foreach_instr(instr, block) {
++         if (instr->type != nir_instr_type_deref)
++            continue;
++
++         nir_variable *var =
++            nir_deref_instr_get_variable(nir_instr_as_deref(instr));
++         if (!var || var->data.mode != nir_var_uniform)
++            continue;
++
++         bool found;
++         if (!_mesa_set_search_or_add(&referenced_uniforms, var, &found)) {
++            /* Without complete reference tracking, do not reserve new slots. */
++            budget = 0;
++            goto done;
++         }
++         if (found)
++            continue;
++
++         /* Charge each referenced uniform once, without overflowing a total
++          * or subtracting more components than remain in the budget.
++          */
++         unsigned components = glsl_get_component_slots(var->type);
++         if (components >= budget) {
++            budget = 0;
++            goto done;
++         }
++         budget -= components;
++      }
++   }
++
++done:
++   _mesa_set_fini(&referenced_uniforms, NULL);
++   return budget;
+ }
+ 
+ bool
+@@ -247,8 +277,8 @@
+    }
+ 
+    bool progress = false;
+-   unsigned uniform_components = count_uniforms(shader);
+-   unsigned free_uni_components = max_uniform_components - uniform_components;
++   unsigned free_uni_components =
++      remaining_uniform_components(impl, max_uniform_components);
+    unsigned const_count = 0;
+ 
+    struct var_info *var_infos = ralloc_array(NULL, struct var_info, num_locals);

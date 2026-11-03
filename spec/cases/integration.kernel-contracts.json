@@ -1,0 +1,46 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "integration.kernel-contracts",
+ "source": "The kernel components of tools/build-userspace.py at driver HEAD",
+ "criteria": "The component suite passes in both flavors",
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "component/vm-layout"
+  },
+  {
+   "id": "component/uapi"
+  },
+  {
+   "id": "component/page-address"
+  },
+  {
+   "id": "component/foreign-mmu"
+  },
+  {
+   "id": "component/debug"
+  },
+  {
+   "id": "component/display-vblank"
+  },
+  {
+   "id": "component/regtable"
+  },
+  {
+   "id": "component/overlap"
+  },
+  {
+   "id": "component/twod-plan"
+  },
+  {
+   "id": "component/vm"
+  },
+  {
+   "id": "component/scene"
+  },
+  {
+   "id": "component/teardown"
+  }
+ ]
+}

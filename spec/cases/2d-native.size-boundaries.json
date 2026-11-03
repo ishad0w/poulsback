@@ -1,0 +1,20 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "2d-native.size-boundaries",
+ "source": "eng/lab/bo/bo-2d-matrix.c --list at workspace 569c3f6 (classes control)",
+ "criteria": null,
+ "runner": null,
+ "external": {
+  "source": "eng/lab/bo/bo-2d-matrix.c",
+  "member": null,
+  "select": [
+   "control/*"
+  ],
+  "count": 20436,
+  "sha256": "3b0a6d0627191c83a6e3ad504b7fddbd06a168675e8b3dbf42cfafb07e325dc7",
+  "source_sha256": "302fb5cd77505fc734d9323d270ca69fc19a1b86084f6b5cb8f730807a0f2345",
+  "builder": "device-suite",
+  "note": "Every size without an 8: generated, pinned by count and SHA-256 of the sorted names; the run reports every name."
+ },
+ "cases": []
+}

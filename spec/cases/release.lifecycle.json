@@ -1,0 +1,66 @@
+{
+ "schema": "poulsback-case-list-v1",
+ "family": "release.lifecycle",
+ "source": "tests/acceptance/release.md#release.lifecycle",
+ "criteria": null,
+ "runner": null,
+ "external": null,
+ "cases": [
+  {
+   "id": "unload-reload-repeat",
+   "criteria": "rmmod and insmod 10 times with no client, then glxgears; no leak, no errsite (until the kernel teardown lands, the engine refuses unload)",
+   "parameters": {
+    "builder": "kernel-teardown+soak"
+   }
+  },
+  {
+   "id": "unload-refused-by-reference",
+   "criteria": "rmmod with a DRM client or an engine fence alive is refused by the module reference alone; the client keeps rendering",
+   "parameters": {
+    "builder": "kernel-teardown"
+   }
+  },
+  {
+   "id": "unload-pinned-after-wedge",
+   "criteria": "After a wedge the module stays pinned for the boot and nothing is released (HOLD)",
+   "parameters": {
+    "builder": "kernel-teardown"
+   }
+  },
+  {
+   "id": "load-clock-gating",
+   "criteria": "Every load writes EMGD's power-on clock gating before the probe's reset; a reload after an unload renders like a cold boot",
+   "parameters": {
+    "builder": "kernel-teardown"
+   }
+  },
+  {
+   "id": "suspend-resume-console",
+   "criteria": "S3 suspend and resume from the console; the engine comes back ready",
+   "parameters": {
+    "builder": "suspend-resume"
+   }
+  },
+  {
+   "id": "suspend-resume-x-gl",
+   "criteria": "S3 with X and a GL client running; both render after resume (EMGD sgxpower.c sequences)",
+   "parameters": {
+    "builder": "suspend-resume"
+   }
+  },
+  {
+   "id": "suspend-resume-repeat",
+   "criteria": "20 suspend/resume cycles with X and gears; no HOLD, no leak",
+   "parameters": {
+    "builder": "suspend-resume"
+   }
+  },
+  {
+   "id": "cold-boot-load",
+   "criteria": "The module loads at boot from the dev GRUB entry, X starts on it",
+   "parameters": {
+    "builder": "device-suite"
+   }
+  }
+ ]
+}

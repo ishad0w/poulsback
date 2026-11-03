@@ -1,0 +1,104 @@
+# SPDX-FileCopyrightText: 2026 ishad0w and the poulsback contributors
+# SPDX-License-Identifier: MIT
+# msvdx-video black-box vectors, format v1; see README.md
+# captured and fixture descriptors
+picture in=x:10001000ffffffffffffffff01000000ffff00002c180000 => status=ok hsize=16 vsize=16 fwd=0xffffffff bwd=0xffffffff type=0x00000001 fcode=0x0000ffff ext=0x0000182c dc_precision=0 structure=3 tff=0 fpfd=1 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=1 first_field=1
+picture in=x:10001000ffffffffffffffff01000000ffff00002c180000 => status=ok hsize=16 vsize=16 fwd=0xffffffff bwd=0xffffffff type=0x00000001 fcode=0x0000ffff ext=0x0000182c dc_precision=0 structure=3 tff=0 fpfd=1 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=1 first_field=1
+picture in=x:40004000ffffffffffffffff01000000ffff00002c180000 => status=ok hsize=64 vsize=64 fwd=0xffffffff bwd=0xffffffff type=0x00000001 fcode=0x0000ffff ext=0x0000182c dc_precision=0 structure=3 tff=0 fpfd=1 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=1 first_field=1
+picture in=x:d002e001ffffffffffffffff01000000ffff00002c180000 => status=ok hsize=720 vsize=480 fwd=0xffffffff bwd=0xffffffff type=0x00000001 fcode=0x0000ffff ext=0x0000182c dc_precision=0 structure=3 tff=0 fpfd=1 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=1 first_field=1
+picture in=x:d002e00100000003ffffffff02000000ff4400002c180000 => status=ok hsize=720 vsize=480 fwd=0x03000000 bwd=0xffffffff type=0x00000002 fcode=0x000044ff ext=0x0000182c dc_precision=0 structure=3 tff=0 fpfd=1 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=1 first_field=1
+picture in=x:d002e001000000030100000303000000331100002c180000 => status=ok hsize=720 vsize=480 fwd=0x03000000 bwd=0x03000001 type=0x00000003 fcode=0x00001133 ext=0x0000182c dc_precision=0 structure=3 tff=0 fpfd=1 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=1 first_field=1
+picture in=x:d002e001000000030100000303000000222200002c180000 => status=ok hsize=720 vsize=480 fwd=0x03000000 bwd=0x03000001 type=0x00000003 fcode=0x00002222 ext=0x0000182c dc_precision=0 structure=3 tff=0 fpfd=1 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=1 first_field=1
+# one extension bit at a time, then unknown high bits
+picture in=x:d002e001000000000000000001000000ffff000001000000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00000001 dc_precision=1 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000002000000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00000002 dc_precision=2 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000004000000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00000004 dc_precision=0 structure=1 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000008000000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00000008 dc_precision=0 structure=2 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000010000000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00000010 dc_precision=0 structure=0 tff=1 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000020000000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00000020 dc_precision=0 structure=0 tff=0 fpfd=1 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000040000000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00000040 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=1 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000080000000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00000080 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=1 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000010000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00000100 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=1 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000020000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00000200 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=1 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000040000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00000400 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=1 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000080000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00000800 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=1 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000100000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00001000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=1
+picture in=x:d002e001000000000000000001000000ffff000000200000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00002000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000400000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00004000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000800000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00008000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000000100 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00010000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000000200 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00020000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000000400 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00040000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000000800 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00080000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000001000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00100000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000002000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00200000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000004000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00400000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000008000 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x00800000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000000001 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x01000000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000000002 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x02000000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000000004 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x04000000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000000008 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x08000000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000000010 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x10000000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000000020 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x20000000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000000040 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x40000000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:d002e001000000000000000001000000ffff000000000080 => status=ok hsize=720 vsize=480 fwd=0x00000000 bwd=0x00000000 type=0x00000001 fcode=0x0000ffff ext=0x80000000 dc_precision=0 structure=0 tff=0 fpfd=0 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=0 first_field=0
+picture in=x:7500887cd2bd4bb44771b853e2ec4d524f3901a71535df7d => status=ok hsize=117 vsize=31880 fwd=0xb44bbdd2 bwd=0x53b87147 type=0x524dece2 fcode=0xa701394f ext=0x7ddf3515 dc_precision=1 structure=1 tff=1 fpfd=0 cmv=0 qst=0 ivlc=1 alt=0 rff=1 progressive=0 first_field=1
+picture in=x:97f91326301cca73ef48cfc2d9cefd96711b8defe153d055 => status=ok hsize=63895 vsize=9747 fwd=0x73ca1c30 bwd=0xc2cf48ef type=0x96fdced9 fcode=0xef8d1b71 ext=0x55d053e1 dc_precision=1 structure=0 tff=0 fpfd=1 cmv=1 qst=1 ivlc=1 alt=1 rff=0 progressive=0 first_field=1
+picture in=x:822ca9e4d84e1554b5a28c942baf81747b4accdf52178438 => status=ok hsize=11394 vsize=58537 fwd=0x54154ed8 bwd=0x948ca2b5 type=0x7481af2b fcode=0xdfcc4a7b ext=0x38841752 dc_precision=2 structure=0 tff=1 fpfd=0 cmv=1 qst=0 ivlc=1 alt=1 rff=1 progressive=0 first_field=1
+picture in=x:f21b193f75158ef0dc299fe0aa9af8a99f18e04c48aaf12a => status=ok hsize=7154 vsize=16153 fwd=0xf08e1575 bwd=0xe09f29dc type=0xa9f89aaa fcode=0x4ce0189f ext=0x2af1aa48 dc_precision=0 structure=2 tff=0 fpfd=0 cmv=1 qst=0 ivlc=0 alt=1 rff=0 progressive=1 first_field=0
+picture in=x:fcf075f96ddab3f052fdd781a1abc5432c3e4d935a8824ce => status=ok hsize=61692 vsize=63861 fwd=0xf0b3da6d bwd=0x81d7fd52 type=0x43c5aba1 fcode=0x934d3e2c ext=0xce24885a dc_precision=2 structure=2 tff=1 fpfd=0 cmv=1 qst=0 ivlc=0 alt=0 rff=0 progressive=1 first_field=0
+picture in=x:7c7c475b8e19e95a06901f92adfa5149b42317fc44f387f1 => status=ok hsize=31868 vsize=23367 fwd=0x5ae9198e bwd=0x921f9006 type=0x4951faad fcode=0xfc1723b4 ext=0xf187f344 dc_precision=0 structure=1 tff=0 fpfd=0 cmv=1 qst=0 ivlc=1 alt=1 rff=0 progressive=0 first_field=1
+picture in=x:8d602115fc9d9242621f791ee8d8924537751e674dbcddca => status=ok hsize=24717 vsize=5409 fwd=0x42929dfc bwd=0x1e791f62 type=0x4592d8e8 fcode=0x671e7537 ext=0xcaddbc4d dc_precision=1 structure=3 tff=0 fpfd=0 cmv=1 qst=0 ivlc=0 alt=0 rff=1 progressive=1 first_field=1
+picture in=x:cb160bd6d20977322a7c9ea452fa041e8234bc8f8deb9072 => status=ok hsize=5835 vsize=54795 fwd=0x327709d2 bwd=0xa49e7c2a type=0x1e04fa52 fcode=0x8fbc3482 ext=0x7290eb8d dc_precision=1 structure=3 tff=0 fpfd=0 cmv=0 qst=1 ivlc=1 alt=1 rff=0 progressive=1 first_field=0
+picture in=x:573a437123fb0e1fbbe338a3e167704d281f461685c6ff75 => status=ok hsize=14935 vsize=28995 fwd=0x1f0efb23 bwd=0xa338e3bb type=0x4d7067e1 fcode=0x16461f28 ext=0x75ffc685 dc_precision=1 structure=1 tff=0 fpfd=0 cmv=0 qst=1 ivlc=0 alt=1 rff=1 progressive=0 first_field=0
+picture in=x:c7ccdadec39a00c78b94b3246be09ba5cf074d3a27f89635 => status=ok hsize=52423 vsize=57050 fwd=0xc7009ac3 bwd=0x24b3948b type=0xa59be06b fcode=0x3a4d07cf ext=0x3596f827 dc_precision=3 structure=1 tff=0 fpfd=1 cmv=0 qst=0 ivlc=0 alt=0 rff=0 progressive=1 first_field=1
+picture in=x:547bd14444ec6a87c2ecfb4393659e78f24a68296474308a => status=ok hsize=31572 vsize=17617 fwd=0x876aec44 bwd=0x43fbecc2 type=0x789e6593 fcode=0x29684af2 ext=0x8a307464 dc_precision=0 structure=1 tff=0 fpfd=1 cmv=1 qst=0 ivlc=0 alt=0 rff=1 progressive=0 first_field=1
+picture in=x:6d7620f09930227d2fec6bde4efdd006a3403de2f3e2d24b => status=ok hsize=30317 vsize=61472 fwd=0x7d223099 bwd=0xde6bec2f type=0x06d0fd4e fcode=0xe23d40a3 ext=0x4bd2e2f3 dc_precision=3 structure=0 tff=1 fpfd=1 cmv=1 qst=1 ivlc=0 alt=1 rff=0 progressive=0 first_field=0
+picture in=x:01648d87093e5d77fbd958a6ce5e5f757ffdd562ad13f494 => status=ok hsize=25601 vsize=34701 fwd=0x775d3e09 bwd=0xa658d9fb type=0x755f5ece fcode=0x62d5fd7f ext=0x94f413ad dc_precision=1 structure=3 tff=0 fpfd=1 cmv=0 qst=1 ivlc=1 alt=1 rff=0 progressive=0 first_field=1
+picture in=x:883b85cb482d7c175bbceeee785e31042932331de729f320 => status=ok hsize=15240 vsize=52101 fwd=0x177c2d48 bwd=0xeeeebc5b type=0x04315e78 fcode=0x1d333229 ext=0x20f329e7 dc_precision=3 structure=1 tff=0 fpfd=1 cmv=1 qst=1 ivlc=1 alt=0 rff=0 progressive=1 first_field=0
+picture in=x:41b78c79752fbc5faffc2b52daa1edcc93f9ec160827d90f => status=ok hsize=46913 vsize=31116 fwd=0x5fbc2f75 bwd=0x522bfcaf type=0xcceda1da fcode=0x16ecf993 ext=0x0fd92708 dc_precision=0 structure=2 tff=0 fpfd=0 cmv=0 qst=0 ivlc=1 alt=1 rff=1 progressive=0 first_field=0
+picture in=x:708150c1d7c3fe740c90f4c305f9ea2469d800e0559a2108 => status=ok hsize=33136 vsize=49488 fwd=0x74fec3d7 bwd=0xc3f4900c type=0x24eaf905 fcode=0xe000d869 ext=0x08219a55 dc_precision=1 structure=1 tff=1 fpfd=0 cmv=1 qst=0 ivlc=0 alt=1 rff=0 progressive=1 first_field=1
+picture in=x:1aff307f2aa1f3d7274228706ca3b2df2c9148093004d6a7 => status=ok hsize=65306 vsize=32560 fwd=0xd7f3a12a bwd=0x70284227 type=0xdfb2a36c fcode=0x0948912c ext=0xa7d60430 dc_precision=0 structure=0 tff=1 fpfd=1 cmv=0 qst=0 ivlc=0 alt=0 rff=1 progressive=0 first_field=0
+picture in=x:4635d2d1ef9230532250968be68aa3153e7ab10aa0c564b6 => status=ok hsize=13638 vsize=53714 fwd=0x533092ef bwd=0x8b965022 type=0x15a38ae6 fcode=0x0ab17a3e ext=0xb664c5a0 dc_precision=0 structure=0 tff=0 fpfd=1 cmv=0 qst=1 ivlc=1 alt=0 rff=1 progressive=0 first_field=0
+picture in=x:8d47fcf115cbec613461829695f4d794bdf0ca8d8c5a4bae => status=ok hsize=18317 vsize=61948 fwd=0x61eccb15 bwd=0x96826134 type=0x94d7f495 fcode=0x8dcaf0bd ext=0xae4b5a8c dc_precision=0 structure=3 tff=0 fpfd=0 cmv=0 qst=1 ivlc=0 alt=1 rff=0 progressive=1 first_field=1
+picture in=x:84c72c24791fefec2257ad88d801de0b5f94b04664b42f32 => status=ok hsize=51076 vsize=9260 fwd=0xecef1f79 bwd=0x88ad5722 type=0x0bde01d8 fcode=0x46b0945f ext=0x322fb464 dc_precision=0 structure=1 tff=0 fpfd=1 cmv=1 qst=0 ivlc=0 alt=0 rff=1 progressive=0 first_field=1
+picture in=x:999e9b9a856f31155bdbc6db8dead8aa009de7e81615ea68 => status=ok hsize=40601 vsize=39579 fwd=0x15316f85 bwd=0xdbc6db5b type=0xaad8ea8d fcode=0xe8e79d00 ext=0x68ea1516 dc_precision=2 structure=1 tff=1 fpfd=0 cmv=0 qst=0 ivlc=1 alt=0 rff=1 progressive=0 first_field=1
+picture in=x:6bd1fd558841e0b09001ef5c8b576f9a2c145875571bfddc => status=ok hsize=53611 vsize=22013 fwd=0xb0e04188 bwd=0x5cef0190 type=0x9a6f578b fcode=0x7558142c ext=0xdcfd1b57 dc_precision=3 structure=1 tff=1 fpfd=0 cmv=1 qst=0 ivlc=1 alt=1 rff=0 progressive=1 first_field=1
+picture in=x:05283d5a83e281c30aa411fb0a612be4e49de223a1fb02a9 => status=ok hsize=10245 vsize=23101 fwd=0xc381e283 bwd=0xfb11a40a type=0xe42b610a fcode=0x23e29de4 ext=0xa902fba1 dc_precision=1 structure=0 tff=0 fpfd=1 cmv=0 qst=1 ivlc=1 alt=1 rff=0 progressive=1 first_field=1
+picture in=x:9e96f62bb5658a67e96367e46ae549df8c12c873ccde9d0d => status=ok hsize=38558 vsize=11254 fwd=0x678a65b5 bwd=0xe46763e9 type=0xdf49e56a fcode=0x73c8128c ext=0x0d9ddecc dc_precision=0 structure=3 tff=0 fpfd=0 cmv=1 qst=1 ivlc=0 alt=1 rff=1 progressive=1 first_field=1
+# length and argument refusals
+picture in=x: => status=length
+picture in=x:11 => status=length
+picture in=x:1111 => status=length
+picture in=x:111111 => status=length
+picture in=x:11111111 => status=length
+picture in=x:1111111111 => status=length
+picture in=x:111111111111 => status=length
+picture in=x:11111111111111 => status=length
+picture in=x:1111111111111111 => status=length
+picture in=x:111111111111111111 => status=length
+picture in=x:11111111111111111111 => status=length
+picture in=x:1111111111111111111111 => status=length
+picture in=x:111111111111111111111111 => status=length
+picture in=x:11111111111111111111111111 => status=length
+picture in=x:1111111111111111111111111111 => status=length
+picture in=x:111111111111111111111111111111 => status=length
+picture in=x:11111111111111111111111111111111 => status=length
+picture in=x:1111111111111111111111111111111111 => status=length
+picture in=x:111111111111111111111111111111111111 => status=length
+picture in=x:11111111111111111111111111111111111111 => status=length
+picture in=x:1111111111111111111111111111111111111111 => status=length
+picture in=x:111111111111111111111111111111111111111111 => status=length
+picture in=x:11111111111111111111111111111111111111111111 => status=length
+picture in=x:1111111111111111111111111111111111111111111111 => status=length
+picture in=x:11111111111111111111111111111111111111111111111111 => status=length
+picture in=x:1111111111111111111111111111111111111111111111111111 => status=length
+picture in=x:111111111111111111111111111111111111111111111111111111 => status=length
+picture in=x:11111111111111111111111111111111111111111111111111111111 => status=length
+picture in=x:1111111111111111111111111111111111111111111111111111111111 => status=length
+picture in=x:111111111111111111111111111111111111111111111111111111111111 => status=length
+picture in=x:11111111111111111111111111111111111111111111111111111111111111 => status=length
+picture in=x:1111111111111111111111111111111111111111111111111111111111111111 => status=length
+picture null=input in=x:10001000ffffffffffffffff01000000ffff00002c180000 => status=argument
+picture null=output in=x:10001000ffffffffffffffff01000000ffff00002c180000 => status=argument
+picture null=input in=x:10001000ffffffffffffffff01000000ffff00002c1800 => status=argument
