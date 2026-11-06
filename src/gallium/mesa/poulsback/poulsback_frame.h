@@ -36,8 +36,13 @@
 /* Limits of one frame: its draws (GPU draws and frame objects; each a vertex
  * PDS program and a TA entry in the PDS buffer's low region, below
  * POULSBACK_FRAME_GPU_PDS), and a CPU draw's vertices, the ordered
- * constructor's. A draw past them is refused; the frame is not split. */
-#define POULSBACK_FRAME_MAX_DRAWS 160u
+ * constructor's. A draw past them is refused; the frame is not split.
+ * A draw takes at most 116 bytes of the low region (its vertex PDS, a GPU
+ * TA entry and a STATE), the frame's own words about 370: 240 draws fill
+ * 28 KiB of the 32, and a frame's reserve of program places (two per draw)
+ * stays below PROGRAMS. A new frame loads and stores the whole target, so
+ * fewer of them count. */
+#define POULSBACK_FRAME_MAX_DRAWS 240u
 #define POULSBACK_FRAME_MAX_VERTICES 4096u
 /* A frame's own buffers (one set per frame in flight): the PDS words (TA
  * stream, pixel event, per-draw programs; GPU draws' from
