@@ -62,6 +62,7 @@ struct poulsback_submit {
 
 #define POULSBACK_2D_FILL 1U
 #define POULSBACK_2D_COPY 2U
+#define POULSBACK_2D_OVER 3U
 #define POULSBACK_2D_CLIP 1U
 
 /* `offset` into the BO is a multiple of 8, `stride` a multiple of
@@ -83,7 +84,9 @@ struct poulsback_2d_rect {
 /* `rop` is an X11 GX function (0-15) of the fill pixel or source and the
  * destination. FILL: `pixel` in the destination's format. COPY: from `src`
  * at (`src_x`, `src_y`), the same format as `dst`; one surface onto itself
- * copies as if through a temporary, two different views of one BO are refused. */
+ * copies as if through a temporary, two different views of one BO are refused.
+ * OVER: Render's Over of `src` (premultiplied ARGB8888, no mask) at (`src_x`,
+ * `src_y`) onto `dst` (ARGB8888 or XRGB8888) of another BO; `rop` is 0. */
 struct poulsback_2d_op {
     __u32 kind, flags, rop, dst, src, pixel;
     struct poulsback_2d_rect rect;

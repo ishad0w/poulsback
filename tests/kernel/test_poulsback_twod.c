@@ -147,6 +147,28 @@ EDIT(pixels_at_cap, (j->bo_count = 3, j->bos[2] = (struct poulsback_twod_bo){BAS
                      j->ops[1] = j->ops[0]))
 EDIT(pixels_over_cap, (pixels_at_cap(j), j->op_count = 3, j->ops[2] = j->ops[0]))
 
+/* Over: from A (ARGB, BO 0) onto B, made XRGB (BO 1), or within A. */
+static void over_onto_b(struct job *j, uint32_t rop, uint32_t pixel)
+{
+    j->surfaces[1].format = POULSBACK_2D_XRGB8888;
+    j->surfaces[1].stride = 256;
+    j->ops[1] = (struct poulsback_2d_op){.kind = POULSBACK_2D_OVER, .rop = rop, .dst = 1,
+                                         .pixel = pixel, .rect = {5, 6, 30, 40}, .src_x = 10,
+                                         .src_y = 20};
+}
+EDIT(over_ok, over_onto_b(j, 0, 0))
+EDIT(over_rop, over_onto_b(j, 3, 0))
+EDIT(over_pixel, over_onto_b(j, 0, 1))
+static void over_rgb565(struct job *j)
+{
+    j->ops[1] = (struct poulsback_2d_op){.kind = POULSBACK_2D_OVER, .dst = 1, .rect = {5, 6, 30, 40}};
+}
+static void over_self(struct job *j)
+{
+    j->ops[1] = (struct poulsback_2d_op){.kind = POULSBACK_2D_OVER, .rect = {50, 60, 30, 40},
+                                         .src_x = 10, .src_y = 20};
+}
+
 static const struct row {
     const char *name;
     void (*edit)(struct job *);
@@ -156,6 +178,11 @@ static const struct row {
 #define INVALID POULSBACK_TWOD_INVALID
 #define UNSUPPORTED POULSBACK_TWOD_UNSUPPORTED
     {"base", none, OK},
+    {"over onto XRGB of another BO", over_ok, OK},
+    {"over with a rop", over_rop, INVALID},
+    {"over with a pixel", over_pixel, INVALID},
+    {"over onto RGB565", over_rgb565, UNSUPPORTED},
+    {"over within one view", over_self, UNSUPPORTED},
     {"bo_count 0", no_bos, INVALID},
     {"bo_count 17", many_bos, INVALID},
     {"surface_count 0", no_surfaces, INVALID},
@@ -304,8 +331,8 @@ static void random_job(struct job *j)
     j->op_count = 1 + rnd(8);
     for (i = 0; i < j->op_count; i++) {
         struct poulsback_2d_op *op = &j->ops[i];
-        op->kind = rnd(60) ? 1 + rnd(2) : rnd(4);
-        op->rop = rnd(60) ? rnd(16) : 16 + rnd(4);
+        op->kind = rnd(60) ? (rnd(32) ? 1 + rnd(2) : POULSBACK_2D_OVER) : rnd(5);
+        op->rop = rnd(60) ? (op->kind == POULSBACK_2D_OVER && rnd(4) ? 0 : rnd(16)) : 16 + rnd(4);
         const struct poulsback_2d_surface *d, *s;
         op->dst = rnd(j->surface_count + !rnd(100));
         d = &j->surfaces[op->dst];
@@ -345,13 +372,19 @@ static int command(const struct job *j, const struct poulsback_2d_op *op, const 
                    int64_t x0, int64_t y0, int64_t x1, int64_t y1, uint32_t *used)
 {
     const struct poulsback_2d_surface *d = &j->surfaces[op->dst], *s = &j->surfaces[op->src];
-    int copy = op->kind == POULSBACK_2D_COPY, rx = 0, ry = 0;
+    int over = op->kind == POULSBACK_2D_OVER;
+    int copy = op->kind == POULSBACK_2D_COPY || over, rx = 0, ry = 0;
     int64_t dx = copy ? (int64_t)op->src_x - op->rect.x : 0;
     int64_t dy = copy ? (int64_t)op->src_y - op->rect.y : 0;
     uint64_t daddr = j->bos[d->bo].va - BASE + d->offset, saddr;
     uint32_t i = 0, blit, x, y, wd, ht, offset = 0, fmt[] = {0, 0x60000, 0x58000, 0x50000};
     if (w[i++] != 0x70000000 || w[i++] != (0xa0000000 | fmt[d->format] | d->stride) ||
         w[i++] != daddr)
+        return 0;
+    /* Over: the alpha control block, one plus one minus the source's alpha */
+    if (over && (w[i++] != 0x20000004 || w[i++] != 0x09000000 || w[i++] != 0x09000000 ||
+                 s->format != POULSBACK_2D_ARGB8888 || d->format == POULSBACK_2D_RGB565 ||
+                 s->bo == d->bo))
         return 0;
     if (copy) {
         saddr = j->bos[s->bo].va - BASE + s->offset;
@@ -366,7 +399,8 @@ static int command(const struct job *j, const struct poulsback_2d_op *op, const 
     if (copy) {
         int same = op->src == op->dst || !memcmp(s, d, sizeof(*s));
         uint32_t order = blit >> 23 & 3;
-        if (blit & 0x0e7f0000 || w[i++] != 0xffffffff)
+        if (blit & (over ? 0x0e7d0000 : 0x0e7f0000) || !over != !(blit & 0x00020000) ||
+            w[i++] != 0xffffffff)
             return 0;
         rx = order == 1 || order == 2;
         ry = order == 1 || order == 3;
@@ -413,7 +447,7 @@ static int decode(const struct job *j, const struct poulsback_2d_op *op, const u
                   uint32_t *used, int *split)
 {
     const struct poulsback_2d_surface *d = &j->surfaces[op->dst], *s = &j->surfaces[op->src];
-    int copy = op->kind == POULSBACK_2D_COPY;
+    int copy = op->kind == POULSBACK_2D_COPY || op->kind == POULSBACK_2D_OVER;
     int64_t x0 = op->rect.x, y0 = op->rect.y, x1 = x0 + op->rect.width, y1 = y0 + op->rect.height;
     int64_t dx = copy ? (int64_t)op->src_x - op->rect.x : 0;
     int64_t dy = copy ? (int64_t)op->src_y - op->rect.y : 0;
@@ -558,12 +592,15 @@ static void splits(void)
     CASE("clipped to 47 wide", op, 100, 400, {700, 47});
     split_job(&j, split_fill(0, 1280, 0, 300, 300));
     CHECK(plan(&j, &p) == POULSBACK_TWOD_OK && p.count == 0 && p.expected == 0); /* clipped away */
-    /* Capacity: 256 split copies and the scratch fill fill it exactly. */
+    /* Capacity: 256 split copies and the scratch fill, in a capacity counted
+     * for the largest command (an Over) split in two. */
     split_job(&j, big);
     j.op_count = POULSBACK_2D_MAX_OPS;
     for (i = 0; i < j.op_count; i++)
         j.ops[i] = big;
-    CHECK(plan(&j, &p) == POULSBACK_TWOD_OK && p.count == POULSBACK_TWOD_MAX_WORDS &&
+    CHECK(plan(&j, &p) == POULSBACK_TWOD_OK &&
+          p.count == 2 * POULSBACK_2D_MAX_OPS * SGX535_2D_RASTER_COPY_WORDS +
+                         SGX535_2D_RASTER_FILL_WORDS &&
           p.expected == 2 * (2 * POULSBACK_2D_MAX_OPS + 1));
     CHECK(poulsback_twod_plan(j.bos, j.bo_count, j.surfaces, j.surface_count, j.ops, j.op_count,
                               words, POULSBACK_TWOD_MAX_WORDS - 1, &p) == POULSBACK_TWOD_INVALID);
@@ -601,7 +638,9 @@ static void fuzz(unsigned jobs)
             }
             if (!used)
                 empty++;
-            else if (words[at + (j.ops[i].kind == POULSBACK_2D_COPY ? 6 : 3)] >> 23 & 3)
+            else if (words[at + (j.ops[i].kind == POULSBACK_2D_COPY  ? 6
+                                 : j.ops[i].kind == POULSBACK_2D_OVER ? 9
+                                                                      : 3)] >> 23 & 3)
                 ordered++;
             splits += split != 0;
             body_first += split == 2;

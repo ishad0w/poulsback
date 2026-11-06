@@ -70,9 +70,15 @@ static enum poulsback_twod_status encode(const struct sgx535_2d_raster_surface *
 	} else {
 		src = (struct sgx535_2d_raster_rect){op->src_x, op->src_y, op->rect.width,
 						     op->rect.height};
-		ret = status(sgx535_2d_raster_copy(&views[op->src], &src, &views[op->dst], &dst,
-						   clip, (enum sgx535_2d_raster_rop)op->rop,
-						   words + p->count, capacity - p->count, &n));
+		if (op->kind == POULSBACK_2D_OVER)
+			ret = status(sgx535_2d_raster_over(&views[op->src], &src, &views[op->dst],
+							   &dst, clip, words + p->count,
+							   capacity - p->count, &n));
+		else
+			ret = status(sgx535_2d_raster_copy(&views[op->src], &src, &views[op->dst],
+							   &dst, clip,
+							   (enum sgx535_2d_raster_rop)op->rop,
+							   words + p->count, capacity - p->count, &n));
 	}
 	if (ret || !n)
 		return ret;
@@ -109,7 +115,8 @@ static enum poulsback_twod_status encode_op(const struct sgx535_2d_raster_surfac
 					    sgx535_u64 *pixels)
 {
 	const struct sgx535_2d_raster_surface *d = &views[op->dst], *s = &views[op->src];
-	const int copy = op->kind == POULSBACK_2D_COPY, clipped = op->flags & POULSBACK_2D_CLIP;
+	const int copy = op->kind == POULSBACK_2D_COPY || op->kind == POULSBACK_2D_OVER,
+		  clipped = op->flags & POULSBACK_2D_CLIP;
 	const sgx535_u32 bpp = d->format == SGX535_2D_RASTER_RGB565 ? 2 : 4;
 	int64_t lo = op->rect.x, hi = lo + op->rect.width, top = op->rect.y,
 		bottom = top + op->rect.height;
@@ -203,6 +210,9 @@ poulsback_twod_plan(const struct poulsback_twod_bo *bos, sgx535_u32 bo_count,
 				return POULSBACK_TWOD_INVALID;
 		} else if (op->kind == POULSBACK_2D_COPY) {
 			if (op->pixel || op->src >= surface_count)
+				return POULSBACK_TWOD_INVALID;
+		} else if (op->kind == POULSBACK_2D_OVER) {
+			if (op->pixel || op->rop || op->src >= surface_count)
 				return POULSBACK_TWOD_INVALID;
 		} else {
 			return POULSBACK_TWOD_INVALID;

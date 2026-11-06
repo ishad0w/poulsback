@@ -11,10 +11,10 @@
 #include "sgx535_2d_encoder.h"
 #include "sgx535_types.h"
 
-/* Words for n operations: every one a copy split in two (HW-2D-006), then
- * the scratch fill. */
+/* Words for n operations: every one the largest command split in two
+ * (HW-2D-006), then the scratch fill. */
 #define POULSBACK_TWOD_WORDS(n)                                                                    \
-	((n) * 2 * SGX535_2D_RASTER_COPY_WORDS + SGX535_2D_RASTER_FILL_WORDS)
+	((n) * 2 * SGX535_2D_RASTER_MAX_WORDS + SGX535_2D_RASTER_FILL_WORDS)
 #define POULSBACK_TWOD_MAX_WORDS POULSBACK_TWOD_WORDS(POULSBACK_2D_MAX_OPS)
 /* An operation whose destination starts off a 64-byte boundary runs as a head
  * and an aligned body when it keeps at least this much of each row and this
