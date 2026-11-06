@@ -181,11 +181,26 @@ static void clear(struct pipe_context *p, unsigned buffers, uint32_t colors,
     else if (e)
         fail(c, e);
 }
+bool poulsback_context_viewport_rect(const struct poulsback_context *c, struct sgx535_rect *r)
+{
+    const float sx = fabsf(c->viewport.scale[0]), sy = fabsf(c->viewport.scale[1]);
+    const float e[4] = {c->viewport.translate[0] - sx, c->viewport.translate[1] - sy,
+                        c->viewport.translate[0] + sx, c->viewport.translate[1] + sy};
+    for (unsigned i = 0; i < 4; i++)
+        if (!(fabsf(e[i]) <= 32768.0f) || e[i] != floorf(e[i]))
+            return false;
+    if (!(e[2] > e[0] && e[3] > e[1]))
+        return false;
+    if (r)
+        *r = (struct sgx535_rect){(int32_t)e[0], (int32_t)e[1], (int32_t)e[2], (int32_t)e[3]};
+    return true;
+}
 /* The bound state a draw may have: BACKEND, a GPU draw of a backend program,
  * whose ISP words are the draw's, may test depth with any
  * function and write it or not, test and write a Z24S8 attachment's stencil
  * and offset its depth, blend, mask and logic-op its colour and test its
- * alpha. */
+ * alpha, and take any viewport of whole-pixel edges (the draw mask keeps it
+ * within the viewport's rectangle). */
 static bool state_supported(struct poulsback_context *c, bool backend)
 {
     const struct pipe_rasterizer_state *r;
@@ -280,10 +295,12 @@ static bool state_supported(struct poulsback_context *c, bool backend)
      * top-down surfaces, so the faces and the fragment's y need nothing
      * more). Dither is ignored above: it has no effect on the
      * 8-bit-per-channel targets this context renders. */
+    if (backend)
+        return (c->viewport.scale[0] > 0 && poulsback_context_viewport_rect(c, NULL)) ||
+               refused(c, "viewport");
     return (c->viewport.scale[0] == hw && c->viewport.translate[0] == hw &&
-            c->viewport.translate[1] == hh &&
-            (c->viewport.scale[1] == -hh || (backend && c->viewport.scale[1] == hh)) &&
-            (backend || (c->viewport.scale[2] == .5f && c->viewport.translate[2] == .5f))) ||
+            c->viewport.translate[1] == hh && c->viewport.scale[1] == -hh &&
+            c->viewport.scale[2] == .5f && c->viewport.translate[2] == .5f) ||
            refused(c, "viewport");
 }
 static int scene_sample_snapshot(const struct poulsback_context *c,
@@ -411,8 +428,7 @@ int poulsback_context_frame_shape(struct poulsback_context *c,
         solid != !program->source_linkage.count || rs->half_pixel_center != 1 ||
         rs->bottom_edge_rule != (object || c->viewport.scale[1] < 0) || rs->light_twoside ||
         (!object &&
-         (backend ? c->viewport.scale[0] != scale[0] || fabsf(c->viewport.scale[1]) != -scale[1] ||
-                        memcmp(c->viewport.translate, translate, 8)
+         (backend ? c->viewport.scale[0] <= 0 || !poulsback_context_viewport_rect(c, NULL)
                   : memcmp(c->viewport.scale, scale, sizeof(scale)) ||
                         memcmp(c->viewport.translate, translate, sizeof(translate)))))
         return -EOPNOTSUPP;
@@ -507,7 +523,7 @@ static int frame_sink(struct poulsback_context *c, const struct poulsback_draw_b
         batch->words + 3,           solid ? NULL : batch->words + 4,
         batch->stride_words,        batch->stride_words,
         batch->stride_words};
-    e = poulsback_context_draw_mask(c, rs->scissor);
+    e = poulsback_context_draw_mask(c, rs->scissor, false);
     if (e)
         return e;
     c->t_vertices += in.count;
@@ -723,11 +739,14 @@ static int gpu_elements(struct poulsback_context *c, int64_t bias, uint32_t low,
 }
 
 /* The viewport as the MTE's words (Tx, Sx, Ty, Sy, Tz, Sz) in WORDS when it
- * is not the window's: a bottom-up target's, a depth range other than [0, 1];
- * else NULL. */
+ * is not the window's over the whole target: a bottom-up target's, a part of
+ * the target, a depth range other than [0, 1]; else NULL. */
 static const uint32_t *draw_viewport(const struct poulsback_context *c, uint32_t words[6])
 {
-    if (c->viewport.scale[1] < 0 && c->viewport.scale[2] == .5f && c->viewport.translate[2] == .5f)
+    const float hw = (float)c->fb.width * .5f, hh = (float)c->fb.height * .5f;
+    if (c->viewport.scale[0] == hw && c->viewport.translate[0] == hw &&
+        c->viewport.scale[1] == -hh && c->viewport.translate[1] == hh &&
+        c->viewport.scale[2] == .5f && c->viewport.translate[2] == .5f)
         return NULL;
     for (unsigned i = 0; i < 3; i++) {
         memcpy(&words[2 * i], &c->viewport.translate[i], 4);
@@ -831,7 +850,7 @@ static int gpu_draw(struct poulsback_context *c, const struct pipe_draw_info *in
     if (!e && stencil && !c->stencil_ready)
         e = poulsback_context_stencil_object(c);
     if (!e)
-        e = poulsback_context_draw_mask(c, rs->scissor);
+        e = poulsback_context_draw_mask(c, rs->scissor, true);
     if (e)
         return e;
     c->stencil_ready |= stencil;
