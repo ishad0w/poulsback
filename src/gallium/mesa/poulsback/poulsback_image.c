@@ -15,7 +15,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
-#include <linux/dma-buf.h>
+#include "drm-uapi/dma-buf.h"
 #include <poll.h>
 #include <pthread.h>
 #include <stdbool.h>

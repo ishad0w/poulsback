@@ -2,7 +2,11 @@
 /* SPDX-FileCopyrightText: 2026 ishad0w and the poulsback contributors */
 #ifndef POULSBACK_EXEC_UAPI_H
 #define POULSBACK_EXEC_UAPI_H
+#ifdef __KERNEL__
 #include <linux/types.h>
+#else
+#include <drm.h> /* __u32 and friends on every system (libdrm) */
+#endif
 
 /* Execution contexts of the GPU execution engine (docs/kernel/execution.md).
  * The first context in a boot brings the engine up; it then owns the SGX for

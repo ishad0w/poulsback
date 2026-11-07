@@ -41,7 +41,23 @@
 #include "fbrop.h"
 #include "gcstruct.h"
 #include "servermd.h"
+#ifdef __linux__
 #include <linux/dma-buf.h>
+#else
+/* the dma-buf sync ioctl as Linux defines it (uapi, with the syscall
+ * note), for the systems whose DRM layer takes it from there */
+#include <stdint.h>
+#include <sys/ioctl.h>
+struct dma_buf_sync {
+    uint64_t flags;
+};
+#define DMA_BUF_SYNC_READ (1 << 0)
+#define DMA_BUF_SYNC_WRITE (2 << 0)
+#define DMA_BUF_SYNC_RW (DMA_BUF_SYNC_READ | DMA_BUF_SYNC_WRITE)
+#define DMA_BUF_SYNC_START (0 << 2)
+#define DMA_BUF_SYNC_END (1 << 2)
+#define DMA_BUF_IOCTL_SYNC _IOW('b', 0, struct dma_buf_sync)
+#endif
 #include <errno.h>
 #include <fcntl.h>
 #include <poll.h>
