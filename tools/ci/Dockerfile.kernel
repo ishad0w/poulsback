@@ -1,0 +1,39 @@
+# SPDX-FileCopyrightText: 2026 poulsback contributors
+# SPDX-License-Identifier: MIT
+FROM docker.io/library/debian@sha256:139eacf457e4a322903c5ac9d5ac33da2b12bd1340e830124694a467a415a0d9 AS build
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates build-essential git python3 patch pkg-config libdrm-dev \
+    libelf-dev util-linux \
+    linux-headers-6.1.0-54-686-pae=6.1.190-1 \
+    linux-headers-6.1.0-54-common=6.1.190-1 \
+    linux-kbuild-6.1 linux-compiler-gcc-12-x86 \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /source
+COPY tools/build_targets.py tools/fetch-kernel.py /source/tools/
+COPY support /source/support
+COPY kernel/integration/linux.lock.json kernel/integration/linux.patch /source/kernel/integration/
+COPY src/gallium/graphics.lock.json /source/src/gallium/
+RUN setarch i686 python3 -B tools/fetch-kernel.py \
+    --build-target debian-12-i686 --output /kernel-inputs
+COPY . /source/
+ARG BUILD_TARGET=debian-12-i686
+ARG JOBS=16
+RUN --network=none setarch i686 python3 -B tools/build-kernel.py \
+    --build-target "$BUILD_TARGET" \
+    --headers /usr/src/linux-headers-6.1.0-54-686-pae \
+    --kernel-source /kernel-inputs/linux --output /kernel-build \
+    --target physical --jobs "$JOBS"
+ARG SOURCE_REVISION
+RUN test -n "$SOURCE_REVISION" && mkdir /artifacts \
+    && cp /kernel-build/physical/poulsback.ko /artifacts/ \
+    && cp /kernel-build/report.json /artifacts/build-report.json \
+    && dpkg-query -W > /artifacts/packages.tsv \
+    && printf '%s\n' "$SOURCE_REVISION" > /artifacts/source-revision.txt \
+    && tar -czf /artifacts/build-evidence.tar.gz -C /kernel-build . \
+    && cd /artifacts && sha256sum poulsback.ko build-report.json packages.tsv \
+       source-revision.txt build-evidence.tar.gz > SHA256SUMS
+
+FROM scratch AS artifacts
+ARG SOURCE_REVISION
+LABEL org.opencontainers.image.revision=$SOURCE_REVISION
+COPY --from=build /artifacts/ /

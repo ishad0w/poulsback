@@ -302,6 +302,36 @@ vertex word projections and their CPU checks. They provide no GPU upload path.
 
 ## Kernel dependencies
 
+### Container and remote builds
+
+`tools/ci/Dockerfile.kernel` packages the native i386 module build using a
+digest-pinned Debian image and the exact reference headers. It keeps dependency
+installation and verified source restoration in cacheable layers before copying
+the driver sources. Its final image contains the module, checksums, source
+revision, package inventory, build report and compressed build evidence.
+Compilation has no network access. It runs no tests and loads no module.
+
+For Depot, use a reviewed, published commit as the Git build context, select an
+AMD64 builder with a `linux/386` container, and supply `DEPOT_TOKEN` through the
+caller's environment. Never pass credentials as build arguments or copy them into
+the build context. For example, with `PROJECT`, `COMMIT`, `GIT_URL` and a new `OUTPUT`
+directory set by the caller:
+
+```sh
+depot build --project "$PROJECT" --build-platform linux/amd64 --platform linux/386 \
+  --file tools/ci/Dockerfile.kernel --build-arg SOURCE_REVISION="$COMMIT" \
+  --build-arg BUILD_TARGET=debian-12-bonnell-i686 --build-arg JOBS=16 \
+  --save --metadata-file "$OUTPUT-metadata.json" \
+  --output "type=local,dest=$OUTPUT" "$GIT_URL#$COMMIT"
+```
+
+`--save` retains the artifact image in Depot Registry; the local exporter returns
+the files without installing or loading an image. Record the resulting build ID
+and manifest digest. This recipe builds the module, not a complete bootable kernel.
+Full-kernel and RT configuration builds require their own reviewed inputs.
+
+### Matching headers
+
 The current target is Debian 12 i386 with kernel `6.1.0-54-686-pae`, Debian
 package version `6.1.190-1`. Install the matching headers, kbuild/compiler
 dependencies, `libdrm-dev`, `pkg-config`, `patch`, and build tools in the build
