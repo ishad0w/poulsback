@@ -34,7 +34,8 @@ The common compiler, raster, UAPI and renderer are shared across targets.
 `kernel/integration/` owns Linux API/KMS integration and its patch; the existing
 Mesa overlay and patches own the matched Gallium integration. `support/` holds
 small data-only target requirements, grouped by system, rather than copies of
-the driver or distro-specific builders. There is one implemented target so far.
+the driver or distro-specific builders. The reference and Bonnell tuning candidate
+share those locked inputs and the same builders.
 
 The kernel builder resolves the one physical module into an immutable internal
 `KernelBuildPlan` (files, patch, Kbuild fragment and licence inputs) before
@@ -105,6 +106,14 @@ A container uses its host kernel; it cannot qualify another kernel's runtime.
 No build command loads a module, changes loader defaults, starts GPU work or
 removes a stock/recovery driver.
 
+The candidate `debian-12-bonnell-i686` target uses the same locked Debian kernel
+inputs with `-march=bonnell -mtune=bonnell`. Select it explicitly for Bonnell Atom
+CPUs; its instruction baseline is narrower than generic i686 compatibility.
+It keeps the 32-bit ABI and native toolchain requirements. The target selects
+compiler tuning only: it does not enable an RT kernel, qualify another kernel
+configuration, establish hardware runtime support, or claim a performance gain.
+Neither `-march=native` nor `-mtune=native` is accepted.
+
 DEB installation lifecycle, package hooks/rollback, CI, DKMS, additional kernel
 lines and system GLVND/DRI/EGL/GBM/Xorg activation are deferred. The first target
 does not claim Debian 13, antiX or Void support. Add support through trusted
@@ -161,8 +170,8 @@ already accepted. Do not copy a builder or change the Debian 12 reference lock.
 
 ### Candidate systems
 
-Only the Debian 12 reference manifest exists. The entries below are porting
-directions, not additional support declarations. All use the same procedure and
+The Debian 12 reference and its Bonnell tuning candidate exist. The entries below
+are porting directions, not additional support declarations. All use the same procedure and
 builders above; adding a distro must not create another driver or builder.
 
 | System | First useful scope | Separate work before claiming support |

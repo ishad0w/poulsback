@@ -60,12 +60,12 @@ def _cpu_flags(flags):
     if (
         not isinstance(flags, list)
         or len(flags) != 2
-        or flags[0] != "-march=i686"
+        or flags[0] not in ("-march=i686", "-march=bonnell")
         or not isinstance(flags[1], str)
         or not re.fullmatch(r"-mtune=[a-z0-9][a-z0-9-]*", flags[1])
         or flags[1] == "-mtune=native"
     ):
-        raise ValueError("Explicit i686 CPU baseline and portable tuning required")
+        raise ValueError("Explicit i686 or Bonnell CPU baseline and portable tuning required")
 
 
 def _executable(value):
@@ -244,7 +244,8 @@ def compiler_source(cxx=False):
     assertion = "static_assert" if cxx else "_Static_assert"
     return (
         "#include <features.h>\n#include <stdint.h>\n"
-        "#if !defined(__linux__) || !defined(__GLIBC__) || !defined(__i386__) || !defined(__i686__)\n"
+        "#if !defined(__linux__) || !defined(__GLIBC__) || !defined(__i386__) "
+        "|| !(defined(__i686__) || defined(__bonnell__))\n"
         '#error "Expected Linux glibc i686 target"\n#endif\n'
         f'{assertion}(sizeof(void *) == 4, "pointer ABI");\n'
         f'{assertion}(sizeof(int) == 4 && sizeof(long) == 4, "ILP32 ABI");\n'
