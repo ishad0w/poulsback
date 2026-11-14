@@ -794,10 +794,10 @@ static int psb_switch_tuple(struct poulsback_display_psb_source *s, const struct
 	    (t->fb->format->format != DRM_FORMAT_ARGB8888 &&
 	     t->fb->format->format != DRM_FORMAT_XRGB8888) ||
 	    t->fb->format->cpp[0] != 4 || t->fb->format->num_planes != 1 ||
-	    t->fb->modifier != DRM_FORMAT_MOD_LINEAR || t->fb->offsets[0] || s->width != 1280 ||
-	    s->height != 800 || s->stride != 5120 || s->mode.hdisplay != 1280 ||
-	    s->mode.vdisplay != 800 || t->fb->width != 1280 || t->fb->height != 800 ||
-	    t->fb->pitches[0] != 5120 ||
+	    t->fb->modifier != DRM_FORMAT_MOD_LINEAR || t->fb->offsets[0] ||
+	    s->width != s->mode.hdisplay ||
+	    s->height != s->mode.vdisplay || t->fb->width != s->width ||
+	    t->fb->height != s->height || t->fb->pitches[0] != s->stride ||
 	    (s->words[1] & DISPPLANE_PIXFORMAT_MASK) != DISPPLANE_32BPP_NO_ALPHA)
 		return POULSBACK_ERRSITE(-ESTALE);
 	ret = psb_switch_route(s, set);
@@ -1521,8 +1521,8 @@ static int psb_base_flip(struct poulsback_display_domain *d, struct poulsback_di
 		if (old < 0 || !c->images[old].bound)
 			return POULSBACK_ERRSITE(-EINVAL);
 	}
-	if (!binding || m->layout.width != 1280 || m->layout.height != 800 ||
-	    m->layout.stride != 5120 ||
+	if (!binding || m->layout.width != s->width || m->layout.height != s->height ||
+	    m->layout.stride != s->stride ||
 	    (m->layout.format != DRM_FORMAT_ARGB8888 && m->layout.format != DRM_FORMAT_XRGB8888) ||
 	    !m->pin.count || m->mapped != m->pin.count)
 		return POULSBACK_ERRSITE(-EINVAL);
@@ -1858,8 +1858,8 @@ static int psb_static_owner_prepare(struct drm_device *dev, struct drm_crtc *crt
 						   &o->source);
 	if (ret)
 		goto retained;
-	if (o->source->mode.hdisplay != 1280 || o->source->mode.vdisplay != 800 ||
-	    o->source->stride != 5120) {
+	if (o->source->width != o->source->mode.hdisplay ||
+	    o->source->height != o->source->mode.vdisplay) {
 		ret = POULSBACK_ERRSITE(-EOPNOTSUPP);
 		goto retained;
 	}
@@ -1900,7 +1900,8 @@ static int psb_static_pin(struct psb_static_owner *o, struct poulsback_framebuff
 		goto exit;
 	}
 	/* This BASE-only provider preserves the existing size/stride registers. */
-	if (fb->width != 1280 || fb->height != 800 || fb->pitches[0] != 5120 || !fb->format ||
+	if (fb->width != o->source->width || fb->height != o->source->height ||
+	    fb->pitches[0] != o->source->stride || !fb->format ||
 	    (fb->format->format != DRM_FORMAT_ARGB8888 &&
 	     fb->format->format != DRM_FORMAT_XRGB8888) ||
 	    fb->modifier != DRM_FORMAT_MOD_LINEAR || fb->offsets[0]) {
@@ -1953,12 +1954,13 @@ static int psb_static_request(struct drm_mode_set *set)
 	u32 i, j, found = 0;
 	int ret = 0;
 	if (!set->fb || !set->mode || set->x || set->y || crtc->primary->old_fb != fb ||
-	    !drm_mode_equal(set->mode, &crtc->mode) || crtc->mode.hdisplay != 1280 ||
-	    crtc->mode.vdisplay != 800 || fb->width != 1280 || fb->height != 800 ||
-	    fb->pitches[0] != 5120 || fb->format->depth != 24 || fb->format->num_planes != 1 ||
+	    !drm_mode_equal(set->mode, &crtc->mode) || fb->width != crtc->mode.hdisplay ||
+	    fb->height != crtc->mode.vdisplay || fb->format->depth != 24 ||
+	    fb->format->num_planes != 1 ||
 	    to_gma_crtc(crtc)->page_flip_event || set->num_connectors <= 0 ||
 	    set->num_connectors > dev->mode_config.num_connector || !set->connectors ||
-	    set->fb->width != 1280 || set->fb->height != 800 || set->fb->pitches[0] != 5120 ||
+	    set->fb->width != fb->width || set->fb->height != fb->height ||
+	    set->fb->pitches[0] != fb->pitches[0] ||
 	    !set->fb->format ||
 	    (set->fb->format->format != DRM_FORMAT_ARGB8888 &&
 	     set->fb->format->format != DRM_FORMAT_XRGB8888) ||
@@ -2031,7 +2033,7 @@ static int psb_static_owner_start(struct drm_mode_set *set,
 	slot = kzalloc(sizeof(*slot), GFP_KERNEL);
 	if (!slot)
 		return -ENOMEM;
-	/* Four 256 KiB-aligned slots of one 1280x800 buffer each. */
+	/* The fixed window bounds the number of native-sized, aligned buffers. */
 	ret = psb_static_owner_prepare(dev, set->crtc, POULSBACK_DISPLAY_WINDOW, slot);
 	o = *slot;
 	if (!o) {

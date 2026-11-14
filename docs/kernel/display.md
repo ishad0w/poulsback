@@ -9,7 +9,11 @@
 - [Display identity](#display-identity)
 
 The current typed display path switches buffers in the inherited panel mode.
-On the Dell this is pipe B at 1280×800 with a 5120-byte pitch. It does not
+Each replacement must match the authenticated legacy framebuffer dimensions
+and pitch, with framebuffer dimensions equal to the inherited mode. The
+existing format, alignment and BO/window bounds still apply. On the Dell this
+is pipe B at 1280×800 with a 5120-byte pitch; other panel geometries are admitted
+by these same checks but require their own hardware qualification. It does not
 yet implement typed full modesets, front-buffer resizing or multi-output
 operation; VT handoff with our DDX is not qualified. DPMS switches the panel through its encoder while
 the pipe keeps running. VGA testing is deferred because the reference setup
@@ -64,7 +68,9 @@ The GMA500 reservation adapter reserves one 32 MiB non-stolen window, 256 KiB
 aligned, in the legacy `gtt_mem` resource tree and confines the display
 suballocator to it. Each buffer's GTT offset is 256 KiB aligned (EMGD's
 async-flip rule), so eight 1280×800 buffers fit: the front and a fullscreen
-client's three back buffers, with room for replaced ones still retiring. Source/map/scratch identity and
+client's three back buffers, with room for replaced ones still retiring. Larger
+buffers fit fewer slots within the same window (six at 1600×768, pitch 6400);
+the allocator refuses exhaustion without enlarging the reservation. Source/map/scratch identity and
 capacity are rechecked after sleep; partial failure retains the reachable owner.
 
 `poulsback_framebuffer` owns the DRM metadata and embeds the typed display owner.
