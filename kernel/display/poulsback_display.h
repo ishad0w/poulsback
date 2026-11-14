@@ -60,8 +60,8 @@ enum poulsback_display_phase {
 };
 /* GTT offsets of shown buffers are 256 KiB aligned (EMGD's async-flip rule). */
 #define POULSBACK_DISPLAY_SLOT_ALIGN SZ_256K
-/* Upper bounds on image count and GTT space; larger aligned buffers may
- * exhaust the window before the image slots. */
+/* These limits cap image count and GTT space. Larger aligned buffers may
+ * fill the window before all image slots are used. */
 #define POULSBACK_DISPLAY_IMAGES 8
 #define POULSBACK_DISPLAY_WINDOW SZ_32M
 /* The display's hold on one SCANOUT BO (poulsback_bo_display_pin): a GEM

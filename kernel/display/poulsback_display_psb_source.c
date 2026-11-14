@@ -2033,7 +2033,7 @@ static int psb_static_owner_start(struct drm_mode_set *set,
 	slot = kzalloc(sizeof(*slot), GFP_KERNEL);
 	if (!slot)
 		return -ENOMEM;
-	/* The fixed window bounds the number of native-sized, aligned buffers. */
+	/* The fixed window limits how many aligned panel buffers fit. */
 	ret = psb_static_owner_prepare(dev, set->crtc, POULSBACK_DISPLAY_WINDOW, slot);
 	o = *slot;
 	if (!o) {
