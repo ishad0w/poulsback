@@ -166,10 +166,11 @@ no workaround.
 
 The selected PSB, EMGD and Linux register headers place the native-2D requester
 at SGX MMIO **byte offset `0x0c88`**. EMGD selects mask `0xfff00000` and shift
-20 for its base field. Poulsback's engine reads this register at start and
-refuses to run unless it holds the GATT start gma500 wrote, `0xD0000000`; its 2D
-addresses are offsets in the 256-MiB window above that base. `0x0c80` is a
-different register.
+20 for its base field. During probe, gma500 writes the GATT start from the PCI
+aperture. This address varies between machines. Once Poulsback owns the idle
+engine, it sets the register to its fixed 2D virtual base, `0xD0000000`, and
+checks the readback. Its 2D packet addresses are offsets in the 256-MiB window
+above that base. `0x0c80` is a different register.
 
 In PSB, `psb_init_2d` writes `pg->gatt_start` and retains the same byte base as
 `mmu_2d_offset`. `psb_apply_reloc` forms a packet offset from BO SGX VA plus
