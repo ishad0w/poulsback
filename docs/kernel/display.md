@@ -77,6 +77,8 @@ reject typed framebuffers before power, register, pin or event changes.
 
 ## Static source and cache custody
 
+The legacy fbdev producer zero-initializes its framebuffer request, including
+unused offsets, flags and the linear modifier, before filling its geometry.
 The selected PSB source owner authenticates the current legacy framebuffer,
 CRTC, pipe, device, GTT geometry and register snapshot. Its two bounded pipe
 slots retain the original DRM, framebuffer and module references before sleeping

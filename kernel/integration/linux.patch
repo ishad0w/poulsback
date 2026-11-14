@@ -60,6 +60,15 @@
  
  static vm_fault_t psbfb_vm_fault(struct vm_fault *vmf)
  {
+@@ -197,7 +205,7 @@
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+ 	struct fb_info *info;
+ 	struct drm_framebuffer *fb;
+-	struct drm_mode_fb_cmd2 mode_cmd;
++	struct drm_mode_fb_cmd2 mode_cmd = {};
+ 	int size;
+ 	int ret;
+ 	struct psb_gem_object *backing;
 @@ -297,6 +305,14 @@
  	if (obj == NULL)
  		return ERR_PTR(-ENOENT);
