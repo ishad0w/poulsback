@@ -1181,7 +1181,8 @@ static int engine_program(struct poulsback_engine *e)
 	    readl(regs + REG_CORE_REVISION) != SGX535_ENGINE121_REVISION ||
 	    readl(regs + REG_SOFT_RESET) || (readl(regs + REG_EVENT_STATUS) & ~(1U << 31)) ||
 	    readl(regs + REG_EVENT_STATUS2) || readl(regs + REG_BIF_BANK0) ||
-	    readl(regs + REG_3D_REQ_BASE) != POULSBACK_VM_PARAM_VA)
+	    readl(regs + REG_3D_REQ_BASE) != POULSBACK_VM_PARAM_VA ||
+	    readl(regs + REG_TWOD_REQ_BASE) != POULSBACK_VM_TWOD_REQ_BASE)
 		return POULSBACK_ERRSITE(-ENODEV);
 	memset(&e->ov, 0, sizeof(e->ov));
 	e->dpm_id = e->dpm_next = 0;
@@ -1200,10 +1201,6 @@ static int engine_program(struct poulsback_engine *e)
 	writel((u32)page_to_phys(e->directory), regs + REG_BIF_BASE15);
 	writel(ENGINE_BANK0_IDLE, regs + REG_BIF_BANK0);
 	writel(POULSBACK_VM_PARAM_VA, regs + REG_TA_REQ_BASE);
-	/* Owned 2D buffers use our VM range, so replace the PCI aperture base from probe. */
-	writel(POULSBACK_VM_TWOD_REQ_BASE, regs + REG_TWOD_REQ_BASE);
-	if (readl(regs + REG_TWOD_REQ_BASE) != POULSBACK_VM_TWOD_REQ_BASE)
-		return POULSBACK_ERRSITE(-EIO);
 	ret = engine_invaldc(regs);
 	if (ret)
 		return ret;

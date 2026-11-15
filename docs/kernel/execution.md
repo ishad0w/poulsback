@@ -40,16 +40,15 @@ flushed (the parameter buffer at `0x30000000` and the DPM tables at `0x48000000`
 16 page tables of a kernel directory; the work queues, the CPU latency request
 and the two `drm_sched` schedulers (2 s job timeout). Register programming
 needs the GPU as probe left it (core `0x01130000` rev `0x00010201`, reset
-released, no event pending, `BANK0` 0):
+released, no event pending, `BANK0` 0, and the private `TWOD_REQ_BASE`
+`0xD0000000` established by the integration BIF reset):
 1. use the freshly zeroed areas, or zero and flush them again on reprogramming;
 2. program the USE code windows (bank 3 + 2*w* vertex, 4 + 2*w* pixel, *w* = 0–5,
    from `0x40000000`) and `PDS_EXEC_BASE`;
 3. run engine121's 17-action enable program;
 4. put the kernel directory in `DIR_LIST_BASE15`, route every requester there
    (`BANK0` `0x000FFFFF`), and set `TA_REQ_BASE`;
-5. set `TWOD_REQ_BASE` to the owned 2D buffer range at `0xD0000000` and check
-   its readback. Probe sets this register from the PCI aperture, whose address
-   varies between machines. Then pulse `INVALDC` with readback;
+5. pulse `INVALDC` with readback;
 6. run the 29-action DPM program with its thresholds (TA and global beyond the
    pool, ZLS = pages − 477, PDS = ZLS − 473);
 7. bind the engine's IRQ route (once) and set the static enables (`HOST_ENABLE`
