@@ -26,8 +26,9 @@ progress, device queues and experiment records stay out of product documentation
   [Display](docs/kernel/display.md).
 - An unknown GPU outcome loses the engine for the boot. Lost fences signal
   an error while GPU-reachable BOs, scene storage and address spaces stay held.
-  No retry, reset or release follows. Safe unload/reload and suspend/resume
-  remain unsupported; teardown helpers are not wired into the lifecycle.
+  No retry, reset or release follows. Safe unload/reload remains unsupported.
+  The system-sleep path retains mappings and contexts through a known idle
+  power transition; device suspend/resume qualification remains open.
 - The [hardware inventory](README.md#hardware-behind-the-project) owns machine
   models and availability.
   Results apply to their named device; Dell qualification does not establish
@@ -41,6 +42,9 @@ progress, device queues and experiment records stay out of product documentation
   shared with Mesa; glamor remains a measured alternative.
 - Prioritize the 2D/3D/Mesa/X11 milestone. Video decode follows it. MPEG-2 has
   no Vulkan prerequisite.
+- A native PSB MPEG-2 frame-picture decoder now connects firmware upload,
+  private video mappings, synchronous completion and system sleep. Hardware
+  qualification remains open; [Video](docs/video.md) owns the limits.
 - [Building](docs/building.md) owns recipes and dependencies. Full `make check`
   needs the prepared build image and SDK inputs; standalone CPU checks have their
   own documented targets. These commands grant no device action.

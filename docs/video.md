@@ -122,3 +122,31 @@ authority. Device integration must qualify ordering, cache/MMU effects, reply or
 See [video tests](tests.md#video) for CPU suites, plane oracles, codec matrices
 and decode/presentation procedures, and [notices](../NOTICES.md) for source and
 firmware licensing boundaries.
+
+## Kernel MPEG-2 decoder
+
+The `PB_MPEG2_DECODE` ioctl accepts MPEG-2 4:2:0 frame pictures, native GEM
+handles, raster quantization matrices and bounded compressed slices. It builds
+PSB commands in kernel-owned storage. It does not accept register writes,
+device addresses or user command buffers. Separate field pictures are refused.
+
+This implementation has not yet been qualified on hardware. It uses the
+[PSB 0.30 firmware and transport](re/video/msvdx-firmware.md), not EMGD's
+firmware profile. The firmware is loaded from
+`poulsback/msvdx-fw-0.30.bin`; distribution must include its original license.
+The loader checks its container and reads back the uploaded words before
+starting MTX. The Vulkan and X11 components are not involved.
+
+Output and references use linear NV12, with UV at `pitch * ALIGN(height, 32)`.
+Pitch is 512, 1024, 1280 or 2048 bytes. Each synchronous call retains the native
+BOs, waits for their existing fences and maps them into a private video address
+space. Completion requires the matching successful firmware reply and idle
+hardware. Cached output pages are flushed before returning. Reference handles
+remain owned by the caller across pictures; completion does not free them.
+
+An unknown outcome freezes mappings and retains the job until reboot. No reset,
+retry or CPU fallback follows it. System sleep parks submissions and powers
+video down only after known idle; resume reloads firmware before reopening
+submission. Initial video use retains the module and a separate claim on the shared PCI
+power domain for the boot, as SGX use does. Both claims block runtime removal
+or unmanaged power-off; system sleep drains both engines.

@@ -70,6 +70,18 @@ bool poulsback_bo_is_scanout(const struct drm_gem_object *obj)
 	       (container_of(obj, struct poulsback_bo, base)->flags & POULSBACK_BO_SCANOUT);
 }
 
+int poulsback_bo_video_pages(struct drm_gem_object *obj, struct page ***pages,
+			     u32 *count, bool *cached)
+{
+	struct poulsback_bo *bo = to_bo(obj);
+	if (!bo)
+		return -EINVAL;
+	*pages = bo->pages;
+	*count = bo->count;
+	*cached = !(bo->flags & POULSBACK_BO_CPU_WC);
+	return 0;
+}
+
 int poulsback_bo_display_pin(struct drm_gem_object *obj, struct page ***pages, u32 *count)
 {
 	struct poulsback_bo *bo = poulsback_bo_is_scanout(obj) ? to_bo(obj) : NULL;
