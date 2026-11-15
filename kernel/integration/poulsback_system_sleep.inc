@@ -19,12 +19,18 @@ int gma_system_prepare(struct device *device)
 		ret = poulsback_display_psb_sleep_check(dev, false);
 	if (!ret)
 		ret = poulsback_engine_quiesce(dev);
+	if (!ret) {
+		ret = poulsback_video_quiesce(dev);
+		if (ret)
+			poulsback_engine_unquiesce(dev);
+	}
 	return ret;
 }
 
 void gma_system_complete(struct device *device)
 {
 	/* Another device may have refused sleep after our prepare callback. */
+	poulsback_video_unquiesce(pci_get_drvdata(to_pci_dev(device)));
 	poulsback_engine_unquiesce(pci_get_drvdata(to_pci_dev(device)));
 }
 
@@ -88,6 +94,9 @@ int gma_system_suspend(struct device *device)
 	ret = poulsback_engine_quiesce(dev);
 	if (ret)
 		goto poll;
+	ret = poulsback_video_quiesce(dev);
+	if (ret)
+		goto unpark;
 	ret = poulsback_save_sleep_gtt(dev);
 	if (ret)
 		goto unpark;
@@ -95,9 +104,16 @@ int gma_system_suspend(struct device *device)
 	if (ret)
 		goto discard;
 	p->poulsback_sleep_clocks = readl(p->sgx_reg + PSB_CR_CLKGATECTL);
-	ret = poulsback_engine_power_down(dev);
+	ret = poulsback_video_power_down(dev);
 	if (ret)
 		goto discard;
+	ret = poulsback_engine_power_down(dev);
+	if (ret) {
+		int cleanup = poulsback_video_resume(dev, 0);
+		if (cleanup)
+			drm_err(dev, "Video sleep rollback failed (%d)\n", cleanup);
+		goto discard;
+	}
 	p->poulsback_sleeping = true;
 	wmb();
 	gma_irq_uninstall(dev);
@@ -117,6 +133,7 @@ discard:
 	p->poulsback_sleep_gtt = NULL;
 	p->poulsback_sleep_entries = 0;
 unpark:
+	poulsback_video_unquiesce(dev);
 	poulsback_engine_unquiesce(dev);
 poll:
 	drm_kms_helper_poll_enable(dev);
@@ -144,6 +161,7 @@ int gma_system_resume(struct device *device)
 	if (!ret)
 		ret = gma_irq_install(dev);
 	ret = poulsback_engine_resume(dev, ret);
+	ret = poulsback_video_resume(dev, ret);
 	if (ret) {
 		sgx535_epoch_lost(dev, SGX535_EPOCH_PM);
 		drm_err(dev, "System resume failed (%d); GPU resources retained until reboot\n",

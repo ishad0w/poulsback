@@ -35,6 +35,7 @@ LICENSE_PATHS = (
 )
 # Project objects linked beside the patched gma500 sources.
 MODULE_OBJECTS = (
+    "poulsback_video.o poulsback_mpeg2.o "
     "poulsback_engine.o poulsback_overlap.o poulsback_teardown.o poulsback_context.o "
     "poulsback_scene.o "
     "poulsback_submit.o "
@@ -683,7 +684,7 @@ def project_sources():
         if "test" in path.relative_to(ROOT).parts or "_test." in path.name:
             continue
         yield path
-    for name in ("poulsback_bo_uapi.h", "poulsback_exec_uapi.h"):
+    for name in ("poulsback_bo_uapi.h", "poulsback_exec_uapi.h", "poulsback_video_uapi.h"):
         yield ROOT / "include/uapi/poulsback" / name
     for name in (
         "raster/sgx535_engine121",

@@ -42,6 +42,9 @@ progress, device queues and experiment records stay out of product documentation
   shared with Mesa; glamor remains a measured alternative.
 - Prioritize the 2D/3D/Mesa/X11 milestone. Video decode follows it. MPEG-2 has
   no Vulkan prerequisite.
+- A native PSB MPEG-2 frame-picture decoder now connects firmware upload,
+  private video mappings, synchronous completion and system sleep. Hardware
+  qualification remains open; [Video](docs/video.md) owns the limits.
 - [Building](docs/building.md) owns recipes and dependencies. Full `make check`
   needs the prepared build image and SDK inputs; standalone CPU checks have their
   own documented targets. These commands grant no device action.

@@ -115,7 +115,127 @@ The `.text` locations are section offsets, not live virtual addresses.
 Envelope words, GPU VAs, kernel aliases and MTX addresses are different
 namespaces. Numeric subtraction between them does not prove an LLDMA mapping,
 DMA extent or external-reference ownership. The per-slice address linkage
-and any buffer-size field's hardware unit need their own producer/consumer join.
+needs its own producer/consumer join. The PSB render-size producer below does
+not establish EMGD's corresponding unit.
+
+## PSB render sizes and DMA addresses
+
+The xpsb-glx 0.18 `psb_drv_video.so` is 188,948 bytes, SHA-256
+`f0103b67f8c7bc522fe67bdb0d0fc47c0e15cd1a08963aebe07e1a1176c6495b`.
+The reference collection contains identical copies in the original source
+archive and Ubuntu 10.04 PSB stack. Its x86 code gives the producer-side
+contracts below. All locations are ELF virtual addresses, not live pointers.
+This identifies host command construction, not executing MTX firmware or
+successful decoding.
+
+### Render buffer size counts bytes
+
+The render producer at `0x6890` reads command-start and command-end pointers
+from object offsets `0x114` and `0x118`. With no continuation segment, the branch
+at `0x6a48` subtracts these pointers without a shift. With continuation segments,
+it uses the saved first-segment length at offset `0x148`. The segment builder
+at `0x5bb0` saves that length as a byte-pointer difference, including the eight
+bytes it reserves for the continuation command.
+
+The producer at `0x698a..0x699d` writes that byte count into the low 12 bits of
+the render halfword at byte 2. It does not divide by four. The kernel consumer
+`psb_msvdx_map_command` in the same stack's `psb-kernel-source-4.42.0/psb_msvdx.c`
+(SHA-256 `6870b7822b7c6017c2150868eff4052275c6232c26c4b97aee3ed391bf7b2f0d`)
+patches the fence and PTD but leaves this halfword unchanged.
+
+This differs from the comparative AOSP `dfc4b4b` implementation:
+`psb_cmdbuf.c` writes `cmdbuffer_size / 4` to `FW_DEVA_DECODE_BUFFER_SIZE`.
+That is a different message profile. Its word count must not replace the byte
+count in this PSB `0x81` render message. The separate message header at byte 0
+still counts envelope bytes; host-ring indices count DWORDs.
+
+### Render commands point through an LLDMA record
+
+The render producer passes the command allocation, command-start byte offset
+and segment byte count to the helper at `0x5a00`. The helper returns the
+new LLDMA record's byte offset within that allocation. The relocation call
+at `0x6953..0x6985` places the full device address of that record in render
+byte 8. It is not the address of the first register command.
+
+The record builder at `0x5750` reserves 32 bytes per record. It clears each
+record, writes the device destination at byte 8, and relocates the source
+allocation address into byte 24. It divides the supplied byte count by the
+selected peripheral width before writing the transfer count at byte 4.
+The width lookup at `0x20660` is `{4, 2, 1}` bytes. Transfers larger than
+65,535 peripheral units create another record; the next-record address at
+byte 28 is encoded as `device_address >> 4`. The last record clears that
+address and sets bit 31 of the word at byte 4.
+
+The producer's eight-word DMA profiles begin at `0x20500`. Relevant entries are:
+
+| Profile index | Device destination | Peripheral width | MMU group |
+| ---: | ---: | ---: | ---: |
+| 0, VLC table | `0x3000` | 2 bytes | 0 |
+| 1, bitstream | `0x0820` | 1 byte | 0 |
+| 3, MC command buffer | `0x0350` | 4 bytes | 1 |
+| 4, VLD command buffer | `0x0350` | 4 bytes | 0 |
+
+The render caller selects profile 4 when its context field at offset `0x104`
+equals 2; otherwise it selects profile 3. The bitstream address is carried by
+its own LLDMA source relocation, separate from the three shift-register setup
+words. Full source spans, alignment, reference-picture ownership and output
+planes still need validation by the native submission boundary. These static
+locators do not authorize reuse of the vendor's unchecked relocation ioctl.
+
+### PSB render operation flags
+
+The producer adds flags at final publication, after constructing the render
+message. At `0x6138..0x617c`, it ORs `0x4000` into byte 28 of the last message
+in the batch (`0x2000` for earlier messages). It also ORs `0x0800` when context
+field `0x104` equals 2. The MPEG-2 path sets that field to 2 at `0x7735`.
+The matched kernel consumer preserves these flags.
+
+The comparative AOSP `dxva_fw_flags.h` names the old render flag
+`FW_VA_RENDER_IS_VLD_NOT_MC`. Its newer DEVA profile assigns another meaning
+to the same bit; that meaning does not apply to this PSB render envelope.
+Poulsback submits each slice as a one-message batch, so byte 28 must contain
+`0x4800`: VLD operation and a host completion interrupt. The VLD DMA profile
+alone does not select the firmware operation.
+
+### PSB compressed-input allocation extent
+
+The matched PSB host producer rounds buffer allocation sizes to 32 KiB at
+`0x2ed7..0x2ee0` before the BO-create call at `0x2f00`. The comparative AOSP
+`psb__allocate_BO_buffer` uses the same rounding for slice-data buffers.
+Poulsback keeps this allocation extent for compressed input and clears the
+padding. Slice validation and DMA lengths still use the logical payload size;
+allocated padding does not extend the accepted bitstream.
+
+The matching PSB 4.42 kernel defaults `drm_psb_trap_pagefaults` to zero in
+`psb_drv.c:40` and passes it to `psb_mmu_driver_init` at lines 609–612.
+`psb_mmu_alloc_pd` in `psb_mmu.c:224–267` then fills unused PDEs and PTEs
+with mappings to a cleared dummy page. BO bindings use this default directory
+through `drm_psb_tbe_bind` in `psb_buffer.c`. Reads beyond a BO can therefore
+reach zeros in that driver instead of faulting on an unmapped page.
+
+Poulsback keeps one cleared tail page after the 32-KiB-rounded compressed
+input allocation. This bounds the compatibility mapping to the page immediately
+after the input; other unused addresses remain unmapped. The tail belongs to
+the job and follows its normal completion or HOLD lifetime. Logical payload,
+slice bounds and DMA lengths remain unchanged. This differs from PSB's mapping
+of every unused address and still needs device qualification; it does not
+establish a general MSVDX read-ahead limit or malformed-input recovery.
+
+### PSB context tags
+
+The same PSB producer builds a context tag at `0x36df..0x36ec` from the low
+16 bits of its VA context ID and a process-derived upper halfword
+(`getpid() << 16` at `0x4858..0x4863`). It writes
+that tag at render byte 12 (`0x6909..0x6912`). The matched kernel consumer
+preserves it while patching the fence and directory. Normal userspace decoder
+contexts therefore carry a nonzero tag; zero is not the native producer's
+first-context convention.
+
+The native kernel decoder owns one serialized engine and private address
+space, so it uses one nonzero opaque tag, `0x00010001`. This preserves the
+producer's tag form without exporting process IDs or accepting userspace tags.
+Whether a zero tag caused a particular device failure still requires a matched
+physical run; static construction alone does not establish firmware behavior.
 
 ## Ring and reply semantics
 
@@ -133,3 +253,13 @@ Fence assignment, observed completion, CPU/display visibility and last
 reference use are separate facts. Neither a successful firmware-init call nor
 correct decoded planes closes those missing joins. The broader
 [decode pipeline](decode-pipeline.md) describes the output and lifetime limits.
+
+## MSVDX memory-fault diagnostics
+
+The EMGD 1.8 source `emgd/include/msvdx.h` identifies the MSVDX MMU status
+register at block offset `0x068c`. Its `msvdx.c` fault handler reads that register
+when interrupt status contains `0x00000f00`. The comparative AOSP core header
+places the fault page address in bits 31:12 and access status in bit 0.
+Poulsback records this status, the current page-table entries and the job's
+mapped ranges when a memory fault occurs. These reads do not clear the fault,
+reset the engine or authorize releasing its mappings.

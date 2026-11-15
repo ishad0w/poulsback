@@ -168,3 +168,12 @@ Ordinary CPU builds need no vendor binary. See the
 [Linux licensing rules](https://www.kernel.org/doc/html/latest/process/license-rules.html)
 and [SPDX identifier guidance](https://spdx.github.io/spdx-spec/v2.3.1/using-SPDX-short-identifiers-in-source-files/)
 for annotation syntax; neither grants rights in an unknown source.
+
+## MPEG-2 VLC table
+
+`kernel/video/poulsback_mpeg2_vlc.h` contains the MPEG-2 VLC table from Intel's
+MIT-licensed AOSP `psb-video` source, revision `dfc4b4b`,
+`src/mrst/psb_MPEG2.c`. The header preserves its Intel/Imagination copyright,
+license and contributor credit. The 764 table bytes match the PSB xpsb-glx
+0.18 video producer at file offset `0x208c0`; the newer AOSP command protocol
+is not used by this decoder. No firmware binary is included in this repository.

@@ -1,6 +1,7 @@
 # Video and VA-API status
 
-WIP. Command preparation and models exist; poulsback has no live hardware decoder.
+WIP. A native MPEG-2 kernel decoder is connected to the build and system sleep.
+Hardware decoding, reference correctness and throughput are not yet qualified.
 
 ## Working and checked
 
@@ -10,7 +11,8 @@ WIP. Command preparation and models exist; poulsback has no live hardware decode
 
 ## In progress
 
-- Physical MSVDX firmware/loader integration, command transport and matching completion.
+- Physical qualification of the implemented PSB firmware loader, MPEG-2 command
+  transport and matching completion path.
 - Typed YUV/reference lifetime, complete plane/guard checks and safe release/reuse.
 - VA-API integration and presentation; separate decode/composition/throughput checks.
 

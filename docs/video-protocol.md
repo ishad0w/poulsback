@@ -203,3 +203,53 @@ aliasing and unchanged outputs on refusal. [Vector grammar](../tests/vectors/msv
 defines their text format; `MANIFEST.sha256` pins the data. Running the checks
 does not require a vector generator. A CPU pass establishes these contracts,
 not firmware compatibility, GPU address validity, physical completion or decode quality.
+
+## Native MPEG-2 ioctl
+
+`poulsback_video_uapi.h` defines ABI 1 of `PB_MPEG2_DECODE`. Unlike the CPU
+helpers above, it reaches the physical decoder. [Video](video.md#kernel-mpeg-2-decoder)
+owns its resource and completion rules.
+
+Each request supplies width, height, a permitted pitch, output/reference GEM
+handles, coding type (1 I, 2 P, 3 B), four packed f_code nibbles in forward
+horizontal/vertical then backward horizontal/vertical order, and raster-order
+intra/non-intra matrices. Active motion-vector f_code values must be 1–9.
+
+The coding_extension bits follow the MPEG-2 VA picture layout:
+
+| Bits | Field |
+| --- | --- |
+| 1:0 | intra_dc_precision |
+| 3:2 | picture_structure; only 3 (frame) is accepted |
+| 4 | top_field_first |
+| 5 | frame_pred_frame_dct |
+| 6 | concealment_motion_vectors |
+| 7 | q_scale_type |
+| 8 | intra_vlc_format |
+| 9 | alternate_scan |
+| 10 | repeat_first_field |
+| 11 | progressive_frame |
+| 12 | is_first_field; 1 for a frame picture |
+
+`flags & POULSBACK_MPEG2_PROGRESSIVE_SEQUENCE` selects a coded height rounded
+to 16; interlaced sequences round it to 32. Both use output UV at the height
+rounded to 32. The validated slice array supplies byte offsets/lengths,
+macroblock bit offsets, zero-based vertical positions and quantizer codes.
+The kernel checks slice start codes and extra-information header length before
+constructing commands. One picture is at most 4 MiB and 2,048 slices; one slice
+is at most 29 * 65,535 bytes so its DMA records fit the command page.
+
+The command builder follows the PSB producer identified in
+[MSVDX firmware](re/video/msvdx-firmware.md#psb-render-sizes-and-dma-addresses).
+Its x86 helpers at ELF VA 0x51c0–0x5330 write register and RENDEC blocks;
+0x735e–0x78f4 connects the MPEG-2 registers, matrices, reference bases and VLC
+load. Register blocks use 0x10000000 | pair_count, followed by
+0x04800000 | register_offset and its value. RENDEC blocks contain their word
+count, 0x1000b, zero, the register/count descriptor, values and terminator 7.
+The builder ends each slice with 0x60000000. It uses VLD DMA profile 4, VLC
+profile 0 and bitstream profile 1; each request invalidates the video MMU.
+
+The command page holds commands in its first 2 KiB, 32-byte DMA records in the
+next KiB, and the 764-byte VLC table at offset 3072. Commands, compressed input,
+RENDEC buffers and surfaces have checked mappings in the private video VM.
+These source-backed layouts still require physical output and lifetime validation.

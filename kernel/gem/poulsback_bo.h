@@ -23,6 +23,10 @@ int poulsback_bo_info_ioctl(struct drm_device *dev, void *data, struct drm_file 
 int poulsback_bo_resolve(struct drm_file *file, u32 handle, struct drm_gem_object **obj, u64 *va,
 			 u64 *size);
 void poulsback_bo_release(struct drm_gem_object *obj, struct poulsback_vm *vm);
+/* The resolved native BO keeps these pages pinned until release. Video maps
+ * them in its own MMU and flushes write-back pages before device access. */
+int poulsback_bo_video_pages(struct drm_gem_object *obj, struct page ***pages,
+			     u32 *count, bool *cached);
 /* Type identity only: a poulsback BO is never a gma500 psb_gem_object. */
 bool poulsback_bo_is_object(const struct drm_gem_object *obj);
 /* A BO created with POULSBACK_BO_SCANOUT (always CPU_WC). */

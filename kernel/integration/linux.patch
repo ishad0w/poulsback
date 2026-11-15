@@ -1243,11 +1243,12 @@
  #endif
 --- a/power.c
 +++ b/power.c
-@@ -30,6 +30,11 @@
+@@ -30,6 +30,12 @@
  
  #include "gem.h"
  #include "power.h"
 +#include "poulsback_engine.h"
++#include "poulsback_video.h"
 +#include <drm/drm_probe_helper.h>
 +#include <linux/slab.h>
 +#include "sgx535_source_epoch.h"
@@ -1389,7 +1390,7 @@
  /*
 --- a/psb_drv.c
 +++ b/psb_drv.c
-@@ -33,9 +33,19 @@
+@@ -33,9 +33,21 @@
  #include "mid_bios.h"
  #include "power.h"
  #include "psb_drv.h"
@@ -1398,8 +1399,10 @@
 +#include "poulsback_bo.h"
 +#include "poulsback_bo_uapi.h"
 +#include "poulsback_engine.h"
++#include "poulsback_video.h"
 +#include "poulsback_file.h"
 +#include "poulsback_exec_uapi.h"
++#include "poulsback_video_uapi.h"
 +#include "poulsback_display_psb_source.h"
 +#include <drm/drm_prime.h>
  #include "psb_intel_reg.h"
@@ -1409,7 +1412,7 @@
  
  static const struct drm_driver driver;
  static int psb_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent);
-@@ -92,6 +102,13 @@
+@@ -92,6 +102,14 @@
   * Standard IOCTLs.
   */
  static const struct drm_ioctl_desc psb_ioctls[] = {
@@ -1420,6 +1423,7 @@
 +	DRM_IOCTL_DEF_DRV(PB_SUBMIT, poulsback_submit_ioctl, DRM_RENDER_ALLOW),
 +	DRM_IOCTL_DEF_DRV(PB_DISPLAY_INFO, poulsback_display_info_ioctl, DRM_RENDER_ALLOW),
 +	DRM_IOCTL_DEF_DRV(PB_SUBMIT_2D, poulsback_submit_2d_ioctl, DRM_RENDER_ALLOW),
++	DRM_IOCTL_DEF_DRV(PB_MPEG2_DECODE, poulsback_mpeg2_decode_ioctl, DRM_RENDER_ALLOW),
  };
  
  /**
@@ -1474,7 +1478,7 @@
 -	/* TODO: Kill vblank etc here */
 +	/* First, including out_err and devm_add_action_or_reset's reset callback.
 +	 * The engine's claim requires a complete teardown before unload. */
-+	if (poulsback_engine_retained(dev))
++	if (poulsback_engine_retained(dev) || poulsback_video_retained(dev))
 +		return;
 +	if (sgx535_epoch_close(dev))
 +		return; /* Keep a busy engine on HOLD. */

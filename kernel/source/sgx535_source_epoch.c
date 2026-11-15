@@ -23,7 +23,10 @@ static struct drm_device *bound;
 static u64 epoch = 1;
 static u32 lost;
 /* closed: PM or removal ended the boot's source; claimed: the engine owns it. */
-static bool closed, claimed;
+static bool closed;
+#define CLAIM_SGX 1U
+#define CLAIM_VIDEO 2U
+static u32 claimed;
 static struct drm_device *external_device;
 static struct task_struct *external_task;
 int sgx535_epoch_external_begin(struct drm_device *dev)
@@ -154,7 +157,7 @@ int sgx535_epoch_close(struct drm_device *dev)
 	WARN_ON(epoch_unbind(dev));
 	return 0;
 }
-int sgx535_epoch_executor_claim(struct drm_device *dev)
+static int executor_claim(struct drm_device *dev, u32 owner)
 {
 	unsigned long flags;
 	int ret = 0;
@@ -164,14 +167,22 @@ int sgx535_epoch_executor_claim(struct drm_device *dev)
 	spin_lock_irqsave(&source_lock, flags);
 	if (bound != dev)
 		ret = POULSBACK_ERRSITE(-ENODEV);
-	else if (claimed || closed)
+	else if ((claimed & owner) || closed || lost)
 		ret = POULSBACK_ERRSITE(-EBUSY);
 	else
-		claimed = true; /* The executor owns the SGX for the rest of the boot. */
+		claimed |= owner;
 	spin_unlock_irqrestore(&source_lock, flags);
 	mutex_unlock(&admission);
 	diag_after(SGX535_DIAG_LEASE, ret, 0);
 	return ret;
+}
+int sgx535_epoch_executor_claim(struct drm_device *dev)
+{
+	return executor_claim(dev, CLAIM_SGX);
+}
+int sgx535_epoch_video_claim(struct drm_device *dev)
+{
+	return executor_claim(dev, CLAIM_VIDEO);
 }
 static void lost_locked(struct drm_device *dev, u32 reason)
 {
@@ -202,7 +213,7 @@ void sgx535_epoch_executor_release(struct drm_device *dev)
 	mutex_lock(&admission);
 	spin_lock_irqsave(&source_lock, flags);
 	if (bound == dev)
-		claimed = false;
+		claimed &= ~CLAIM_SGX;
 	spin_unlock_irqrestore(&source_lock, flags);
 	mutex_unlock(&admission);
 	diag_after(SGX535_DIAG_LEASE, 0, 0);

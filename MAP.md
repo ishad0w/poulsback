@@ -33,7 +33,7 @@ For a new task, start at the boundary involved:
 | `src/xorg/`: the Xorg DDX (KMS, EXA on the 2D core, DRI3, Present) | [Graphics](docs/graphics.md) |
 | `src/raster/` 2D | [Native 2D](docs/native-2d.md) |
 | `src/raster/` 3D plans, packets and depth | [Native 3D](docs/native-3d.md) |
-| `src/video/` | [Video](docs/video.md); [message, ring and MPEG-2 descriptor protocol](docs/video-protocol.md) |
+| `src/video/`, `kernel/video/`, video UAPI | [Video](docs/video.md); [message, ring and MPEG-2 descriptor protocol](docs/video-protocol.md) |
 | Kernel/userspace observations | [Diagnostics](docs/diagnostics.md) |
 | Component responsibilities and actual compilation boundaries | [Architecture](docs/architecture.md#component-boundaries) |
 | Current subsystem progress and research coverage | [Status pages](docs/status/README.md); compact [README overview](README.md#status) |
