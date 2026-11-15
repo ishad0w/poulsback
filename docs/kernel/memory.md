@@ -119,6 +119,8 @@ PM, reset, removal or a fault can permanently close the bound source. A
 pre-bind loss is ignored because nothing is published yet; the probe's
 start-up reset precedes the bind.
 
-The engine's claim blocks PM until reboot in the current lifecycle.
+The engine's claim blocks runtime PM. Controlled [system sleep](system-sleep.md)
+retains the same source epoch, page tables and pinned objects after restoring
+their hardware state. Failed restoration closes the source permanently.
 This admission rule does not by itself pin module text or make unload
 safe; see the [execution lifecycle boundary](execution.md#p3-engine).

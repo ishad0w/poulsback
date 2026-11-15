@@ -6,6 +6,7 @@
  * two frames after its successor's BASE store (pipe frame counter).
  */
 #include <linux/debugfs.h>
+#include <linux/delay.h>
 #include <linux/err.h>
 #include "poulsback_errsite.h"
 #include <linux/io.h>
@@ -2475,6 +2476,67 @@ int poulsback_display_psb_legacy_flip(struct drm_crtc *crtc, struct drm_framebuf
 	release->unpin = old;
 	psb_flip_arm(crtc, pipe, event, release);
 	return 0;
+}
+
+int poulsback_display_psb_sleep_check(struct drm_device *dev, bool resumed)
+{
+	struct drm_psb_private *p = to_drm_psb_private(dev);
+	struct drm_crtc *crtc;
+	u32 pipe, i;
+	int ret = 0;
+
+	drm_modeset_lock_all(dev);
+	drm_for_each_crtc(crtc, dev)
+	{
+		ret = poulsback_framebuffer_legacy_check(crtc->primary->fb, crtc->primary->old_fb);
+		if (ret)
+			goto out;
+	}
+	for (pipe = 0; pipe < 2; pipe++) {
+		struct poulsback_display_psb_source *s = p->poulsback_display_sources[pipe];
+		struct psb_static_owner *o = p->poulsback_display_static_owners[pipe];
+		struct psb_pipe_position at;
+		unsigned long expires;
+		if (!s && !o)
+			continue;
+		if (!s || !o || !o->prepared || o->held || o->base.held || o->domain.held ||
+		    o->base.preparing || o->base.withdrawing || o->base.current_image ||
+		    s->report.held || s->primary->fb != s->fb || s->change.shown.fb ||
+		    s->change.staged.fb || s->change.entered || s->change.restoring ||
+		    s->change.held || psb_flip_pending(s)) {
+			ret = -EBUSY;
+			goto out;
+		}
+		ret = psb_source_read(s, false);
+		if (ret)
+			goto out;
+		if (!resumed)
+			continue;
+		ret = psb_pipe_position(dev, pipe, &at);
+		if (ret || !at.enabled) {
+			ret = ret ?: -EIO;
+			goto out;
+		}
+		/* The frame counter can restart at wake. Require two new frames. */
+		mutex_lock(&o->domain.lock);
+		for (i = 0; i < ARRAY_SIZE(o->base.images); i++)
+			if (o->base.images[i].image)
+				o->base.images[i].frame = at.frame;
+		mutex_unlock(&o->domain.lock);
+		/* Allow the usual retirement interval while retirement work is frozen. */
+		expires = jiffies + msecs_to_jiffies(200);
+		while (o->base.count) {
+			ret = psb_base_frames_after(&o->base, at.frame);
+			if (ret != -EAGAIN || time_after_eq(jiffies, expires))
+				break;
+			msleep(5);
+		}
+		if (ret)
+			goto out;
+	}
+out:
+	drm_modeset_unlock_all(dev);
+	return ret;
 }
 
 /* Read-only debugfs dri/N/poulsback_display: per pipe, the plane and cursor

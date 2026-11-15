@@ -26,8 +26,9 @@ progress, device queues and experiment records stay out of product documentation
   [Display](docs/kernel/display.md).
 - An unknown GPU outcome loses the engine for the boot. Lost fences signal
   an error while GPU-reachable BOs, scene storage and address spaces stay held.
-  No retry, reset or release follows. Safe unload/reload and suspend/resume
-  remain unsupported; teardown helpers are not wired into the lifecycle.
+  No retry, reset or release follows. Safe unload/reload remains unsupported.
+  The system-sleep path retains mappings and contexts through a known idle
+  power transition; device suspend/resume qualification remains open.
 - The [hardware inventory](README.md#hardware-behind-the-project) owns machine
   models and availability.
   Results apply to their named device; Dell qualification does not establish

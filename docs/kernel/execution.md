@@ -21,20 +21,22 @@ no kernel interface carries them.
 
 The execution engine (`kernel/engine/`) is the only GPU path. The first
 `CONTEXT_CREATE` claims the SGX through `sgx535_epoch_executor_claim`; the
-current lifecycle keeps that claim until reboot and refuses runtime PM.
+claim remains held across controlled system sleep and refuses runtime PM.
 A claim after PM or removal closed the source returns `-EBUSY`. KMS clients
 do not claim the SGX.
 
-**Unload and suspend are unsupported.** The teardown helpers below are not
-wired into the Linux lifecycle, and an unload callback that returns early
-skips cleanup; it cannot reject `rmmod`. So the engine itself holds a module
+**Unload remains unsupported.** An unload callback that returns early
+skips cleanup; it cannot reject `rmmod`. The engine itself holds a module
 reference from its claim, ready or wedged, until release frees it: once a
 client has claimed the SGX, `rmmod` is refused for the rest of the boot.
 Before the first claim, open files, exported BOs and display owners hold
-the module as usual. Safe unload/reload and suspend/resume remain
-unvalidated.
+the module as usual. The [system-sleep path](system-sleep.md) preserves these
+references. Its source implementation still requires device qualification.
+Safe unload/reload remains unvalidated.
 
-**Bring-up (once per boot)** separates allocation from register programming.
+**Bring-up** separates allocation from register programming. System resume
+reuses the allocated engine and repeats register programming after a known idle
+power transition.
 Allocation touches no register: the two device areas, 32 MiB each, zeroed and
 flushed (the parameter buffer at `0x30000000` and the DPM tables at `0x48000000`), mapped by
 16 page tables of a kernel directory; the work queues, the CPU latency request
@@ -57,12 +59,13 @@ wedged (HOLD), which is [the loss](#the-loss). Each context has a 3D scheduler
 entity and a 2D entity; creating one also links the device mappings into the
 file's directory. A job timeout wedges the engine; nothing is retried or reset.
 
-**Teardown helpers exist but have no lifecycle caller.** Quiesce refuses a
+**Quiesce and power-down also serve system sleep.** Quiesce refuses a
 lost engine or a held job,
 parks both schedulers, waits for the job slots to empty (two job timeouts and
 100 ms, after which the engine wedges) and reads `EVENT_STATUS`,
 `EVENT_STATUS2`, `BLIT_STATUS` and `BIF_INT_STAT`: an unacknowledged event, a
 busy 2D core or a BIF fault refuses it and unparks the schedulers.
+After the slots drain, quiesce flushes both engine work queues.
 Power-down, after quiesce, writes the EMGD deinit sequence: `0xa58`, `0xa68`,
 `0xa6c`, `0xa70`, `0xa48`, `HOST_ENABLE`, `HOST_ENABLE2`, `CLKGATECTL` ← 0.
 Release, after quiesce with the engine ready and no hardware fence alive, stops

@@ -26,6 +26,8 @@ struct poulsback_display_psb_source_report {
 /* Cached discovery only, after REMOVE source closure. This neither accesses
  * hardware nor certifies fetch retirement; a live slot bars manual teardown. */
 bool poulsback_display_psb_source_retained(struct drm_device *);
+/* System sleep requires legacy scanout; native buffers remain pinned. */
+int poulsback_display_psb_sleep_check(struct drm_device *, bool resumed);
 /* Existing GTT borrower transaction only: caller holds domain/GTT/source locks.
  * Pure check and nofail CPU stores; no MMIO, locking or reference release. */
 int poulsback_display_psb_source_link_check(struct poulsback_display_psb_source *,
