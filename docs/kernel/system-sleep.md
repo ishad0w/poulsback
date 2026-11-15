@@ -80,3 +80,8 @@ audio and network recovery. Check the driver logs for both restoration messages
 and new GPU completions. Repeated cycles, failed admission, 3D workloads and
 other hardware need their own evidence. Compilation alone establishes none of
 those results.
+
+Probe and system resume use the same integration BIF reset. It establishes the
+private 2D requester base before strict engine admission. The probe invalidates
+the source epoch before reset; a drained system resume preserves the retained
+epoch and mappings. This path does not recover an unknown GPU outcome.
