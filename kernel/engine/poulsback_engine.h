@@ -21,7 +21,7 @@ struct poulsback_vm;
  * that exists, ready or lost, holds a module reference until its release. */
 struct poulsback_engine *poulsback_engine_get(struct drm_device *dev);
 /* True once the engine exists: its claim requires a complete teardown
- * before unload or power-down. Lifecycle callers are not wired yet. */
+ * before unload. System sleep retains it while the GPU is powered down. */
 bool poulsback_engine_retained(struct drm_device *dev);
 /* The scheduler of 3D jobs, or of 2D jobs (TWOD). */
 struct drm_gpu_scheduler *poulsback_engine_scheduler(struct poulsback_engine *engine, bool twod);
@@ -35,13 +35,17 @@ void poulsback_engine_link_vm(struct poulsback_engine *engine, struct poulsback_
  * the engine to drain (two job timeouts and 100 ms, then it wedges), read
  * the idle registers; -EBUSY, the schedulers unparked and the engine as it
  * is, when lost, holding a job or not idle. Power-down: EMGD's deinit
- * writes, only after quiesce. Release: after quiesce, with the engine ready and no
- * hardware fence alive, stop the schedulers, unbind the IRQ route, free every
+ * writes, only after quiesce. System sleep uses both helpers and keeps the
+ * allocations. Release: after quiesce, with the engine ready and no hardware
+ * fence alive, stop the schedulers, unbind the IRQ route, free every
  * page, release the claim and drop the engine's module reference (taken at
  * its claim); -EBUSY otherwise, freeing nothing. */
 int poulsback_engine_quiesce(struct drm_device *dev);
 int poulsback_engine_power_down(struct drm_device *dev);
 int poulsback_engine_release(struct drm_device *dev);
+/* System sleep keeps the engine, contexts and mappings allocated. */
+void poulsback_engine_unquiesce(struct drm_device *dev);
+int poulsback_engine_resume(struct drm_device *dev, int restore_error);
 
 struct poulsback_exec_file *poulsback_exec_file_create(void);
 void poulsback_exec_file_destroy(struct poulsback_exec_file *exec);

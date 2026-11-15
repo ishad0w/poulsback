@@ -1290,6 +1290,16 @@ int poulsback_engine_quiesce(struct drm_device *dev)
 	if (r == POULSBACK_TEARDOWN_BUSY)
 		engine_wedge(e, POULSBACK_ERRSITE(-ETIMEDOUT));
 	if (!r) {
+		/* A slot can report completion before its work callback returns. */
+		flush_workqueue(e->wq);
+		flush_workqueue(e->wq2d);
+		cancel_delayed_work_sync(&e->sched.work_tdr);
+		cancel_delayed_work_sync(&e->sched2d.work_tdr);
+		/* Both schedulers are already parked. They free completed jobs after wake. */
+		s = engine_teardown_state(e);
+		r = poulsback_teardown_drained(&s);
+	}
+	if (!r) {
 		struct poulsback_teardown_idle idle = {
 			.event1 = readl(e->regs + REG_EVENT_STATUS),
 			.event2 = readl(e->regs + REG_EVENT_STATUS2),
@@ -1304,6 +1314,42 @@ int poulsback_engine_quiesce(struct drm_device *dev)
 	} else {
 		e->quiesced = true;
 	}
+unlock:
+	mutex_unlock(&engine_lock);
+	return ret;
+}
+
+void poulsback_engine_unquiesce(struct drm_device *dev)
+{
+	struct poulsback_engine *e;
+	mutex_lock(&engine_lock);
+	e = engine;
+	if (e && e->dev == dev && e->quiesced) {
+		e->quiesced = false;
+		engine_unpark(e);
+	}
+	mutex_unlock(&engine_lock);
+}
+
+int poulsback_engine_resume(struct drm_device *dev, int restore_error)
+{
+	struct poulsback_engine *e;
+	int ret = restore_error;
+	mutex_lock(&engine_lock);
+	e = engine;
+	if (!e || e->dev != dev)
+		goto unlock;
+	if (!ret && (!e->quiesced || e->state != ENGINE_READY))
+		ret = POULSBACK_ERRSITE(-EIO);
+	if (!ret)
+		ret = engine_program(e);
+	if (ret)
+		engine_wedge(e, ret);
+	else
+		drm_info(dev, "GPU engine restored after system sleep\n");
+	e->quiesced = false;
+	/* A failed restore drains queued jobs through the existing lost path. */
+	engine_unpark(e);
 unlock:
 	mutex_unlock(&engine_lock);
 	return ret;

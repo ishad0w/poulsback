@@ -21,6 +21,7 @@ For a new task, start at the boundary involved:
 | Source or subject | Owner |
 | --- | --- |
 | `kernel/`, `include/uapi/`, kernel clients | [Kernel](docs/kernel.md) |
+| System sleep and retained GPU/display state | [System sleep](docs/kernel/system-sleep.md) |
 | Kernel execution (the GPU engine) and UAPI | [Kernel execution](docs/kernel/execution.md) |
 | Kernel backing, withdrawal/release, PRIME and source/MMU transactions | [Kernel memory](docs/kernel/memory.md) |
 | `kernel/gem/`, `kernel/memory/poulsback_vm*`: buffer objects and per-file address spaces | [Buffer objects](docs/kernel/memory.md#buffer-objects-and-per-file-address-spaces) |

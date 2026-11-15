@@ -170,7 +170,8 @@ static void framebuffer_retire_work(struct work_struct *work)
 	ret = locked ?: ret;
 	if (ret == -EAGAIN && o->retire_polls < RETIRE_POLLS) {
 		o->retire_polls++;
-		schedule_delayed_work(&o->retire_work, msecs_to_jiffies(RETIRE_POLL_MS));
+		queue_delayed_work(system_freezable_wq, &o->retire_work,
+				   msecs_to_jiffies(RETIRE_POLL_MS));
 		return;
 	}
 	mutex_lock(&o->lock);
@@ -201,7 +202,7 @@ static void framebuffer_destroy(struct drm_framebuffer *fb)
 	if (!ret && o->report.pin_completed && !o->report.retired) {
 		mutex_unlock(&o->lock);
 		atomic_inc(&fb_retire_queued);
-		schedule_delayed_work(&o->retire_work, 0);
+		queue_delayed_work(system_freezable_wq, &o->retire_work, 0);
 		return;
 	}
 	if (!ret)
