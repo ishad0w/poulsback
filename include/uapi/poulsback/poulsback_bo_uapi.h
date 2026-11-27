@@ -2,7 +2,11 @@
 /* SPDX-FileCopyrightText: 2026 ishad0w and the poulsback contributors */
 #ifndef POULSBACK_BO_UAPI_H
 #define POULSBACK_BO_UAPI_H
+#ifdef __KERNEL__
 #include <linux/types.h>
+#else
+#include <drm.h> /* __u32 and friends on every system (libdrm) */
+#endif
 
 /* Buffer objects in a per-file SGX address space (docs/kernel/memory.md). */
 #define POULSBACK_BO_ABI 1U

@@ -6,11 +6,11 @@
 #include "pipe/p_context.h"
 #include "pipe/p_screen.h"
 #include "pipe/p_state.h"
+#include "util/libsync.h" /* the sync-file ioctls on every system */
 #include "util/u_inlines.h"
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
-#include <linux/sync_file.h>
 #include <poll.h>
 #include <stdatomic.h>
 #include <stdlib.h>
