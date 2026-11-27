@@ -10,7 +10,18 @@
 #define DST_SURF 0xa0000000u
 #define SRC_SURF 0x90000000u
 #define SRC_OFF 0x30000000u
+#define CTRL 0x20000000u
 #define BLIT 0x80000000u
+/* Control block: the alpha words follow (alpha channel, then colour). */
+#define CTRL_ALPHA 0x00000004u
+/* An alpha word: the source factor (bits 22:20, inverted by bit 23) and the
+ * destination factor (26:24, inverted by 27). Factor 0 is one, 1 the
+ * source's alpha. */
+#define ALPHA_DST_SRC_ALPHA 0x01000000u
+#define ALPHA_DST_INVERT 0x08000000u
+#define OVER_ALPHA (ALPHA_DST_SRC_ALPHA | ALPHA_DST_INVERT)
+/* BLIT: blend through the control block's alpha words. */
+#define BLIT_ALPHA 0x00020000u
 /* A copy's colour word. */
 #define COPY_COLOUR 0xffffffffu
 /* Positions and sizes are 12-bit fields. */
@@ -272,5 +283,53 @@ enum sgx535_2d_raster_status sgx535_2d_raster_copy(const struct sgx535_2d_raster
     out[9] = pair(g.width, g.height);
     out[10] = FLUSH;
     *written = SGX535_2D_RASTER_COPY_WORDS;
+    return SGX535_2D_RASTER_OK;
+}
+
+enum sgx535_2d_raster_status sgx535_2d_raster_over(const struct sgx535_2d_raster_surface *src,
+                                                   const struct sgx535_2d_raster_rect *src_rect,
+                                                   const struct sgx535_2d_raster_surface *dst,
+                                                   const struct sgx535_2d_raster_rect *dst_rect,
+                                                   const struct sgx535_2d_raster_rect *clip,
+                                                   uint32_t *out, size_t capacity,
+                                                   size_t *written)
+{
+    enum sgx535_2d_raster_status status;
+    struct geometry g;
+
+    if (!src || !src_rect || !dst || !dst_rect || !out || !written)
+        return SGX535_2D_RASTER_INVALID_ARGUMENT;
+    status = check_surface(src);
+    if (status == SGX535_2D_RASTER_OK)
+        status = check_surface(dst);
+    if (status != SGX535_2D_RASTER_OK)
+        return status;
+    if (src->format != SGX535_2D_RASTER_ARGB8888 || dst->format == SGX535_2D_RASTER_RGB565 ||
+        src_rect->width != dst_rect->width || src_rect->height != dst_rect->height ||
+        src->storage_id == dst->storage_id)
+        return SGX535_2D_RASTER_UNSUPPORTED;
+    if (!identity_ok(src, dst))
+        return SGX535_2D_RASTER_UNPROVEN_ALIAS;
+    if (!clip_geometry(src, src_rect, dst, dst_rect, clip, &g)) {
+        *written = 0;
+        return SGX535_2D_RASTER_OK;
+    }
+    if (capacity < SGX535_2D_RASTER_OVER_WORDS)
+        return SGX535_2D_RASTER_NO_SPACE;
+    out[0] = FENCE;
+    out[1] = surface_word(DST_SURF, dst);
+    out[2] = (uint32_t)dst->offset_bytes;
+    out[3] = CTRL | CTRL_ALPHA;
+    out[4] = OVER_ALPHA;
+    out[5] = OVER_ALPHA;
+    out[6] = surface_word(SRC_SURF, src);
+    out[7] = (uint32_t)src->offset_bytes;
+    out[8] = SRC_OFF | pair(g.src_x, g.src_y);
+    out[9] = blit_word(0, ternary_rop(SGX535_2D_RASTER_COPY, SOURCE)) | BLIT_ALPHA;
+    out[10] = COPY_COLOUR;
+    out[11] = pair(g.dst_x, g.dst_y);
+    out[12] = pair(g.width, g.height);
+    out[13] = FLUSH;
+    *written = SGX535_2D_RASTER_OVER_WORDS;
     return SGX535_2D_RASTER_OK;
 }

@@ -12,7 +12,9 @@
  * on its dma-buf every time (the client never waits before Present); X's own
  * BO waits only while a 2D job of X's names it. EXA's global marker is unused.
  *
- * Fills and copies on 2D-class BOs at 32 bpp, any GX function, are SUBMIT_2D
+ * Fills and copies on 2D-class BOs at 32 bpp, any GX function, and Render's
+ * Over of a premultiplied ARGB picture without a mask (the 2D core's alpha
+ * blend; everything else of Render stays fb's), are SUBMIT_2D
  * jobs on X's own context when the CPU would otherwise read write-combined
  * memory or wait for the GPU (docs/graphics.md): the CPU writes the
  * WC front at full speed but reads it slowly, and it fills and copies WB
@@ -40,6 +42,7 @@
 #include "fb.h"
 #include "fbrop.h"
 #include "gcstruct.h"
+#include "picturestr.h"
 #include "servermd.h"
 #include <linux/dma-buf.h>
 #include <errno.h>
@@ -290,6 +293,25 @@ static FbBits *row(uint32_t i, int y)
     return (FbBits *)(void *)((char *)job.privs[i]->map + (size_t)y * job.surfaces[i].stride);
 }
 
+/* An Over of the job on the CPU, as pixman (fb's Render) draws it. */
+static void over_on_cpu(const struct poulsback_2d_op *o)
+{
+    const struct poulsback_2d_surface *ss = &job.surfaces[o->src], *ds = &job.surfaces[o->dst];
+    pixman_image_t *src = pixman_image_create_bits(PIXMAN_a8r8g8b8, (int)ss->width,
+                                                   (int)ss->height, (uint32_t *)job.privs[o->src]->map,
+                                                   (int)ss->stride);
+    pixman_image_t *dst = pixman_image_create_bits(
+        ds->format == POULSBACK_2D_ARGB8888 ? PIXMAN_a8r8g8b8 : PIXMAN_x8r8g8b8, (int)ds->width,
+        (int)ds->height, (uint32_t *)job.privs[o->dst]->map, (int)ds->stride);
+    if (src && dst)
+        pixman_image_composite32(PIXMAN_OP_OVER, src, NULL, dst, o->src_x, o->src_y, 0, 0,
+                                 o->rect.x, o->rect.y, (int)o->rect.width, (int)o->rect.height);
+    if (src)
+        pixman_image_unref(src);
+    if (dst)
+        pixman_image_unref(dst);
+}
+
 /* The operations of a refused job, or of any job once acceleration is off,
  * drawn by fb after waiting as fb's own access would. A copy within one pixmap
  * runs in the direction that reads each pixel before it is written. */
@@ -308,6 +330,8 @@ static void draw_on_cpu(void)
             fbSolid(row(o->dst, o->rect.y), stride, o->rect.x * 32, 32, (int)o->rect.width * 32,
                     (int)o->rect.height, fbAnd((int)o->rop, o->pixel, FB_ALLONES),
                     fbXor((int)o->rop, o->pixel, FB_ALLONES));
+        else if (o->kind == POULSBACK_2D_OVER)
+            over_on_cpu(o);
         else
             fbBlt(row(o->src, o->src_y), (FbStride)(job.surfaces[o->src].stride / sizeof(FbBits)),
                   o->src_x * 32, row(o->dst, o->rect.y), stride, o->rect.x * 32,
@@ -517,6 +541,54 @@ static void Copy(PixmapPtr dst, int src_x, int src_y, int dst_x, int dst_y, int 
 }
 
 static void DoneCopy(PixmapPtr dst)
+{
+    (void)dst;
+    op.src = op.dst = NULL;
+}
+
+/* Render's Over of a premultiplied ARGB picture (no mask, transform, repeat,
+ * alpha map or component alpha) onto ARGB or XRGB, on the 2D core under
+ * the copies' rule: out of or onto WC memory, or with an operand a CPU
+ * access would wait for. Source and destination are different BOs. */
+static Bool CheckComposite(int render_op, PicturePtr src, PicturePtr mask, PicturePtr dst)
+{
+    return render_op == PictOpOver && !mask && src->pDrawable && !src->transform &&
+           !src->repeat && !src->alphaMap && !dst->alphaMap && !src->componentAlpha &&
+           src->format == PICT_a8r8g8b8 &&
+           (dst->format == PICT_a8r8g8b8 || dst->format == PICT_x8r8g8b8);
+}
+
+static Bool PrepareComposite(int render_op, PicturePtr src_pict, PicturePtr mask_pict,
+                             PicturePtr dst_pict, PixmapPtr src, PixmapPtr mask, PixmapPtr dst)
+{
+    struct poulsback *pb = pb_of(xf86ScreenToScrn(dst->drawable.pScreen));
+    struct poulsback_pixmap *s = exaGetPixmapDriverPrivate(src),
+                            *d = exaGetPixmapDriverPrivate(dst);
+    (void)mask_pict;
+    if (!pb->accel || mask || !CheckComposite(render_op, src_pict, NULL, dst_pict) ||
+        !twod(src) || !twod(dst) || src->drawable.depth != 32 || s->handle == d->handle ||
+        !(write_combined(s) || write_combined(d) || busy(s) || busy(d)))
+        return FALSE;
+    op.masked = FALSE;
+    begin(pb, src, dst);
+    return TRUE;
+}
+
+static void Composite(PixmapPtr dst, int src_x, int src_y, int mask_x, int mask_y, int dst_x,
+                      int dst_y, int width, int height)
+{
+    (void)mask_x;
+    (void)mask_y;
+    if (width <= 0 || height <= 0)
+        return;
+    add(pb_of(xf86ScreenToScrn(dst->drawable.pScreen)),
+        (struct poulsback_2d_op){.kind = POULSBACK_2D_OVER,
+                                 .rect = {dst_x, dst_y, (uint32_t)width, (uint32_t)height},
+                                 .src_x = src_x,
+                                 .src_y = src_y});
+}
+
+static void DoneComposite(PixmapPtr dst)
 {
     (void)dst;
     op.src = op.dst = NULL;
@@ -874,6 +946,10 @@ Bool poulsback_exa_init(ScreenPtr screen, struct poulsback *pb)
     exa->PrepareCopy = PrepareCopy;
     exa->Copy = Copy;
     exa->DoneCopy = DoneCopy;
+    exa->CheckComposite = CheckComposite;
+    exa->PrepareComposite = PrepareComposite;
+    exa->Composite = Composite;
+    exa->DoneComposite = DoneComposite;
     exa->MarkSync = MarkSync;
     exa->WaitMarker = WaitMarker;
     if (!exaDriverInit(screen, exa)) {

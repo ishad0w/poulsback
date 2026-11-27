@@ -19,6 +19,9 @@
  * the second-last word. */
 #define SGX535_2D_RASTER_FILL_WORDS 8u
 #define SGX535_2D_RASTER_COPY_WORDS 11u
+#define SGX535_2D_RASTER_OVER_WORDS 14u
+/* The largest command, for buffer sizes. */
+#define SGX535_2D_RASTER_MAX_WORDS SGX535_2D_RASTER_OVER_WORDS
 /* Offsets are relative to TWOD_REQ_BASE, inside this domain. */
 #define SGX535_2D_RASTER_ADDRESS_BYTES 0x10000000ull
 /* The core reads the 15-bit stride field as signed. */
@@ -100,5 +103,18 @@ enum sgx535_2d_raster_status sgx535_2d_raster_copy(const struct sgx535_2d_raster
                                                    const struct sgx535_2d_raster_rect *clip,
                                                    enum sgx535_2d_raster_rop rop, uint32_t *out,
                                                    size_t capacity, size_t *written);
+
+/* Render's Over of a premultiplied ARGB8888 source without a mask onto an
+ * ARGB8888 or XRGB8888 destination: the copy with the core's alpha blend,
+ * the source times one plus the destination times one minus the source's
+ * alpha, for the colour and the alpha channels alike. Source and destination
+ * are different objects (no blend within one view). */
+enum sgx535_2d_raster_status sgx535_2d_raster_over(const struct sgx535_2d_raster_surface *src,
+                                                   const struct sgx535_2d_raster_rect *src_rect,
+                                                   const struct sgx535_2d_raster_surface *dst,
+                                                   const struct sgx535_2d_raster_rect *dst_rect,
+                                                   const struct sgx535_2d_raster_rect *clip,
+                                                   uint32_t *out, size_t capacity,
+                                                   size_t *written);
 
 #endif

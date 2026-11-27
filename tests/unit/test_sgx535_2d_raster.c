@@ -240,6 +240,37 @@ static void literal_vectors(void)
     CHECK(w[1] == 0xa0058100 && w[3] == 0x80005a5a && w[4] == 0xff336699);
 }
 
+/* Over: the literal command, and what the encoder refuses. */
+static void over_vectors(void)
+{
+    struct sgx535_2d_raster_surface s = {1, 0x1000, 8192, 64, 32, 256, SGX535_2D_RASTER_ARGB8888},
+                                    d = {2, 0x4000, 8192, 64, 32, 256, SGX535_2D_RASTER_XRGB8888};
+    struct sgx535_2d_raster_rect sr = {4, 6, 7, 5}, dr = {2, 3, 7, 5};
+    uint32_t w[WORDS];
+    size_t n = 0;
+    static const uint32_t over[] = {0x70000000, 0xa0058100, 0x4000,     0x20000004, 0x09000000,
+                                    0x09000000, 0x90060100, 0x1000,     0x30004006, 0x8002cccc,
+                                    0xffffffff, 0x2003,     0x7005,     0xf0000000};
+    CHECK(sgx535_2d_raster_over(&s, &sr, &d, &dr, NULL, w, WORDS, &n) == SGX535_2D_RASTER_OK &&
+          n == SGX535_2D_RASTER_OVER_WORDS);
+    words_equal(w, over, SGX535_2D_RASTER_OVER_WORDS);
+    d.format = SGX535_2D_RASTER_ARGB8888;
+    CHECK(sgx535_2d_raster_over(&s, &sr, &d, &dr, NULL, w, WORDS, &n) == SGX535_2D_RASTER_OK &&
+          w[1] == 0xa0060100);
+    CHECK(sgx535_2d_raster_over(&s, &sr, &d, &dr, NULL, w, SGX535_2D_RASTER_OVER_WORDS - 1, &n) ==
+          SGX535_2D_RASTER_NO_SPACE);
+    /* one object, a source without alpha, a 16-bit destination */
+    CHECK(sgx535_2d_raster_over(&s, &sr, &s, &dr, NULL, w, WORDS, &n) ==
+          SGX535_2D_RASTER_UNSUPPORTED);
+    s.format = SGX535_2D_RASTER_XRGB8888;
+    CHECK(sgx535_2d_raster_over(&s, &sr, &d, &dr, NULL, w, WORDS, &n) ==
+          SGX535_2D_RASTER_UNSUPPORTED);
+    s.format = SGX535_2D_RASTER_ARGB8888;
+    d.format = SGX535_2D_RASTER_RGB565;
+    CHECK(sgx535_2d_raster_over(&s, &sr, &d, &dr, NULL, w, WORDS, &n) ==
+          SGX535_2D_RASTER_UNSUPPORTED);
+}
+
 static void memory_cases(void)
 {
     unsigned char a[BYTES + GUARD * 2], b[BYTES + GUARD * 2], oa[BYTES], ob[BYTES], expected[BYTES];
@@ -546,6 +577,7 @@ static void rgb565_roundtrip(void)
 int main(void)
 {
     literal_vectors();
+    over_vectors();
     rejection_and_edges();
     rgb565_roundtrip();
     memory_cases();
