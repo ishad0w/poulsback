@@ -235,12 +235,16 @@ int poulsback_context_frame_shape(struct poulsback_context *c,
 /* poulsback_context_objects.c: the solid template and
  * the colour pass-through a backend draw's group is built from, with the
  * template's default colour; the draw mask to the bound scissor (SCISSOR) or
- * the whole target; the stencil's clear object; the load draw, which starts
- * an open frame no full clear began; a clear that does not start the frame
- * over; an object that writes nothing, for a frame of clears alone. */
+ * the whole target, within a backend draw's viewport (VIEWPORT); the
+ * stencil's clear object; the load draw, which starts an open frame no full
+ * clear began; a clear that does not start the frame over; an object that
+ * writes nothing, for a frame of clears alone. */
 extern const struct sgx535_fragment_dri_nir_ir poulsback_template_program[2];
 extern const uint32_t poulsback_template_uniforms[4];
-int poulsback_context_draw_mask(struct poulsback_context *c, bool scissor);
+int poulsback_context_draw_mask(struct poulsback_context *c, bool scissor, bool viewport);
+/* The bound viewport's window rectangle, from the top left as the scissor's:
+ * false unless its edges are whole pixels around a positive extent. */
+bool poulsback_context_viewport_rect(const struct poulsback_context *c, struct sgx535_rect *r);
 const struct poulsback_fragment_state *poulsback_context_fragment_state(struct poulsback_context *,
                                                                         bool flat);
 int poulsback_context_draw_shape(struct poulsback_context *, bool solid, bool flat,

@@ -325,11 +325,15 @@ value masks and write masks. Derivative instructions still refuse integration.
 Varyings may be smooth or flat; flat ones take the triangle's last vertex, and
 `flatshade_first` refuses. Sampling uses the bounded resources described below. Scissor
 changes emit draw-mask objects before the affected draw. Backend draws also
-accept a positive-Y FBO viewport and nondefault depth range; CPU-shaded or
-COLOR0-program draws retain the narrower window viewport and LESS/write or
-no-depth profile. Unsupported backend-only state cannot fall back to that
-narrower path. These are source integration contracts, separate from the named
-[device checks](status/3d.md#working-and-checked).
+accept a positive-Y FBO viewport, a nondefault depth range and a viewport over
+part of the target (or past it) with whole-pixel edges. MTE's clipping alone
+does not keep such a draw inside the viewport (geometry past the clip volume
+reached pixels outside it on the device), so the draw mask is cut to the
+intersection of scissor and viewport, as EMGD's viewport objects cut it for the
+scissor. CPU-shaded or COLOR0-program draws retain the narrower window
+viewport and LESS/write or no-depth profile. Unsupported backend-only state
+cannot fall back to that narrower path. These are source integration
+contracts, separate from the named [device checks](status/3d.md#working-and-checked).
 
 `pipe->blit` handles Mesa DRI3 buffer preservation: an unscaled whole-pixel copy
 between matching colour formats (or within one image), inside both images, with

@@ -66,19 +66,30 @@ static int rect_object(struct poulsback_context *c, const struct sgx535_rect *r,
  * render starts with it set over the target (BGOBJ's MASK), and
  * EMGD's viewport objects clear the last rectangle and set the next before a
  * scissored draw: the scissor's pixel-exact edges. Gallium's scissor is the
- * window's, from the top left. */
-int poulsback_context_draw_mask(struct poulsback_context *c, bool scissor)
+ * window's, from the top left. VIEWPORT: within the bound viewport's
+ * rectangle too, so a viewport smaller than the target keeps every pixel
+ * however far the MTE's clipping lets a triangle reach. */
+int poulsback_context_draw_mask(struct poulsback_context *c, bool scissor, bool viewport)
 {
-    struct sgx535_rect to = {
-        MIN2(c->scissor.minx, c->fb.width), MIN2(c->scissor.miny, c->fb.height),
-        MIN2(c->scissor.maxx, c->fb.width), MIN2(c->scissor.maxy, c->fb.height)};
+    struct sgx535_rect to = {0, 0, (int32_t)c->fb.width, (int32_t)c->fb.height}, v;
     struct sgx535_mask_object o[2];
+    bool cut = scissor;
     int n, e = 0;
-    if (scissor && (to.x1 < to.x0 || to.y1 < to.y0))
+    if (scissor)
+        to = (struct sgx535_rect){
+            MIN2(c->scissor.minx, c->fb.width), MIN2(c->scissor.miny, c->fb.height),
+            MIN2(c->scissor.maxx, c->fb.width), MIN2(c->scissor.maxy, c->fb.height)};
+    if (viewport && poulsback_context_viewport_rect(c, &v) &&
+        (v.x0 > to.x0 || v.y0 > to.y0 || v.x1 < to.x1 || v.y1 < to.y1)) {
+        to.x0 = MAX2(to.x0, v.x0), to.y0 = MAX2(to.y0, v.y0);
+        to.x1 = MIN2(to.x1, v.x1), to.y1 = MIN2(to.y1, v.y1);
+        cut = true;
+    }
+    if (cut && (to.x1 < to.x0 || to.y1 < to.y0))
         to.x1 = to.x0, to.y1 = to.y0; /* empty */
-    if (c->mask_cut ? scissor && !memcmp(&c->mask, &to, sizeof(to)) : !scissor)
+    if (c->mask_cut ? cut && !memcmp(&c->mask, &to, sizeof(to)) : !cut)
         return 0;
-    n = sgx535_draw_mask_objects(c->mask_cut ? &c->mask : NULL, scissor ? &to : NULL, c->fb.width,
+    n = sgx535_draw_mask_objects(c->mask_cut ? &c->mask : NULL, cut ? &to : NULL, c->fb.width,
                                  c->fb.height, o);
     if (n < 0)
         return -EOPNOTSUPP;
@@ -86,7 +97,7 @@ int poulsback_context_draw_mask(struct poulsback_context *c, bool scissor)
         e = rect_object(c, &o[i].rect, 0.0f, NULL,
                         (const uint32_t[3]){o[i].ispa, o[i].ispb, o[i].ispc}, 7);
     if (!e)
-        c->mask_cut = scissor, c->mask = to;
+        c->mask_cut = cut, c->mask = to;
     return e;
 }
 /* An object over the target that writes nothing (no colour, depth and
@@ -116,7 +127,7 @@ int poulsback_context_stencil_object(struct poulsback_context *c)
     int e;
     if (!sgx535_isp_words(&state, &w))
         return -EINVAL;
-    e = poulsback_context_draw_mask(c, false);
+    e = poulsback_context_draw_mask(c, false, false);
     return e ? e : rect_object(c, &all, 0.0f, NULL, (const uint32_t[3]){w.ispa, w.ispb, w.ispc}, 7);
 }
 
@@ -171,7 +182,7 @@ int poulsback_context_clear_object(struct poulsback_context *c, unsigned buffers
         c->stencil_ready = !e;
     }
     if (!e)
-        e = poulsback_context_draw_mask(c, false);
+        e = poulsback_context_draw_mask(c, false, false);
     if (!e)
         e = rect_object(c, &r, (float)(2.0 * depth - 1.0), words,
                         (const uint32_t[3]){w.ispa, w.ispb, w.ispc}, st ? 7u : 3u);
